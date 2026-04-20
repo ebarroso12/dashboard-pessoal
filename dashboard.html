@@ -35,7 +35,7 @@ input,textarea{font-family:inherit}
 
 /* NAVBAR */
 .navbar{position:sticky;top:0;z-index:100;background:rgba(7,8,15,.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:62px;display:flex;align-items:center;padding:0 24px;gap:14px}
-.nav-logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:1rem;letter-spacing:-.02em}
+.nav-logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:.8rem;letter-spacing:-.02em;white-space:nowrap;overflow:hidden}
 .logo-mark{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;background:#fff;box-shadow:0 0 14px rgba(201,169,110,.35)}
 .nav-logo span{background:linear-gradient(90deg,#C9A96E,#e8c98a);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 /* Avatar dropdown */
@@ -1534,9 +1534,9 @@ body::before {
 <nav class="navbar">
   <div class="nav-logo">
     <div class="logo-mark">
-      <img src="https://lh3.googleusercontent.com/d/1OBkE99OavodB-NiZPwsYdkUjpR1WZyBu=w80" alt="Dr. Edson Barroso" style="width:34px;height:34px;object-fit:contain;border-radius:6px">
+      <img src="https://lh3.googleusercontent.com/d/1OBkE99OavodB-NiZPwsYdkUjpR1WZyBu=w80" alt="Dr. Edson Barroso" style="width:36px;height:36px;object-fit:cover;border-radius:6px">
     </div>
-    <div style="display:flex;flex-direction:column;line-height:1.15"><span style="font-size:.82rem;font-weight:800;letter-spacing:-.01em">Dr. Edson Barroso</span><span style="font-size:.58rem;color:var(--muted2);font-weight:500;letter-spacing:.03em;text-transform:uppercase">Saúde Mental</span></div>
+    <span title="Dr. Edson Barroso — Saúde Mental Adulto e Infantil">Dr. Edson Barroso</span>
   </div>
   <div class="nav-clock">
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
@@ -3889,11 +3889,10 @@ async function getGoogleToken(){
   if(Date.now() > (googleTokens.expires_at - 120000) && googleTokens.refresh_token){
     try {
       await loadApiConfig();
-      const _cid = apiConfig.google?.clientId || settings.googleId || '';
-      const _cs = apiConfig.google?.clientSecret || settings.googleSecret || '';
-      const _params = new URLSearchParams({client_id:_cid,client_secret:_cs,refresh_token:googleTokens.refresh_token,grant_type:'refresh_token'});
-      const r = await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:_params.toString()});
-      const t = await r.json();
+      const _cid=apiConfig.google?.clientId||settings.googleId||'';const _cs=apiConfig.google?.clientSecret||settings.googleSecret||'';
+      const _p=new URLSearchParams({client_id:_cid,client_secret:_cs,refresh_token:googleTokens.refresh_token,grant_type:'refresh_token'});
+      const r=await fetch('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:_p.toString()});
+      const t=await r.json();
       if(t.access_token){
         t.expires_at   = Date.now() + (t.expires_in * 1000);
         t.refresh_token= googleTokens.refresh_token;
@@ -3913,8 +3912,8 @@ async function loadCalendar() {
   try {
     const token = await getGoogleToken();
     if (!token) {
-      if (evlist) evlist.innerHTML = '<div style="color:#888;padding:16px;text-align:center"><div style="font-size:13px;margin-bottom:8px">🔐 Token Google expirado</div><button onclick="connectGoogle()" style="background:rgba(66,133,244,.15);border:1px solid rgba(66,133,244,.4);color:#4285f4;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600">🔄 Reconectar Google</button></div>';
-      if (calBtn) { calBtn.textContent='Reconectar'; calBtn.style.cssText='background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171'; }
+      if(evlist) evlist.innerHTML='<div style="color:#888;padding:16px;text-align:center"><div style="font-size:13px;margin-bottom:8px">🔐 Token Google expirado</div><button onclick="connectGoogle()" style="background:rgba(66,133,244,.15);border:1px solid rgba(66,133,244,.4);color:#4285f4;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600">🔄 Reconectar Google</button></div>';
+      if(calBtn){calBtn.textContent='Reconectar';calBtn.style.cssText='background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171';}
       return;
     }
     const now = new Date();
@@ -5088,25 +5087,14 @@ function loadLayout(){
 
 /* ── Adiciona controles em cada card ────────────────── */
 function initLayoutControls(){
-  document.querySelectorAll('#maingrid > .card[data-widget-id]').forEach(card => {
-    const head = card.querySelector('.card-head');
-    if(!head) return;
-    const id = card.dataset.widgetId;
-    if(!head.querySelector('.drag-handle')){
-      const dh = document.createElement('button');
-      dh.className = 'drag-handle'; dh.title = 'Arrastar para mover';
-      dh.innerHTML = `<svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor"><circle cx="3" cy="2" r="1.4"/><circle cx="7" cy="2" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="7" cy="8" r="1.4"/><circle cx="3" cy="14" r="1.4"/><circle cx="7" cy="14" r="1.4"/></svg>`;
-      head.insertBefore(dh, head.firstChild);
-    }
-    if(head.querySelector('.card-ctrl-grp')) return;
-    const grp = document.createElement('div'); grp.className = 'card-ctrl-grp';
-    const rb = document.createElement('button'); rb.className='card-resize-btn'; rb.title='Expandir / Reduzir widget';
-    rb.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>`;
-    rb.onclick=e=>{e.stopPropagation();cycleWidgetSize(id);};
-    const xb=document.createElement('button'); xb.className='card-remove-btn'; xb.title='Remover widget do painel';
-    xb.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>`;
-    xb.onclick=e=>{e.stopPropagation();removeWidget(id);};
-    grp.appendChild(rb); grp.appendChild(xb); head.appendChild(grp);
+  document.querySelectorAll('#maingrid > .card[data-widget-id]').forEach(card=>{
+    const head=card.querySelector('.card-head');if(!head)return;const id=card.dataset.widgetId;
+    if(!head.querySelector('.drag-handle')){const dh=document.createElement('button');dh.className='drag-handle';dh.title='Arrastar para mover';dh.innerHTML=`<svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor"><circle cx="3" cy="2" r="1.4"/><circle cx="7" cy="2" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="7" cy="8" r="1.4"/><circle cx="3" cy="14" r="1.4"/><circle cx="7" cy="14" r="1.4"/></svg>`;head.insertBefore(dh,head.firstChild);}
+    if(head.querySelector('.card-ctrl-grp'))return;
+    const grp=document.createElement('div');grp.className='card-ctrl-grp';
+    const rb=document.createElement('button');rb.className='card-resize-btn';rb.title='Expandir / Reduzir widget';rb.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>`;rb.onclick=e=>{e.stopPropagation();cycleWidgetSize(id);};
+    const xb=document.createElement('button');xb.className='card-remove-btn';xb.title='Remover widget do painel';xb.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>`;xb.onclick=e=>{e.stopPropagation();removeWidget(id);};
+    grp.appendChild(rb);grp.appendChild(xb);head.appendChild(grp);
   });
 }
 
@@ -7055,14 +7043,7 @@ setInterval(infraScanNow, 5*60*1000);
   const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImphZXdqc2NiaWdmd2ppYWVhdmZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMTUwNDksImV4cCI6MjA4Nzg5MTA0OX0.xLo3VVkQmItv9Q7vQ_U_i60FXQj8FzSogwVBfbAPbfU';
   const VPS_ONLY=['easypanel','chatwoot','evolution','n8n'];
 
-  const KNOWLEDGE={
-    supabase:{repair:'REST API autenticada',endpoint:SB_URL+'/rest/v1/widget_scripts?select=id&limit=1',headers:{apikey:SB_KEY,'Authorization':'Bearer '+SB_KEY}},
-    vps:{repair:'Verificar Hostinger hPanel'},
-    openclaw:{repair:'Verificar SSL/DNS no EasyPanel'},
-    dashboard:{repair:'Self-hosted Vercel — sempre Online'},
-    calendar:{repair:'Token Google expirado — clicar Reconectar Google no widget. Configurar Client Secret nas ⚙️ Configurações.'},
-    widgets:{repair:'BUG CORRIGIDO 19/04/2026: botoes duplicados (drag-handle e card-ctrl-grp x3). Guards adicionados em initLayoutControls. NAO remover.'},
-  };
+  const KNOWLEDGE={supabase:{repair:'REST API autenticada',endpoint:SB_URL+'/rest/v1/widget_scripts?select=id&limit=1',headers:{apikey:SB_KEY,'Authorization':'Bearer '+SB_KEY}},vps:{repair:'Verificar Hostinger hPanel'},openclaw:{repair:'Verificar SSL/DNS no EasyPanel'},dashboard:{repair:'Self-hosted Vercel sempre Online'},calendar:{repair:'Token Google expirado - clicar Reconectar Google no widget. Precisar configurar Client Secret.'},widgets:{repair:'BUG CORRIGIDO 19/04/2026: botoes duplicados. Guards adicionados em initLayoutControls. NAO remover.'},};
 
   const applyPatch=function(){
     // Fix _infraServices supabase URL
