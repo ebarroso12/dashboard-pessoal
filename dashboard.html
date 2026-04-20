@@ -3009,6 +3009,54 @@ const METRICS={
               y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#4e566e',font:{size:9},callback:v=>fmtN(v)}}}}});
   })();
 
+  /* ── CALENDÁRIO COM DATAS REAIS ──────────────────────── */
+  const EVENT_POOL = [
+    {t:'Reunião de equipe',       h:14, m:0,  chip:'Trabalho', col:'var(--teal)', cc:'rgba(0,229,181,.14)',  ct:'var(--teal)'},
+    {t:'Consulta médica',         h:10, m:30, chip:'Saúde',    col:'var(--coral)',cc:'rgba(255,77,109,.14)', ct:'var(--coral)'},
+    {t:'Almoço com cliente',      h:12, m:0,  chip:'Negócios', col:'var(--gold)', cc:'rgba(255,182,73,.14)', ct:'var(--gold)'},
+    {t:'Apresentação de resultados',h:15,m:0, chip:'Trabalho', col:'var(--blue)', cc:'rgba(77,159,255,.14)', ct:'var(--blue)'},
+    {t:'Revisão de metas',        h:9,  m:0,  chip:'Planej.',  col:'#4ade80',     cc:'rgba(74,222,128,.14)', ct:'#4ade80'},
+    {t:'Live Instagram',          h:19, m:0,  chip:'Social',   col:'#dd2a7b',     cc:'rgba(221,42,123,.14)', ct:'#f472b6'},
+    {t:'Ligação com fornecedor',  h:11, m:0,  chip:'Negócios', col:'var(--gold)', cc:'rgba(255,182,73,.14)', ct:'var(--gold)'},
+    {t:'Check-in semanal',        h:8,  m:30, chip:'Trabalho', col:'var(--teal)', cc:'rgba(0,229,181,.14)',  ct:'var(--teal)'},
+    {t:'Academia',                h:7,  m:0,  chip:'Saúde',    col:'#4ade80',     cc:'rgba(74,222,128,.14)', ct:'#4ade80'},
+    {t:'Planejamento da semana',  h:9,  m:0,  chip:'Planej.',  col:'var(--blue)', cc:'rgba(77,159,255,.14)', ct:'var(--blue)'},
+    {t:'Publicação de conteúdo',  h:18, m:0,  chip:'Social',   col:'#dd2a7b',     cc:'rgba(221,42,123,.14)', ct:'#f472b6'},
+    {t:'Análise de métricas',     h:16, m:0,  chip:'Negócios', col:'var(--purple)',cc:'rgba(181,123,238,.14)',ct:'var(--purple)'},
+  ];
+
+  // Gera 6 eventos nos próximos 10 dias (sem repetir no mesmo dia)
+  const usedDays = new Set();
+  const events = [];
+  let attempts = 0;
+  while(events.length < 6 && attempts < 40){
+    attempts++;
+    const offsetDays = Math.floor(rnd(seed + 50 + attempts) * 10); // 0-9 dias à frente
+    if(usedDays.has(offsetDays)) continue;
+    usedDays.add(offsetDays);
+    const evDate = new Date();
+    evDate.setDate(evDate.getDate() + offsetDays);
+    const idx = Math.floor(rnd(seed + 60 + attempts) * EVENT_POOL.length);
+    const tmpl = EVENT_POOL[idx];
+    const isToday   = offsetDays === 0;
+    const isTomorrow= offsetDays === 1;
+    const dateLabel = isToday ? 'Hoje' : isTomorrow ? 'Amanhã'
+      : `${String(evDate.getDate()).padStart(2,'0')}/${String(evDate.getMonth()+1).padStart(2,'0')}`;
+    const h = String(tmpl.h).padStart(2,'0'), mm = String(tmpl.m).padStart(2,'0');
+    events.push({...tmpl, when:`${dateLabel} · ${h}:${mm}`, _ts:evDate.getTime()+(tmpl.h*3600+tmpl.m*60)*1000});
+  }
+  // Ordena por data/hora
+  events.sort((a,b) => a._ts - b._ts);
+
+  $('evlist').innerHTML = events.map(e=>`<div class="ev" style="border-left-color:${e.col}">
+    <div class="ev-body"><div class="ev-title">${e.t}</div><div class="ev-time">${e.when}</div></div>
+    <span class="ev-chip" style="background:${e.cc};color:${e.ct}">${e.chip}</span>
+  </div>`).join('');
+
+  // Também atualiza o resumo WA de agenda
+  window._calEventsForWA = events;
+
+})();
 
 /* ─── SETTINGS ───────────────────────────────────────── */
 let settings = LS.get('dash_settings',{name:'Edson',phone:'',googleId:'',googleSecret:'',metaId:''});
@@ -3865,8 +3913,8 @@ async function loadCalendar() {
   try {
     const token = await getGoogleToken();
     if (!token) {
-      if(evlist) evlist.innerHTML='<div style="color:#888;padding:16px;text-align:center"><div style="font-size:24px;margin-bottom:8px">📅</div><div style="margin:4px 0;color:#aaa;font-size:.85rem">Google Calendar não conectado</div><button onclick="connectGoogle()" style="background:rgba(66,133,244,.15);border:1px solid rgba(66,133,244,.4);color:#4285f4;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600;margin-top:8px">🔗 Conectar Google</button></div>';
-      if(calBtn){ calBtn.textContent='Conectar'; calBtn.style.background='rgba(66,133,244,.15)'; calBtn.style.color='#4285f4'; calBtn.onclick=connectGoogle; }
+      if(evlist) evlist.innerHTML='<div style="color:#888;padding:16px;text-align:center"><div style="font-size:13px;margin-bottom:8px">🔐 Token Google expirado</div><button onclick="connectGoogle()" style="background:rgba(66,133,244,.15);border:1px solid rgba(66,133,244,.4);color:#4285f4;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600">🔄 Reconectar Google</button></div>';
+      if(calBtn){calBtn.textContent='Reconectar';calBtn.style.cssText='background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171';}
       return;
     }
     const now = new Date();
@@ -4944,7 +4992,6 @@ async function checkStoredAuth(){
       googleTokens = null;
     }
   }
-  loadCalendar(); // mostra botão conectar se sem token
   if(tiktokToken){
     setConnStatus('tt', true);
     updateConnBtn('tt', true);
