@@ -3889,7 +3889,7 @@ async function connectGoogle(){
     scope:         'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/business.manage https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/analytics.readonly',
     state:         state,
     include_granted_scopes: 'true',
-    access_type:   'offline',    prompt:        'consent',
+    prompt:        'consent',
   });
   showToast('🔐 Abrindo autenticação Google...','var(--teal)');
   const popup = window.open('https://accounts.google.com/o/oauth2/v2/auth?' + params, 'google_auth', 'width=520,height=640,left=200,top=80');
