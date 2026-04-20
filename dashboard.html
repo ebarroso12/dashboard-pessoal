@@ -3836,6 +3836,44 @@ window.addEventListener('message', function(ev){
   }
 });
 
+
+/* Meta OAuth Handler */
+(function handleMetaOAuthCallback(){
+  try {
+    if(!window.location.hash || !window.location.hash.includes('access_token=')) return;
+    const hp=new URLSearchParams(window.location.hash.substring(1));
+    const tok=hp.get('access_token');
+    const state=hp.get('state');
+    if(!tok) return;
+    const ss=sessionStorage.getItem('meta_oauth_state');
+    if(state && ss && state!==ss) return;
+    const sc=hp.get('granted_scopes')||hp.get('scope')||'';
+    if(sc.includes('googleapis')||sc.includes('calendar')) return;
+    if(sessionStorage.getItem('oauth_state')) return;
+    try{if(typeof LS!=='undefined'&&LS.set){LS.set('dash_meta_token',tok);}else{localStorage.setItem('dash_meta_token',tok);}}catch(e){localStorage.setItem('dash_meta_token',tok);}
+    history.replaceState(null,'',window.location.pathname+window.location.search);
+    if(window.opener&&!window.opener.closed){
+      try{window.opener.postMessage({type:'meta_auth_success',token:tok},window.location.origin);}catch(e){}
+      window.close();
+    }else{
+      setTimeout(function(){
+        try{if(typeof showToast==='function')showToast('✅ Meta conectado!','#1877f2');}catch(e){}
+        try{if(typeof loadInstagram==='function')loadInstagram(tok);}catch(e){}
+        try{if(typeof loadFacebook==='function')loadFacebook(tok);}catch(e){}
+      },500);
+    }
+  }catch(err){console.error('Meta OAuth error',err);}
+})();
+window.addEventListener('message',function(ev){
+  if(ev.origin!==window.location.origin)return;
+  if(ev.data&&ev.data.type==='meta_auth_success'){
+    const tok=ev.data.token;
+    try{if(typeof showToast==='function')showToast('✅ Meta conectado!','#1877f2');}catch(e){}
+    try{if(typeof loadInstagram==='function')setTimeout(function(){loadInstagram(tok);},300);}catch(e){}
+    try{if(typeof loadFacebook==='function')setTimeout(function(){loadFacebook(tok);},400);}catch(e){}
+  }
+});
+
 async function connectGoogle(){
   await loadApiConfig();
   const clientId = apiConfig.google?.clientId;
@@ -3988,23 +4026,18 @@ async function connectMeta(){
   if(!appId || appId.includes('COLE') || appId === ''){
     openModal('setupBackdrop'); return;
   }
-  showToast('🔐 Carregando SDK do Facebook...','#1877f2');
-  try {
-    await initFBSDK(appId);
-    FB.login((res) => {
-      if(res.authResponse){
-        metaToken = res.authResponse.accessToken;
-        LS.set('dash_meta_token', metaToken);
-        setConnStatus('ig', true); setConnStatus('fb', true);
-        updateConnBtn('ig', true); updateConnBtn('fb', true);
-        showToast('✅ Meta conectado!','#1877f2');
-        loadInstagram(metaToken);
-        loadFacebook(metaToken);
-      } else {
-        showToast('❌ Login Meta cancelado','var(--coral)');
-      }
-    },{ scope:'pages_read_engagement,instagram_basic,instagram_manage_insights,pages_show_list,read_insights' });
-  } catch(ex){ showToast('❌ Erro ao carregar SDK Meta','var(--coral)'); console.error(ex); }
+  const state = Math.random().toString(36).slice(2) + Date.now().toString(36);
+  sessionStorage.setItem('meta_oauth_state', state);
+  const params = new URLSearchParams({
+    client_id: appId,
+    redirect_uri: window.location.origin + '/dashboard.html',
+    response_type: 'token',
+    scope: 'pages_read_engagement,instagram_basic,instagram_manage_insights,pages_show_list,read_insights',
+    state: state
+  });
+  showToast('🔐 Abrindo autenticação Meta...','#1877f2');
+  const popup = window.open('https://www.facebook.com/dialog/oauth?' + params, 'meta_auth', 'width=580,height=680,left=200,top=80');
+  if(!popup || popup.closed){ showToast('⚠️ Popup bloqueado - libere popups','var(--coral)'); }
 }
 
 /* ─── INSTAGRAM GRAPH API ─────────────────────────────── */
