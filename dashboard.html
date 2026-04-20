@@ -470,7 +470,7 @@ input,textarea{font-family:inherit}
             inset 0 0 30px rgba(217, 119, 87, 0.1);
         }
       }
-    </style></head>
+    </style><style>@keyframes ocFadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}</style><meta id="dcngeagmmhegagicpcmpinaoklddcgon"></head>
 <body>
 
 <!-- ═══ ASSISTENTE FLUTUANTE ═══════════════════════════════ -->
@@ -548,7 +548,7 @@ input,textarea{font-family:inherit}
   </div>
   <div class="nav-clock">
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
-    <span id="clock">21:35:14</span>&nbsp;·&nbsp;<span id="dateshort">19/04/2026</span>
+    <span id="clock">21:50:12</span>&nbsp;·&nbsp;<span id="dateshort">19/04/2026</span>
   </div>
   <div class="nav-spacer"></div>
   <button class="wa-daily" onclick="sendDailySummary()">
@@ -763,21 +763,25 @@ input,textarea{font-family:inherit}
 <div class="card" id="widget-infra-ia" style="grid-column:span 2">
 <div class="c-header"><div class="c-drag-handle">⠿</div><div><div class="c-title">🤖 Monitor IA do Sistema</div><div class="c-sub">Diagnóstico · Reparo · Atualização · Segurança</div></div><div class="c-btns"><span style="background:#22c55e;color:#fff;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700">● LIVE</span><button onclick="infraScanNow()" style="background:#3b82f6;color:#fff;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:12px;margin-left:6px">🔍 Scan</button></div></div>
 <div style="display:flex;gap:4px;border-bottom:1px solid #2d2d2d;margin-bottom:12px;padding:0 4px;flex-wrap:wrap">
-<button class="infra-tab" id="itab-status" onclick="infraSwitchTab('status')" style="background: none; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: initial; color: rgb(136, 136, 136); cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600;">🖥️ Status</button>
-<button class="infra-tab" id="itab-ia" onclick="infraSwitchTab('ia')" style="background: none; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor rgb(34, 197, 94); border-image: initial; color: rgb(34, 197, 94); cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600;">🤖 IA Reparo</button>
+<button class="infra-tab" id="itab-status" onclick="infraSwitchTab('status')" style="background: none; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor rgb(34, 197, 94); border-image: initial; color: rgb(34, 197, 94); cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600;">🖥️ Status</button>
+<button class="infra-tab" id="itab-ia" onclick="infraSwitchTab('ia')" style="background: none; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: initial; color: rgb(136, 136, 136); cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600;">🤖 IA Reparo</button>
 <button class="infra-tab" id="itab-logs" onclick="infraSwitchTab('logs')" style="background:none;border:none;border-bottom:2px solid transparent;color:#888;cursor:pointer;padding:6px 10px;font-size:12px;font-weight:600">📋 Logs</button>
-<button class="infra-tab" id="itab-seg" onclick="infraSwitchTab('seg')" style="background:none;border:none;border-bottom:2px solid transparent;color:#888;cursor:pointer;padding:6px 10px;font-size:12px;font-weight:600">🔐 Segurança</button>
-<button class="infra-tab" id="itab-updates" onclick="infraSwitchTab('updates')" style="background:none;border:none;border-bottom:2px solid transparent;color:#888;cursor:pointer;padding:6px 10px;font-size:12px;font-weight:600">🔄 Atualizações</button>
+<button class="infra-tab" id="itab-seg" onclick="infraSwitchTab('seg')" style="background: none; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: initial; color: rgb(136, 136, 136); cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600;">🔐 Segurança</button>
+<button class="infra-tab" id="itab-updates" onclick="infraSwitchTab('updates')" style="background: none; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: initial; color: rgb(136, 136, 136); cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600;">🔄 Atualizações</button>
 </div>
-<div id="infra-tab-status" class="infra-tab-body" style="display: none;"><div id="infra-services-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px"><div id="icard-vps" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">🖥️</div><div style="font-size:12px;color:#fff;font-weight:600">VPS Hostinger</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">83ms</div></div><div id="icard-easypanel" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">🎛️</div><div style="font-size:12px;color:#fff;font-weight:600">EasyPanel</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-openclaw" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">🦞</div><div style="font-size:12px;color:#fff;font-weight:600">OpenClaw</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">130ms</div></div><div id="icard-chatwoot" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">💬</div><div style="font-size:12px;color:#fff;font-weight:600">Chatwoot</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-evolution" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">📱</div><div style="font-size:12px;color:#fff;font-weight:600">Evolution API</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-n8n" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">⚡</div><div style="font-size:12px;color:#fff;font-weight:600">n8n</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-dashboard" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">📊</div><div style="font-size:12px;color:#fff;font-weight:600">Dashboard</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">0ms</div></div><div id="icard-supabase" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(127, 29, 29);"><div style="font-size:18px;margin-bottom:4px">🗄️</div><div style="font-size:12px;color:#fff;font-weight:600">Supabase</div><div style="font-size:11px;color:#ef4444;margin-top:4px;font-weight:600">🔴 Offline</div><div style="font-size:10px;color:#64748b;margin-top:2px">101ms</div></div><div id="icard-calendar" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">📅</div><div style="font-size:12px;color:#fff;font-weight:600">Google Calendar</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">452ms</div></div></div><div id="infra-summary" style="margin-top:12px;padding:10px;background:#1a1a1a;border-radius:8px;font-size:12px;color:#888"><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><span>🟢 <b style="color:#22c55e">4</b> Online</span><span>⚡ <b style="color:#fbbf24">4</b> VPS-privado</span><span>⏰ 21:34:59</span><span style="color:#22c55e">✅ Sistemas operacionais</span></div></div></div>
-<div id="infra-tab-ia" class="infra-tab-body" style="display: block;"><div style="background:#0f1629;border:1px solid #1e3a8a;border-radius:10px;padding:12px;margin-bottom:10px"><div style="color:#60a5fa;font-size:12px;font-weight:600;margin-bottom:8px">🤖 IA de Reparo — Alimentada por cada atualização do sistema</div><div id="ia-status-summary" style="color:#94a3b8;font-size:12px;line-height:1.6;min-height:60px">⚠️ <b style="color:#fbbf24">1 serviço(s) com problema.</b><br>🔴 <b>Supabase</b>: Banco inacessível<br>&nbsp;&nbsp;→ Verifique supabase.com<br>📅 Google Calendar ✅ — agenda carregada corretamente.<br>📊 Charts: auto-destroy ativo — canvas conflicts evitados.</div></div><div style="display:flex;gap:8px;margin-bottom:10px"><button onclick="iaRepairAll()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px;flex:1">🔧 Auto-Reparar Tudo</button><button onclick="iaAnalyzeNow()" style="background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px;flex:1">🧠 Analisar Sistema</button></div><div id="ia-repair-log" style="background:#0a0a0a;border-radius:8px;padding:10px;font-size:11px;color:#22c55e;font-family:monospace;max-height:180px;overflow-y:auto;min-height:60px"><div style="color:#555">&gt; Sistema pronto para análise...</div><div style="color:#fbbf24">[21:28:49] 🧠 Análise concluída — 1 problema(s)</div><div style="color:#fbbf24">[21:29:59] 🧠 Análise concluída — 1 problema(s)</div><div style="color:#fbbf24">[21:34:59] 🧠 Análise concluída — 1 problema(s)</div></div><div style="margin-top:10px;display:flex;gap:8px"><input id="ia-cmd-input" type="text" placeholder="Peça algo: ex: verifica calendar, repara youtube, scan..." style="flex:1;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#fff;padding:8px 12px;font-size:12px;outline:none" onkeydown="if(event.key==='Enter')iaCommand()"><button onclick="iaCommand()" style="background:#6366f1;color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px">Enviar</button></div></div>
+<div id="infra-tab-status" class="infra-tab-body" style="display: block;"><div id="infra-services-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px"><div id="icard-vps" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">🖥️</div><div style="font-size:12px;color:#fff;font-weight:600">VPS Hostinger</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">32ms</div></div><div id="icard-easypanel" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">🎛️</div><div style="font-size:12px;color:#fff;font-weight:600">EasyPanel</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-openclaw" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">🦞</div><div style="font-size:12px;color:#fff;font-weight:600">OpenClaw</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">18ms</div></div><div id="icard-chatwoot" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">💬</div><div style="font-size:12px;color:#fff;font-weight:600">Chatwoot</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-evolution" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">📱</div><div style="font-size:12px;color:#fff;font-weight:600">Evolution API</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-n8n" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">⚡</div><div style="font-size:12px;color:#fff;font-weight:600">n8n</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-dashboard" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">📊</div><div style="font-size:12px;color:#fff;font-weight:600">Dashboard</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">0ms</div></div><div id="icard-supabase" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(127, 29, 29);"><div style="font-size:18px;margin-bottom:4px">🗄️</div><div style="font-size:12px;color:#fff;font-weight:600">Supabase</div><div style="font-size: 11px; color: rgb(34, 197, 94); margin-top: 4px; font-weight: 600;">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">76ms</div></div><div id="icard-calendar" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">📅</div><div style="font-size:12px;color:#fff;font-weight:600">Google Calendar</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">441ms</div></div></div><div id="infra-summary" style="margin-top:12px;padding:10px;background:#1a1a1a;border-radius:8px;font-size:12px;color:#888"><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><span>🟢 <b style="color:#22c55e">4</b> Online</span><span>⚡ <b style="color:#fbbf24">4</b> VPS-privado</span><span>⏰ 21:45:44</span><span style="color:#22c55e">✅ Sistemas operacionais</span></div></div></div>
+<div id="infra-tab-ia" class="infra-tab-body" style="display: none;"><div style="background:#0f1629;border:1px solid #1e3a8a;border-radius:10px;padding:12px;margin-bottom:10px"><div style="color:#60a5fa;font-size:12px;font-weight:600;margin-bottom:8px">🤖 IA de Reparo — Alimentada por cada atualização do sistema</div><div id="ia-status-summary" style="color:#94a3b8;font-size:12px;line-height:1.6;min-height:60px">⚠️ <b style="color:#fbbf24">1 serviço(s) com problema.</b><br>🔴 <b>Supabase</b>: Banco inacessível<br>&nbsp;&nbsp;→ Verifique supabase.com<br>📅 Google Calendar ✅ — agenda carregada corretamente.<br>📊 Charts: auto-destroy ativo — canvas conflicts evitados.</div></div><div style="display:flex;gap:8px;margin-bottom:10px"><button onclick="iaRepairAll()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px;flex:1">🔧 Auto-Reparar Tudo</button><button onclick="iaAnalyzeNow()" style="background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px;flex:1">🧠 Analisar Sistema</button></div><div id="ia-repair-log" style="background:#0a0a0a;border-radius:8px;padding:10px;font-size:11px;color:#22c55e;font-family:monospace;max-height:180px;overflow-y:auto;min-height:60px"><div style="color:#555">&gt; Sistema pronto para análise...</div><div style="color:#fbbf24">[21:28:49] 🧠 Análise concluída — 1 problema(s)</div><div style="color:#fbbf24">[21:29:59] 🧠 Análise concluída — 1 problema(s)</div><div style="color:#fbbf24">[21:34:59] 🧠 Análise concluída — 1 problema(s)</div><div style="color:#fbbf24">[21:40:47] 🧠 Análise concluída — 1 problema(s)</div><div style="color:#fbbf24">[21:43:01] 🔧 Iniciando reparo de 1 serviço(s)...</div><div style="color:#94a3b8">[21:43:01] 🔍 Supabase...</div><div style="color:#ef4444">[21:43:01] ❌ Supabase offline.</div><div style="color:#a78bfa">[21:43:01] 🏁 Reparo concluído. Executando novo scan...</div><div style="color:#fbbf24">[21:43:04] 🧠 Análise concluída — 1 problema(s)</div></div><div style="margin-top:10px;display:flex;gap:8px"><input id="ia-cmd-input" type="text" placeholder="Peça algo: ex: verifica calendar, repara youtube, scan..." style="flex:1;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#fff;padding:8px 12px;font-size:12px;outline:none" onkeydown="if(event.key==='Enter')iaCommand()"><button onclick="iaCommand()" style="background:#6366f1;color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px">Enviar</button></div></div>
 <div id="infra-tab-logs" class="infra-tab-body" style="display:none"><div id="infra-logs-list" style="font-size:11px;font-family:monospace;background:#0a0a0a;border-radius:8px;padding:10px;max-height:300px;overflow-y:auto"><div style="color:#555">Carregando logs...</div></div></div>
-<div id="infra-tab-seg" class="infra-tab-body" style="display:none"><div style="background:#1e293b;border-radius:10px;padding:14px;margin-bottom:10px"><div style="color:#f59e0b;font-size:12px;font-weight:700;margin-bottom:8px">🔐 Visitante Atual</div><div id="seg-ip" style="color:#94a3b8;font-size:12px">🌐 IP: Detectando...</div><div id="seg-loc" style="color:#94a3b8;font-size:12px;margin-top:4px">📍 Local: Detectando...</div><div id="seg-isp" style="color:#94a3b8;font-size:12px;margin-top:4px">🏢 ISP: Detectando...</div><div id="seg-time" style="color:#94a3b8;font-size:12px;margin-top:4px">🕐 Acesso: carregando...</div><div id="seg-ua" style="color:#94a3b8;font-size:11px;margin-top:4px;word-break:break-all">🖥️ Dispositivo: detectando...</div></div><div style="background:#0a0a0a;border-radius:8px;padding:10px;font-size:11px;color:#888"><div style="color:#f59e0b;font-weight:600;margin-bottom:6px">📜 Histórico de Acessos</div><div id="seg-history-list">Carregando...</div></div></div>
-<div id="infra-tab-updates" class="infra-tab-body" style="display:none"><div id="updates-list" style="display:flex;flex-direction:column;gap:8px"><div style="color:#888;text-align:center;padding:20px">🔍 Verificando atualizações disponíveis...</div></div></div>
+<div id="infra-tab-seg" class="infra-tab-body" style="display: none;"><div style="background:#1e293b;border-radius:10px;padding:14px;margin-bottom:10px"><div style="color:#f59e0b;font-size:12px;font-weight:700;margin-bottom:8px">🔐 Visitante Atual</div><div id="seg-ip" style="color:#94a3b8;font-size:12px">🌐 IP: 2804:1e68:800c:e32f:a126:aa0e:41fe:bf5c  ⚠️ Visitante</div><div id="seg-loc" style="color:#94a3b8;font-size:12px;margin-top:4px">📍 Franca, São Paulo — Brazil</div><div id="seg-isp" style="color:#94a3b8;font-size:12px;margin-top:4px">🏢 ISP: ALGAR TELECOM SA</div><div id="seg-time" style="color:#94a3b8;font-size:12px;margin-top:4px">🕐 Acesso: 19/04/2026, 21:44:08</div><div id="seg-ua" style="color:#94a3b8;font-size:11px;margin-top:4px;word-break:break-all">🖥️ Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Sa...</div></div><div style="background:#0a0a0a;border-radius:8px;padding:10px;font-size:11px;color:#888"><div style="color:#f59e0b;font-weight:600;margin-bottom:6px">📜 Histórico de Acessos</div><div id="seg-history-list"><div style="border-bottom:1px solid #1e293b;padding:4px 0"><span style="color:#60a5fa">19/04/2026, 21:40:43</span> — <span style="color:#fff">2804:1e68:800c:e32f:a126:aa0e:41fe:bf5c</span> — <span style="color:#94a3b8">Franca, Brazil</span></div><div style="border-bottom:1px solid #1e293b;padding:4px 0"><span style="color:#60a5fa">19/04/2026, 19:49:58</span> — <span style="color:#fff">2804:1e68:800c:e32f:a126:aa0e:41fe:bf5c</span> — <span style="color:#94a3b8">Franca, Brazil</span></div><div style="border-bottom:1px solid #1e293b;padding:4px 0"><span style="color:#60a5fa">19/04/2026, 19:33:41</span> — <span style="color:#fff">2804:1e68:800c:e32f:a126:aa0e:41fe:bf5c</span> — <span style="color:#94a3b8">Franca, Brazil</span></div><div style="border-bottom:1px solid #1e293b;padding:4px 0"><span style="color:#60a5fa">19/04/2026, 19:31:30</span> — <span style="color:#fff">2804:1e68:800c:e32f:a126:aa0e:41fe:bf5c</span> — <span style="color:#94a3b8">Franca, Brazil</span></div></div></div></div>
+<div id="infra-tab-updates" class="infra-tab-body" style="display: none;"><div id="updates-list" style="display:flex;flex-direction:column;gap:8px"><div style="background:#0f1a0f;border:1px solid #166534;border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex:1"><span style="font-size:20px">🔑</span><div><div style="color:#22c55e;font-size:12px;font-weight:700">Token Google</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">Válido por 31 min.</div></div></div></div><div style="background:#0f1a0f;border:1px solid #166534;border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex:1"><span style="font-size:20px">💾</span><div><div style="color:#22c55e;font-size:12px;font-weight:700">localStorage</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">4KB — OK</div></div></div></div><div style="background:#0f1a0f;border:1px solid #166534;border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex:1"><span style="font-size:20px">📊</span><div><div style="color:#22c55e;font-size:12px;font-weight:700">Chart.js v4.4.0</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">Auto-destroy patch ativo — stable.</div></div></div></div><div style="background:#0f1a0f;border:1px solid #166534;border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex:1"><span style="font-size:20px">❤️</span><div><div style="color:#22c55e;font-size:12px;font-weight:700">Health Score 89%</div><div style="color:#94a3b8;font-size:11px;margin-top:2px"></div><div style="height:6px;background:#1e293b;border-radius:3px;margin-top:4px"><div style="height:100%;width:89%;background:#fbbf24;border-radius:3px"></div></div></div></div></div></div></div>
 </div>
 
 <div class="card" data-widget-id="openclaw" style="grid-column:span 2">
       <div class="card-head"><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
@@ -796,6 +800,11 @@ input,textarea{font-family:inherit}
         </div>
         <button onclick="toggleOCSetup()" id="oc-setup-btn" style="margin-left:8px;padding:5px 12px;border-radius:8px;font-size:.72rem;font-weight:700;background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.25);color:#ff6b35;cursor:pointer">⚙️ Configurar</button>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -850,6 +859,25 @@ input,textarea{font-family:inherit}
           </div>
         </div>
       </div>
+    </div><div id="oc-cmd-1" style="background: rgba(255, 107, 53, 0.08); border: 1px solid rgba(255, 107, 53, 0.2); border-radius: 12px; padding: 12px 14px; animation: 0.35s ease 0s 1 normal none running ocFadeIn;">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <div style="font-size:1.2rem;flex-shrink:0;margin-top:2px">🎤</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+            <span style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#ff6b35">Áudio</span>
+            <span style="font-size:.65rem;color:var(--muted2)">16:06</span>
+            <span style="font-size:.65rem;color:var(--muted2);margin-left:auto">via Sistema</span>
+          </div>
+          <div style="font-size:.85rem;font-weight:600;color:#eef2ff;line-height:1.4;margin-bottom:6px">
+            Teste de conexão OpenClaw ✅
+          </div>
+          
+          <div style="background:rgba(0,0,0,.25);border-radius:8px;padding:8px 10px;font-size:.78rem;color:var(--muted2);line-height:1.45;border-left:2px solid #ff6b35">
+            <span style="font-size:.65rem;font-weight:700;color:#ff6b35;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">🤖 Resposta OpenClaw</span>
+            Dashboard conectado com sucesso! Pode enviar áudios pelo WhatsApp agora.
+          </div>
+        </div>
+      </div>
     </div>
           <!-- Placeholder inicial -->
           <div id="oc-empty" style="text-align: center; padding: 32px 20px; color: var(--muted2); display: none;">
@@ -872,6 +900,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:linear-gradient(135deg,var(--teal),#00b0ff);box-shadow:0 0 14px rgba(0,229,181,.28)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#07080f" stroke-width="2.6"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
@@ -880,6 +912,11 @@ input,textarea{font-family:inherit}
         <div class="c-spacer"></div>
         <span class="c-tag tag-live" id="cal-status">live ●</span>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -893,11 +930,11 @@ input,textarea{font-family:inherit}
           </div>
           <div>
             <div class="cal-weekday" id="cwday">Domingo</div>
-            <div class="cal-label">Hoje &nbsp;·&nbsp; <span id="clock2" style="color:var(--teal);font-weight:700">21:35</span></div>
+            <div class="cal-label">Hoje &nbsp;·&nbsp; <span id="clock2" style="color:var(--teal);font-weight:700">21:50</span></div>
           </div>
         </div>
         <div class="divider">Próximos eventos</div>
-        <div class="ev-list" id="evlist"><div class="ev-item" onclick="openCalEvent('🛡 🍱 Lunch','2026-04-20T12:00:00-03:00')"><div class="ev-title">🛡 🍱 Lunch</div><div class="ev-time">Amanhã · 12:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Lembrete de aprendizado','2026-04-20T19:00:00-03:00')"><div class="ev-title">Lembrete de aprendizado</div><div class="ev-time">Amanhã · 19:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Telemedicina Amil','2026-04-20T19:00:00-03:00')"><div class="ev-title">Telemedicina Amil</div><div class="ev-time">Amanhã · 19:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Telemedicina Amil - Avisar horário terça','2026-04-21')"><div class="ev-title">Telemedicina Amil - Avisar horário terça</div><div class="ev-time">Amanhã · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('🆓 🍱 Lunch','2026-04-21T12:00:00-03:00')"><div class="ev-title">🆓 🍱 Lunch</div><div class="ev-time">21/04 · 12:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Lembrete de aprendizado','2026-04-21T19:00:00-03:00')"><div class="ev-title">Lembrete de aprendizado</div><div class="ev-time">21/04 · 19:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Telemedicina Amil','2026-04-22T08:00:00-03:00')"><div class="ev-title">Telemedicina Amil</div><div class="ev-time">22/04 · 08:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('🆓 🍱 Lunch','2026-04-22T12:00:00-03:00')"><div class="ev-title">🆓 🍱 Lunch</div><div class="ev-time">22/04 · 12:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Lembrete de aprendizado','2026-04-22T19:00:00-03:00')"><div class="ev-title">Lembrete de aprendizado</div><div class="ev-time">22/04 · 19:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('🆓 🍱 Lunch','2026-04-23T12:00:00-03:00')"><div class="ev-title">🆓 🍱 Lunch</div><div class="ev-time">23/04 · 12:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Lembrete de aprendizado','2026-04-23T19:00:00-03:00')"><div class="ev-title">Lembrete de aprendizado</div><div class="ev-time">23/04 · 19:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Telemedicina Amil','2026-04-24T08:00:00-03:00')"><div class="ev-title">Telemedicina Amil</div><div class="ev-time">24/04 · 08:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('🛡 🍱 Lunch','2026-04-24T12:00:00-03:00')"><div class="ev-title">🛡 🍱 Lunch</div><div class="ev-time">24/04 · 12:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Telemedicina Amil','2026-04-24T13:00:00-03:00')"><div class="ev-title">Telemedicina Amil</div><div class="ev-time">24/04 · 13:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Lembrete de aprendizado','2026-04-24T19:00:00-03:00')"><div class="ev-title">Lembrete de aprendizado</div><div class="ev-time">24/04 · 19:00 · Meu evento</div></div></div>
+        <div class="ev-list" id="evlist"><div class="ev-item" onclick="openCalEvent('Olhar lona','2026-04-20T09:00:00-03:00')"><div class="ev-title">Olhar lona</div><div class="ev-time">Amanhã · 09:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Olhar calça térmica','2026-04-20T09:00:00-03:00')"><div class="ev-title">Olhar calça térmica</div><div class="ev-time">Amanhã · 09:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Olhar repelente','2026-04-20T09:00:00-03:00')"><div class="ev-title">Olhar repelente</div><div class="ev-time">Amanhã · 09:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Olhar itens higiênicos','2026-04-20T09:00:00-03:00')"><div class="ev-title">Olhar itens higiênicos</div><div class="ev-time">Amanhã · 09:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Olhar pilha AAA','2026-04-20T09:00:00-03:00')"><div class="ev-title">Olhar pilha AAA</div><div class="ev-time">Amanhã · 09:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Olhar papel higiênico','2026-04-20T09:00:00-03:00')"><div class="ev-title">Olhar papel higiênico</div><div class="ev-time">Amanhã · 09:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Olhar itens de higiene','2026-04-20T09:00:00-03:00')"><div class="ev-title">Olhar itens de higiene</div><div class="ev-time">Amanhã · 09:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('🛡 🍱 Lunch','2026-04-20T12:00:00-03:00')"><div class="ev-title">🛡 🍱 Lunch</div><div class="ev-time">Amanhã · 12:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Lembrete de aprendizado','2026-04-20T19:00:00-03:00')"><div class="ev-title">Lembrete de aprendizado</div><div class="ev-time">Amanhã · 19:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Telemedicina Amil','2026-04-20T19:00:00-03:00')"><div class="ev-title">Telemedicina Amil</div><div class="ev-time">Amanhã · 19:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Telemedicina Amil - Avisar horário terça','2026-04-21')"><div class="ev-title">Telemedicina Amil - Avisar horário terça</div><div class="ev-time">Amanhã · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('🆓 🍱 Lunch','2026-04-21T12:00:00-03:00')"><div class="ev-title">🆓 🍱 Lunch</div><div class="ev-time">21/04 · 12:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Lembrete de aprendizado','2026-04-21T19:00:00-03:00')"><div class="ev-title">Lembrete de aprendizado</div><div class="ev-time">21/04 · 19:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('Telemedicina Amil','2026-04-22T08:00:00-03:00')"><div class="ev-title">Telemedicina Amil</div><div class="ev-time">22/04 · 08:00 · Meu evento</div></div><div class="ev-item" onclick="openCalEvent('🆓 🍱 Lunch','2026-04-22T12:00:00-03:00')"><div class="ev-title">🆓 🍱 Lunch</div><div class="ev-time">22/04 · 12:00 · Meu evento</div></div></div>
       </div>
       <div class="card-foot">
         <div class="card-foot-row">
@@ -912,6 +949,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af);box-shadow:0 0 14px rgba(221,42,123,.28)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1.3" fill="#fff" stroke="none"></circle></svg>
@@ -919,6 +960,11 @@ input,textarea{font-family:inherit}
         <div><div class="c-title">Instagram</div><div class="c-sub">Métricas · 30 dias</div></div>
         <div class="c-spacer"></div><span class="c-tag tag-live" id="ig-status">live ●</span>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -944,6 +990,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:#1877f2;box-shadow:0 0 14px rgba(24,119,242,.28)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
@@ -951,6 +1001,11 @@ input,textarea{font-family:inherit}
         <div><div class="c-title">Facebook</div><div class="c-sub">Página · 30 dias</div></div>
         <div class="c-spacer"></div><span class="c-tag tag-live" id="fb-status">live ●</span>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -976,6 +1031,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:linear-gradient(135deg,#4285f4,#34a853);box-shadow:0 0 14px rgba(66,133,244,.28)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
@@ -983,6 +1042,11 @@ input,textarea{font-family:inherit}
         <div><div class="c-title">Google Meu Negócio</div><div class="c-sub">30 dias</div></div>
         <div class="c-spacer"></div><span class="c-tag tag-live" id="gmb-status">live ●</span>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1013,6 +1077,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:#ff0000;box-shadow:0 0 14px rgba(255,0,0,.32)">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M23 7s-.3-2-1.2-2.7c-1.2-1.2-2.4-1.2-3-1.3C16.4 2.9 12 2.9 12 2.9s-4.4 0-6.8.1c-.6.1-1.8.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.2v2c0 2 .3 4.1.3 4.1s.3 2 1.2 2.7c1.2 1.2 2.7 1.1 3.4 1.2C7.5 21.3 12 21.3 12 21.3s4.4 0 6.8-.1c.6-.1 1.8-.1 3-1.3.9-.7 1.2-2.7 1.2-2.7s.3-2.1.3-4.1v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.4l6.6 3.6-6.6 3.5z"></path></svg>
@@ -1024,12 +1092,17 @@ input,textarea{font-family:inherit}
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
       <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
     </svg></button></div></div>
       <div class="card-body">
         <div class="kpi-row">
           <div class="kpi"><div class="kpi-label">Inscritos</div><div class="kpi-val" id="yt-subs" style="color:#ff0000;text-shadow:0 0 16px rgba(255,0,0,.5)">390</div><div class="kpi-delta delta-up" id="yt-subs-d">▲ +13 este mês</div></div>
-          <div class="kpi"><div class="kpi-label">Views 30d</div><div class="kpi-val glow-b" id="yt-views">167</div><div class="kpi-delta delta-up">▲ +12%</div></div>
-          <div class="kpi"><div class="kpi-label">Watchtime (h)</div><div class="kpi-val glow-t" id="yt-watch">5</div><div class="kpi-delta delta-up">▲ +8%</div></div>
+          <div class="kpi"><div class="kpi-label">Views 30d</div><div class="kpi-val glow-b" id="yt-views">165</div><div class="kpi-delta delta-up">▲ +12%</div></div>
+          <div class="kpi"><div class="kpi-label">Watchtime (h)</div><div class="kpi-val glow-t" id="yt-watch">4</div><div class="kpi-delta delta-up">▲ +8%</div></div>
           <div class="kpi"><div class="kpi-label">Likes</div><div class="kpi-val glow-g" id="yt-likes">5</div><div class="kpi-delta delta-up">▲ +5%</div></div>
         </div>
         <div class="chart-box"><canvas id="ytChart" style="box-sizing: border-box; display: block; height: 140px; width: 306px;" width="383" height="175"></canvas></div>
@@ -1045,13 +1118,22 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:linear-gradient(135deg,#f4b400,#e94235);box-shadow:0 0 14px rgba(244,180,0,.3)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
         </div>
-        <div><div class="c-title">Google Analytics</div><div class="c-sub" id="ga-prop-name">dredsonbarroso.com.br · 30 dias</div></div>
+        <div><div class="c-title">Google Analytics</div><div class="c-sub" id="ga-prop-name">I.A Para profissionais de Saúde · 30 dias</div></div>
         <div class="c-spacer"></div><span class="c-tag tag-live" id="ga-status">live ●</span>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1077,6 +1159,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:#010101;box-shadow:0 0 14px rgba(105,201,208,.3);border:1px solid rgba(105,201,208,.2)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.19a8.16 8.16 0 004.77 1.52V7.26a4.85 4.85 0 01-1-.57z"></path></svg>
@@ -1088,6 +1174,11 @@ input,textarea{font-family:inherit}
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
         </button>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1128,6 +1219,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:linear-gradient(135deg,#6366f1,#a855f7);box-shadow:0 0 14px rgba(99,102,241,.28)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
@@ -1142,6 +1237,11 @@ input,textarea{font-family:inherit}
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path></svg>
         </button>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1178,6 +1278,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 0 14px rgba(37,211,102,.3)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2z"></path></svg>
@@ -1190,6 +1294,11 @@ input,textarea{font-family:inherit}
           <button id="wa-tab-analysis" onclick="switchWATab('analysis')" style="padding:4px 12px;border-radius:6px;font-size:.72rem;font-weight:700;background:transparent;color:var(--muted2);border:none;cursor:pointer">🔍 Conversas</button>
         </div>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1277,6 +1386,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:linear-gradient(135deg,var(--teal),var(--green));box-shadow:0 0 14px rgba(0,229,181,.25)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#07080f" stroke-width="2.6"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
@@ -1285,6 +1398,11 @@ input,textarea{font-family:inherit}
         <div class="c-spacer"></div>
         <button class="c-tag tag-demo" style="cursor:pointer" onclick="openGoalModal()">+ Adicionar Meta</button>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1349,6 +1467,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:linear-gradient(135deg,#25d366,#128c7e);box-shadow:0 0 14px rgba(37,211,102,.25)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>
@@ -1357,6 +1479,11 @@ input,textarea{font-family:inherit}
         <div class="c-spacer"></div>
         <button class="c-tag tag-live" style="cursor:pointer" onclick="openContactModal()">+ Contato</button>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1373,6 +1500,10 @@ input,textarea{font-family:inherit}
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
       <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
       <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
+      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
     </svg></button>
         <div class="c-icon" style="background:linear-gradient(135deg,#4ade80,#22c55e);box-shadow:0 0 14px rgba(74,222,128,.28)">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
@@ -1381,6 +1512,11 @@ input,textarea{font-family:inherit}
         <div class="c-spacer"></div>
         <button class="c-tag" style="background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);color:#4ade80;cursor:pointer;border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:700" onclick="openFinModal()">✎ Editar</button>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div><div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
     </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -1615,7 +1751,7 @@ input,textarea{font-family:inherit}
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toastEl"><div class="t-dot" id="tdot" style="background: var(--teal); box-shadow: 0 0 8px var(--teal);"></div><span id="tmsg">✅ Já conectado! Clique para reconectar se precisar.</span></div>
+<div class="toast" id="toastEl"><div class="t-dot" id="tdot" style="background: rgb(244, 180, 0); box-shadow: rgb(244, 180, 0) 0px 0px 8px;"></div><span id="tmsg">✅ Google Analytics conectado!</span></div>
 
 <script>
 /* ─── UTILS ──────────────────────────────────────────── */
@@ -5403,7 +5539,7 @@ window._infraServices = [
   { id:'evolution', name:'Evolution API', url:'https://evolution.n8ndredson.com', icon:'📱', type:'vps' },
   { id:'n8n', name:'n8n', url:'https://n8n.n8ndredson.com', icon:'⚡', type:'vps' },
   { id:'dashboard', name:'Dashboard', url:'https://dashboard-pessoal-edson.vercel.app', icon:'📊', type:'self' },
-  { id:'supabase', name:'Supabase', url:'', icon:'🗄️', type:'db' },
+  { id:'supabase', name:'Supabase', url:'https://jaewjscbigfwjiaeavft.supabase.co/rest/v1/widget_scripts?select=id&limit=1', icon:'🗄️', type:'db_rest' },
   { id:'calendar', name:'Google Calendar', url:'', icon:'📅', type:'google' }
 ];
 
@@ -5758,12 +5894,162 @@ setInterval(infraScanNow, 5*60*1000);
       <button class="um-btn um-btn-outline" onclick="closePhotoModal()">Cancelar</button>
       <button id="photo-save-btn" class="um-btn" style="background:linear-gradient(135deg,#4ade80,#22c55e);color:#000;font-weight:800;display:none" onclick="savePhotoTx()">💾 Registrar Gastos</button>
     </div>
+  </div></div><div id="finBackdrop" class="backdrop"><div class="fin-modal"><div class="fin-modal-head"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#4ade80,#22c55e);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px rgba(74,222,128,.3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><span style="font-size:.95rem;font-weight:800;letter-spacing:-.02em">Finanças Pessoais</span><div class="fin-tabs"><button class="fin-tab active" data-tab="orcamento" onclick="switchFinTab('orcamento')">📋 Orçamento</button><button class="fin-tab" data-tab="lancamentos" onclick="switchFinTab('lancamentos')">💸 Lançamentos</button><button class="fin-tab" data-tab="patrimonio" onclick="switchFinTab('patrimonio')">🏦 Patrimônio</button><button class="fin-tab" data-tab="comparativo" onclick="switchFinTab('comparativo')">📊 Comparativo</button><button class="fin-tab" data-tab="insights" onclick="switchFinTab('insights')">🤖 Insights IA</button></div><select class="fin-month-sel" id="fin-month-sel" onchange="finChangeMonth()"></select><button class="fin-save-btn" onclick="saveFinData()">💾 Salvar</button><button class="modal-x" onclick="closeFinModal()">✕</button></div><div class="fin-body" id="fin-tab-orc"></div><div class="fin-body" id="fin-tab-lancamentos" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-pat" style="display:none"></div><div class="fin-body" id="fin-tab-comparativo" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-insights" style="display:none;padding:16px 22px 20px"></div></div></div><div id="txModal" class="user-modal-overlay">
+  <div class="fin-tx-modal">
+    <button class="um-close" onclick="closeTxModal()">✕</button>
+    <div class="um-head">
+      <div class="um-icon" style="background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.2)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+      </div>
+      <div><div class="um-title">Novo Lançamento</div><div class="um-sub">Registre receita ou despesa</div></div>
+    </div>
+    <div class="um-row">
+      <div class="um-field">
+        <label>Tipo</label>
+        <select id="tx-type" style="width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#eef2ff;font-family:inherit;font-size:.88rem;outline:none">
+          <option value="despesa">💸 Despesa</option>
+          <option value="receita">💰 Receita</option>
+        </select>
+      </div>
+      <div class="um-field">
+        <label>Data</label>
+        <input type="date" id="tx-date" style="width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#eef2ff;font-family:inherit;font-size:.88rem;outline:none;color-scheme:dark">
+      </div>
+    </div>
+    <div class="um-field">
+      <label>Descrição / Item</label>
+      <input type="text" id="tx-item" placeholder="Ex: Mercado, Farmácia, Salário..." style="width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#eef2ff;font-family:inherit;font-size:.88rem;outline:none" onkeydown="if(event.key==='Enter')saveTx()">
+    </div>
+    <div class="um-row">
+      <div class="um-field">
+        <label>Valor (R$)</label>
+        <input type="number" id="tx-amount" step="0.01" min="0" placeholder="0,00" style="width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#eef2ff;font-family:inherit;font-size:.88rem;outline:none">
+      </div>
+      <div class="um-field">
+        <label>Categoria</label>
+        <select id="tx-cat" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:10px 13px;color:#eef2ff;font-family:inherit;font-size:.88rem;outline:none;width:100%">
+          <option value="_receita">💰 Renda / Receita</option>
+          <option value="moradia">MORADIA</option><option value="comunicacao">COMUNICAÇÃO</option><option value="alimentacao">ALIMENTAÇÃO</option><option value="transporte">TRANSPORTE</option><option value="saude">SAÚDE</option><option value="pessoais">PESSOAIS</option><option value="educacao">EDUCAÇÃO</option><option value="lazer">LAZER &amp; INFORMAÇÃO</option><option value="financeiros">SERVIÇOS FINANCEIROS</option><option value="empresa">EMPRESA &amp; AUTÔNOMA</option><option value="dependentes">DEPENDENTES</option><option value="diversos">DIVERSOS</option>
+        </select>
+      </div>
+    </div>
+    <div class="um-field">
+      <label>Observações (opcional)</label>
+      <input type="text" id="tx-notes" placeholder="Detalhes adicionais..." style="width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#eef2ff;font-family:inherit;font-size:.88rem;outline:none">
+    </div>
+    <div class="um-actions">
+      <button class="um-btn um-btn-outline" onclick="closeTxModal()">Cancelar</button>
+      <button class="um-btn" onclick="saveTx()" style="background:linear-gradient(135deg,#4ade80,#22c55e);color:#000;font-weight:800">💾 Salvar</button>
+    </div>
+  </div></div><div id="photoModal" class="user-modal-overlay">
+  <div class="user-modal" style="max-width:520px">
+    <button class="um-close" onclick="closePhotoModal()">✕</button>
+    <div class="um-head">
+      <div class="um-icon" style="background:rgba(0,229,181,.1);border:1px solid rgba(0,229,181,.2);font-size:1.1rem">📷</div>
+      <div><div class="um-title">Analisar Comprovante / Nota</div><div class="um-sub">A IA extrai os gastos automaticamente</div></div>
+    </div>
+    <div id="photo-drop-zone" class="fin-photo-zone" onclick="$('photo-input').click()" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="handlePhotoDrop(event)">
+      <img id="photo-preview" class="fin-photo-preview" alt="preview">
+      <div id="photo-placeholder">
+        <div style="font-size:2.2rem;margin-bottom:8px">🧾</div>
+        <div style="font-size:.85rem;font-weight:700;color:var(--muted2)">Clique ou arraste a imagem aqui</div>
+        <div style="font-size:.72rem;color:var(--muted);margin-top:5px">Recibo · Nota fiscal · Comprovante de pagamento</div>
+      </div>
+    </div>
+    <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="handlePhotoSelect(event)">
+    <div id="photo-loading" style="display:none;text-align:center;padding:16px;color:var(--muted2)">
+      <div style="font-size:.88rem;font-weight:700;margin-bottom:10px">🤖 IA analisando a imagem...</div>
+      <div style="display:flex;gap:5px;justify-content:center"><div class="ast-dot"></div><div class="ast-dot"></div><div class="ast-dot"></div></div>
+    </div>
+    <div id="photo-result" style="display:none;margin-top:4px">
+      <div style="font-size:.72rem;font-weight:700;color:#4ade80;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">✅ Itens detectados pela IA</div>
+      <div id="photo-items-list"></div>
+    </div>
+    <div id="photo-manual-entry" style="display:none">
+      <div style="font-size:.72rem;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">📝 Confirme os dados</div>
+      <div class="um-field"><label>Descrição</label>
+        <input type="text" id="photo-item-txt" placeholder="Ex: Supermercado Extra" style="width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#eef2ff;font-family:inherit;font-size:.88rem;outline:none">
+      </div>
+      <div class="um-row">
+        <div class="um-field"><label>Valor (R$)</label>
+          <input type="number" id="photo-item-val" step="0.01" min="0" placeholder="0,00" style="width:100%;padding:10px 13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;color:#eef2ff;font-family:inherit;font-size:.88rem;outline:none">
+        </div>
+        <div class="um-field"><label>Categoria</label>
+          <select id="photo-item-cat" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:10px 13px;color:#eef2ff;font-family:inherit;font-size:.88rem;outline:none;width:100%">
+            <option value="moradia">MORADIA</option><option value="comunicacao">COMUNICAÇÃO</option><option value="alimentacao">ALIMENTAÇÃO</option><option value="transporte">TRANSPORTE</option><option value="saude">SAÚDE</option><option value="pessoais">PESSOAIS</option><option value="educacao">EDUCAÇÃO</option><option value="lazer">LAZER &amp; INFORMAÇÃO</option><option value="financeiros">SERVIÇOS FINANCEIROS</option><option value="empresa">EMPRESA &amp; AUTÔNOMA</option><option value="dependentes">DEPENDENTES</option><option value="diversos">DIVERSOS</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="um-actions" style="margin-top:14px">
+      <button class="um-btn um-btn-outline" onclick="closePhotoModal()">Cancelar</button>
+      <button id="photo-save-btn" class="um-btn" style="background:linear-gradient(135deg,#4ade80,#22c55e);color:#000;font-weight:800;display:none" onclick="savePhotoTx()">💾 Registrar Gastos</button>
+    </div>
   </div></div>
 
 
-<text-from-app id="text-from-app"></text-from-app><div id="claude-agent-glow-border" style="position: fixed; inset: 0px; pointer-events: none; z-index: 2147483646; opacity: 1; transition: opacity 0.3s ease-in-out; animation: 2s ease-in-out 0s infinite normal none running claude-pulse; box-shadow: rgba(217, 119, 87, 0.5) 0px 0px 10px inset, rgba(217, 119, 87, 0.3) 0px 0px 20px inset, rgba(217, 119, 87, 0.1) 0px 0px 30px inset;"></div><div id="claude-agent-stop-container" style="position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); justify-content: center; align-items: center; pointer-events: none; z-index: 2147483647;"><button id="claude-agent-stop-button" style="position: relative; transform: translateY(0px); padding: 12px 16px; background: rgb(250, 249, 245); color: rgb(20, 20, 19); border: 0.5px solid rgba(31, 30, 29, 0.4); border-radius: 12px; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: rgba(217, 119, 87, 0.24) 0px 40px 80px, rgba(217, 119, 87, 0.24) 0px 4px 14px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 1; user-select: none; pointer-events: auto; white-space: nowrap; margin: 0px auto;">
+<div id="claude-agent-glow-border" style="position: fixed; inset: 0px; pointer-events: none; z-index: 2147483646; opacity: 1; transition: opacity 0.3s ease-in-out; animation: 2s ease-in-out 0s infinite normal none running claude-pulse; box-shadow: rgba(217, 119, 87, 0.5) 0px 0px 10px inset, rgba(217, 119, 87, 0.3) 0px 0px 20px inset, rgba(217, 119, 87, 0.1) 0px 0px 30px inset;"></div><div id="claude-agent-stop-container" style="position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); justify-content: center; align-items: center; pointer-events: none; z-index: 2147483647;"><button id="claude-agent-stop-button" style="position: relative; transform: translateY(0px); padding: 12px 16px; background: rgb(250, 249, 245); color: rgb(20, 20, 19); border: 0.5px solid rgba(31, 30, 29, 0.4); border-radius: 12px; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: rgba(217, 119, 87, 0.24) 0px 40px 80px, rgba(217, 119, 87, 0.24) 0px 4px 14px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 1; user-select: none; pointer-events: auto; white-space: nowrap; margin: 0px auto;">
       <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" style="margin-right: 12px; vertical-align: middle;">
         <path d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm40-112v56a12,12,0,0,1-12,12H100a12,12,0,0,1-12-12V100a12,12,0,0,1,12-12h56A12,12,0,0,1,168,100Z"></path>
       </svg>
       <span style="vertical-align: middle;">Stop Claude</span>
-    </button></div></body></html>
+    </button></div><text-from-app id="text-from-app"></text-from-app><div id="claude-agent-glow-border" style="position: fixed; inset: 0px; pointer-events: none; z-index: 2147483646; opacity: 1; transition: opacity 0.3s ease-in-out; animation: 2s ease-in-out 0s infinite normal none running claude-pulse; box-shadow: rgba(217, 119, 87, 0.5) 0px 0px 10px inset, rgba(217, 119, 87, 0.3) 0px 0px 20px inset, rgba(217, 119, 87, 0.1) 0px 0px 30px inset;"></div><div id="claude-agent-stop-container" style="position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); justify-content: center; align-items: center; pointer-events: none; z-index: 2147483647;"><button id="claude-agent-stop-button" style="position: relative; transform: translateY(0px); padding: 12px 16px; background: rgb(250, 249, 245); color: rgb(20, 20, 19); border: 0.5px solid rgba(31, 30, 29, 0.4); border-radius: 12px; font-family: -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; box-shadow: rgba(217, 119, 87, 0.24) 0px 40px 80px, rgba(217, 119, 87, 0.24) 0px 4px 14px; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); opacity: 1; user-select: none; pointer-events: auto; white-space: nowrap; margin: 0px auto;">
+      <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" style="margin-right: 12px; vertical-align: middle;">
+        <path d="M128,20A108,108,0,1,0,236,128,108.12,108.12,0,0,0,128,20Zm0,192a84,84,0,1,1,84-84A84.09,84.09,0,0,1,128,212Zm40-112v56a12,12,0,0,1-12,12H100a12,12,0,0,1-12-12V100a12,12,0,0,1,12-12h56A12,12,0,0,1,168,100Z"></path>
+      </svg>
+      <span style="vertical-align: middle;">Stop Claude</span>
+    </button></div>
+<script>
+(function() {
+  const _SB_URL = 'https://jaewjscbigfwjiaeavft.supabase.co';
+  const _SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImphZXdqc2NiaWdmd2ppYWVhdmZ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzMTUwNDksImV4cCI6MjA4Nzg5MTA0OX0.xLo3VVkQmItv9Q7vQ_U_i60FXQj8FzSogwVBfbAPbfU';
+  const _applyPatch = function() {
+    if (window._infraServices) {
+      const sb = window._infraServices.find(function(s){return s.id==='supabase';});
+      if (sb) { sb.url = _SB_URL+'/rest/v1/widget_scripts?select=id&limit=1'; sb.type='db_rest'; }
+    }
+    window.infraScanNow = async function() {
+      const scanBtn = document.getElementById('infraScanBtn');
+      if (scanBtn){scanBtn.disabled=true;scanBtn.textContent='🔄 Scanning...';}
+      const services = window._infraServices||[];
+      const results = [];
+      const vpsOnly = ['easypanel','chatwoot','evolution','n8n'];
+      for (const svc of services) {
+        const start = Date.now();
+        let online=false, ms=0;
+        try {
+          if (svc.id==='supabase') {
+            const r = await fetch(_SB_URL+'/rest/v1/widget_scripts?select=id&limit=1',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY},signal:AbortSignal.timeout(5000)});
+            ms=Date.now()-start; online=r.status===200;
+          } else if (svc.id==='calendar') {
+            ms=Date.now()-start; online=document.querySelectorAll('[class*="event"]').length>0||!!window._calendarLoaded;
+          } else if (svc.id==='dashboard') {
+            ms=0;online=true;
+          } else if (vpsOnly.includes(svc.id)) {
+            ms=0;online=true;
+          } else {
+            try{await fetch(svc.url,{mode:'no-cors',signal:AbortSignal.timeout(4000)});ms=Date.now()-start;online=true;}catch(e){ms=Date.now()-start;online=e.name!=='AbortError';}
+          }
+        } catch(err){ms=Date.now()-start;online=false;}
+        results.push({id:svc.id,name:svc.name,online:online,ms:ms,type:svc.type});
+      }
+      window._lastScanResults=results;
+      const vpsO=['easypanel','chatwoot','evolution','n8n'];
+      results.forEach(function(svc){
+        const card=document.getElementById('icard-'+svc.id);
+        if(!card)return;
+        const divs=card.querySelectorAll('div');
+        if(divs.length<4)return;
+        if(vpsO.includes(svc.id)){divs[2].innerHTML='⚡ VPS-only';divs[2].style.color='#f59e0b';divs[3].textContent='CORS/privado';}
+        else if(svc.online){divs[2].innerHTML='🟢 Online';divs[2].style.color='#22c55e';divs[3].textContent=svc.ms+'ms';}
+        else{divs[2].innerHTML='🔴 Offline';divs[2].style.color='#ef4444';divs[3].textContent=svc.ms+'ms';}
+      });
+      if(typeof _iaKB_update==='function')_iaKB_update(results);
+      if(scanBtn){scanBtn.disabled=false;scanBtn.textContent='🔍 Scan';}
+      return results;
+    };
+  };
+  if(document.readyState==='complete'){setTimeout(_applyPatch,500);}else{window.addEventListener('load',function(){setTimeout(_applyPatch,500);});}
+})();
+</script>
+</body></html>
