@@ -6,7 +6,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 <style>
 :root{
-  --bg:#0a0b0d;--bg2:#0f1114;--bg3:#141619;
+  --bg:#0a0b0d;--bg2:#0f1114;--bg3:#141619;h
   --glass:rgba(255,255,255,0.030);--border:rgba(255,255,255,.07);--border-h:rgba(255,255,255,.14);
   --text:#e8eaed;--muted:#5a6070;--muted2:#9aa0ab;
   --teal:#6c8ebf;--coral:#c85252;--blue:#6c8ebf;--gold:#c8a052;--purple:#8a7bb5;--green:#52c878;
@@ -3889,7 +3889,7 @@ async function connectGoogle(){
     scope:         'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/business.manage https://www.googleapis.com/auth/youtube.readonly https://www.googleapis.com/auth/yt-analytics.readonly https://www.googleapis.com/auth/analytics.readonly',
     state:         state,
     include_granted_scopes: 'true',
-    prompt:        'consent',
+    access_type:   'offline',    prompt:        'consent',
   });
   showToast('🔐 Abrindo autenticação Google...','var(--teal)');
   const popup = window.open('https://accounts.google.com/o/oauth2/v2/auth?' + params, 'google_auth', 'width=520,height=640,left=200,top=80');
