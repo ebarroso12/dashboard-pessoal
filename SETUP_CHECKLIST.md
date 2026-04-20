@@ -49,6 +49,13 @@
 - [ ] Página criada
 - [ ] Instagram Business vinculado
 - [ ] Permissões de acesso concedidas
+- [ ] Escopos `pages_read_engagement` e `pages_show_list` ativos
+
+#### WhatsApp Business
+- [ ] Conta Meta Business Manager (BM) ativa
+- [ ] WhatsApp Business Account (WABA) configurada
+- [ ] Número de telefone verificado na API
+- [ ] Escopos `whatsapp_business_management` e `whatsapp_business_messaging` ativos
 
 #### Google
 - [ ] Conta Google ativa
