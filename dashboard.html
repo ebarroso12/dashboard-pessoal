@@ -1522,40 +1522,6 @@ body::before {
 .ast-dot:nth-child(2){animation-delay:.15s}.ast-dot:nth-child(3){animation-delay:.3s}
 @keyframes astPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
 @keyframes astSlideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-
-/* ── TribeMD Widget ── */
-.card-tribemd{grid-column:span 2}
-.tribemd-nav{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.tribemd-nav button{background:rgba(255,255,255,.08);border:none;color:var(--text);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:13px;transition:background .2s}
-.tribemd-nav button:hover{background:rgba(255,255,255,.18)}
-.tribemd-date-lbl{flex:1;text-align:center;font-weight:600;font-size:14px;color:var(--text)}
-.tribemd-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-.tm-stat{background:rgba(255,255,255,.06);border-radius:8px;padding:10px;text-align:center}
-.tm-stat-val{font-size:22px;font-weight:700;color:var(--accent)}
-.tm-stat-lbl{font-size:11px;color:var(--text-muted);margin-top:2px}
-.tribemd-list{display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto}
-.tm-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.05);border-radius:8px;padding:8px 10px;font-size:13px}
-.tm-item-time{font-weight:700;color:var(--accent);min-width:42px;font-size:12px}
-.tm-item-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.tm-badge{font-size:10px;padding:2px 6px;border-radius:10px;font-weight:600;white-space:nowrap}
-.tm-badge-1{background:rgba(59,130,246,.25);color:#93c5fd}
-.tm-badge-2{background:rgba(34,197,94,.25);color:#86efac}
-.tm-badge-3{background:rgba(239,68,68,.25);color:#fca5a5}
-.tm-badge-6{background:rgba(156,163,175,.2);color:#d1d5db}
-.tm-badge-8{background:rgba(245,158,11,.25);color:#fcd34d}
-.tm-badge-10{background:rgba(99,102,241,.25);color:#c4b5fd}
-.tm-badge-4{background:rgba(239,68,68,.2);color:#f87171}
-.tm-mode-1::before{content:"Presencial: "}
-.tm-mode-2::before{content:"Teleconsulta: "}
-.tm-mode-3::before{content:"Domiciliar: "}
-.tribemd-footer{display:flex;gap:8px;margin-top:12px}
-.tribemd-footer button{flex:1;padding:8px;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600;transition:all .2s}
-.tm-btn-open{background:rgba(99,102,241,.3);color:#e0e7ff}
-.tm-btn-open:hover{background:rgba(99,102,241,.5)}
-.tm-btn-new{background:rgba(34,197,94,.25);color:#bbf7d0}
-.tm-btn-new:hover{background:rgba(34,197,94,.45)}
-.tm-empty{text-align:center;padding:24px;color:var(--text-muted);font-size:13px}
-.tm-error{text-align:center;padding:16px;color:#f87171;font-size:12px}
 </style>
 
 <div class="aurora">
@@ -1969,37 +1935,6 @@ body::before {
           <button class="wa-btn" onclick="sendCalWA()">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Agenda
           </button>
-        </div>
-      </div>
-    </div><div class="card card-tribemd" data-widget-id="tribemd">
-      <div class="card-head"><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
-      <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
-      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
-      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
-      </svg></button><span class="card-title">TribeMD</span>
-        <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-        <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
-        <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
-        </svg></button><button class="card-close-btn" title="Ocultar widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg></button></div>
-      </div>
-      <div class="card-body">
-        <div class="tribemd-nav">
-          <button onclick="tmNav(-1)">&#8249;</button>
-          <span class="tribemd-date-lbl" id="tm-date-lbl">Carregando...</span>
-          <button onclick="tmNav(1)">&#8250;</button>
-          <button onclick="tmNav(0)" style="font-size:11px;padding:4px 8px">Hoje</button>
-        </div>
-        <div class="tribemd-stats">
-          <div class="tm-stat"><div class="tm-stat-val" id="tm-stat-today">-</div><div class="tm-stat-lbl">Hoje</div></div>
-          <div class="tm-stat"><div class="tm-stat-val" id="tm-stat-week">-</div><div class="tm-stat-lbl">Semana</div></div>
-          <div class="tm-stat"><div class="tm-stat-val" id="tm-stat-next">-</div><div class="tm-stat-lbl">Proxima</div></div>
-        </div>
-        <div class="tribemd-list" id="tm-list"><div class="tm-empty">&#9203; Carregando agenda...</div></div>
-        <div class="tribemd-footer">
-          <button class="tm-btn-open" onclick="window.open('https://app.tribemd.com/atendimentos/agenda','_blank')">Abrir TribeMD</button>
-          <button class="tm-btn-new" onclick="window.open('https://app.tribemd.com/atendimentos/agenda','_blank')">+ Agendar</button>
         </div>
       </div>
     </div><div class="card" data-widget-id="ig" draggable="false" style="">
@@ -2641,10 +2576,6 @@ body::before {
           <label class="form-label">Meta App ID</label>
           <input class="form-input" id="sMetaId" placeholder="Obtido no developers.facebook.com">
         </div>
-      <div class="form-group">
-        <label class="form-label">TribeMD Token (Bearer)</label>
-        <input class="form-input" id="sTribeMDToken" placeholder="Cole o token bipp-user-token aqui">
-      </div>
         <button style="background:rgba(0,229,181,.08);border:1px solid rgba(0,229,181,.2);color:var(--teal);border-radius:8px;padding:7px 14px;font-size:.75rem;font-weight:700;width:100%;margin-bottom:10px;cursor:pointer" onclick="closeModal('settingsBackdrop');openModal('setupBackdrop')">📋 Ver Guia Passo a Passo →</button>
       </div>
       <button class="form-btn" onclick="saveSettings()">Salvar Configurações</button>
@@ -3093,15 +3024,13 @@ function openSettings(){
   const cr=$('cfg-redirect');   if(cr) cr.textContent=ori+'/oauth/google';
   const cm=$('cfg-meta-redirect'); if(cm) cm.textContent=ori;
   openModal('settingsBackdrop');
-
-  if($("sTribeMDToken")) $("sTribeMDToken").value = LS.get("dash_tribemd_token")||"";}
+}
 function saveSettings(){
   settings.name=$('sName').value.trim()||'Edson';
   settings.phone=$('sPhone').value.trim();
   settings.googleId=$('sGoogleId').value.trim();
   settings.googleSecret=($('sGoogleSecret')||{value:''}).value.trim();
   settings.metaId=$('sMetaId').value.trim();
-    LS.set('dash_tribemd_token',($('sTribeMDToken')||{value:''}).value.trim());
   LS.set('dash_settings',settings);
   closeModal('settingsBackdrop');
   showToast('✅ Configurações salvas!','#00e5b5');
@@ -5016,7 +4945,6 @@ async function checkStoredAuth(){
     }
   }
   loadCalendar(); // mostra botão conectar se sem token
-  loadTribeMD();
   if(tiktokToken){
     setConnStatus('tt', true);
     updateConnBtn('tt', true);
@@ -6704,89 +6632,6 @@ window.infraCheckUpdates = async function() {
 // Auto-scan on load + every 5 min
 setTimeout(infraScanNow, 3000);
 setInterval(infraScanNow, 5*60*1000);
-
-// ── TribeMD Widget ──────────────────────────────────────
-let _tmDate = new Date();
-function tmFmtDate(d){ const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0'); return y+'-'+m+'-'+dd; }
-function tmFmtDisp(d){ return d.toLocaleDateString('pt-BR',{weekday:'short',day:'2-digit',month:'short'}); }
-function tmNav(delta){ if(delta===0){_tmDate=new Date();}else{_tmDate.setDate(_tmDate.getDate()+delta);} loadTribeMD(); }
-
-async function loadTribeMD(){
-  const token = (typeof LS!=='undefined' && LS.get('dash_tribemd_token')) || null;
-  const tmList = document.getElementById('tm-list');
-  const tmLbl  = document.getElementById('tm-date-lbl');
-  const tmToday = document.getElementById('tm-stat-today');
-  const tmWeek  = document.getElementById('tm-stat-week');
-  const tmNext  = document.getElementById('tm-stat-next');
-  if(!tmList) return;
-
-  if(tmLbl) tmLbl.textContent = tmFmtDisp(_tmDate);
-
-  if(!token){
-    tmList.innerHTML = '<div class="tm-error">Configure o token TribeMD em Configuracoes</div>';
-    return;
-  }
-
-  tmList.innerHTML = '<div class="tm-empty">Carregando...</div>';
-
-  const dateStr = tmFmtDate(_tmDate);
-  const todayStr = tmFmtDate(new Date());
-
-  try {
-    const resp = await fetch('https://app.tribemd.com/api/atendimentos/agenda?usuario_id=56528&inicio='+dateStr+'&fim='+dateStr, {
-      headers: { 'Authorization': 'Bearer '+token, 'X-Instituicao': '14678' }
-    });
-    if(!resp.ok){ tmList.innerHTML = '<div class="tm-error">Erro '+resp.status+'</div>'; return; }
-    const data = await resp.json();
-    const items = Array.isArray(data) ? data : (data.data || data.atendimentos || []);
-
-    const statusLabel = {1:'Agendado',2:'Confirmado',3:'Cancelado',4:'Faltou',6:'Bloqueio',8:'Encaixe',10:'Atendido'};
-
-    const ativos = items.filter(function(i){return i.status_id!==6;});
-    const bloqueios = items.filter(function(i){return i.status_id===6;});
-
-    if(tmToday) tmToday.textContent = ativos.length;
-
-    const now = new Date();
-    const proximos = ativos.filter(function(i){
-      if(dateStr!==todayStr) return false;
-      if(i.status_id!==1 && i.status_id!==2) return false;
-      if(!i.hora_inicio) return false;
-      const parts = i.hora_inicio.split(':');
-      const t = new Date(); t.setHours(+parts[0],+parts[1],0,0);
-      return t > now;
-    });
-    if(tmNext) tmNext.textContent = proximos.length > 0 ? proximos[0].hora_inicio.substring(0,5) : (dateStr!==todayStr?'-':'OK');
-
-    try {
-      const mon = new Date(_tmDate); mon.setDate(mon.getDate()-mon.getDay()+1);
-      const fri = new Date(mon); fri.setDate(fri.getDate()+6);
-      const rW = await fetch('https://app.tribemd.com/api/atendimentos/agenda?usuario_id=56528&inicio='+tmFmtDate(mon)+'&fim='+tmFmtDate(fri), {
-        headers: { 'Authorization': 'Bearer '+token, 'X-Instituicao': '14678' }
-      });
-      if(rW.ok){ const dW=await rW.json(); const aW=Array.isArray(dW)?dW:(dW.data||dW.atendimentos||[]); if(tmWeek) tmWeek.textContent=aW.filter(function(i){return i.status_id!==6;}).length; }
-    } catch(e){ if(tmWeek) tmWeek.textContent='?'; }
-
-    if(ativos.length===0 && bloqueios.length===0){
-      tmList.innerHTML = '<div class="tm-empty">Nenhum atendimento</div>'; return;
-    }
-
-    const rows = ativos.slice().sort(function(a,b){return (a.hora_inicio||'').localeCompare(b.hora_inicio||'');}).map(function(item){
-      const hora = (item.hora_inicio||'--:--').substring(0,5);
-      const nome = item.paciente_nome || item.nome || 'Paciente';
-      const sid = item.status_id||1;
-      const sl = statusLabel[sid]||'';
-      return '<div class="tm-item"><span class="tm-item-time">'+hora+'</span><span class="tm-item-name">'+nome+'</span><span class="tm-badge tm-badge-'+sid+'">'+sl+'</span></div>';
-    });
-    if(bloqueios.length>0) rows.push('<div class="tm-item" style="opacity:.5"><span class="tm-item-time">--</span><span class="tm-item-name">'+bloqueios.length+' bloqueio(s)</span></div>');
-    tmList.innerHTML = rows.join('');
-
-  } catch(err){
-    tmList.innerHTML = '<div class="tm-error">Erro: '+err.message+'</div>';
-  }
-}
-// ── Fim TribeMD ──────────────────────────────────────────
-
 
 
 </script><div id="finBackdrop" class="backdrop"><div class="fin-modal"><div class="fin-modal-head"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#4ade80,#22c55e);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px rgba(74,222,128,.3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><span style="font-size:.95rem;font-weight:800;letter-spacing:-.02em">Finanças Pessoais</span><div class="fin-tabs"><button class="fin-tab active" data-tab="orcamento" onclick="switchFinTab('orcamento')">📋 Orçamento</button><button class="fin-tab" data-tab="lancamentos" onclick="switchFinTab('lancamentos')">💸 Lançamentos</button><button class="fin-tab" data-tab="patrimonio" onclick="switchFinTab('patrimonio')">🏦 Patrimônio</button><button class="fin-tab" data-tab="comparativo" onclick="switchFinTab('comparativo')">📊 Comparativo</button><button class="fin-tab" data-tab="insights" onclick="switchFinTab('insights')">🤖 Insights IA</button></div><select class="fin-month-sel" id="fin-month-sel" onchange="finChangeMonth()"></select><button class="fin-save-btn" onclick="saveFinData()">💾 Salvar</button><button class="modal-x" onclick="closeFinModal()">✕</button></div><div class="fin-body" id="fin-tab-orc"></div><div class="fin-body" id="fin-tab-lancamentos" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-pat" style="display:none"></div><div class="fin-body" id="fin-tab-comparativo" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-insights" style="display:none;padding:16px 22px 20px"></div></div></div><div id="txModal" class="user-modal-overlay">
