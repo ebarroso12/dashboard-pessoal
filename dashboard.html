@@ -5,7 +5,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
 <style>
-:root{
+:root{h
   --bg:#0a0b0d;--bg2:#0f1114;--bg3:#141619;h
   --glass:rgba(255,255,255,0.030);--border:rgba(255,255,255,.07);--border-h:rgba(255,255,255,.14);
   --text:#e8eaed;--muted:#5a6070;--muted2:#9aa0ab;
@@ -4061,7 +4061,7 @@ async function loadInstagram(token){
       if(m.name==='impressions') m.values.forEach(v => impressions += (v.value||0));
     });
     const followers = profile.followers_count || 0;
-    $('ig-followers').textContent = fmtN(followers);
+    $('ig-followers').textContent = fmtN(followers); $('ig-followers').style.cssText='background:linear-gradient(90deg,#f58529,#dd2a7b);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent';
     $('ig-reach').textContent     = fmtN(reach);
     $('ig-likes').textContent     = fmtN(impressions);
     $('ig-engage').textContent    = followers > 0 ? ((reach/followers)*100).toFixed(1)+'%' : '—';
