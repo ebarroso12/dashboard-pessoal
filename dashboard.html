@@ -1522,6 +1522,33 @@ body::before {
 .ast-dot:nth-child(2){animation-delay:.15s}.ast-dot:nth-child(3){animation-delay:.3s}
 @keyframes astPulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
 @keyframes astSlideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── TRIBEMD WIDGET ─────────────────────────────────── */
+.tribemd-hero { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+.tribemd-logo { width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,#1a73e8,#0d47a1); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.tribemd-logo svg { width:18px; height:18px; }
+.tribemd-stats { display:flex; gap:8px; margin-bottom:10px; }
+.tribemd-stat { flex:1; background:var(--bg3); border-radius:8px; padding:8px 10px; text-align:center; }
+.tribemd-stat .ts-num { font-size:1.3rem; font-weight:700; color:var(--accent); line-height:1; }
+.tribemd-stat .ts-lbl { font-size:.65rem; color:var(--muted); margin-top:2px; }
+.tribemd-consult { display:flex; flex-direction:column; gap:6px; max-height:220px; overflow-y:auto; }
+.tribemd-item { display:flex; gap:10px; align-items:flex-start; padding:8px 10px; background:var(--bg3); border-radius:8px; border-left:3px solid var(--accent); cursor:pointer; transition:background .18s; text-decoration:none; }
+.tribemd-item:hover { background:rgba(108,142,191,.1); }
+.tribemd-item.status-atendido { border-left-color:var(--teal); }
+.tribemd-item.status-cancelado { border-left-color:var(--coral); opacity:.6; }
+.tribemd-item.status-confirmado { border-left-color:#4ade80; }
+.tribemd-item .ti-hora { font-size:.72rem; font-weight:700; color:var(--accent); min-width:38px; padding-top:1px; }
+.tribemd-item .ti-info { flex:1; min-width:0; }
+.tribemd-item .ti-pac { font-size:.82rem; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.tribemd-item .ti-meta { font-size:.68rem; color:var(--muted); margin-top:1px; }
+.tribemd-item .ti-badge { font-size:.6rem; padding:2px 6px; border-radius:10px; background:rgba(108,142,191,.15); color:var(--accent); white-space:nowrap; }
+.tribemd-empty { text-align:center; color:var(--muted); font-size:.82rem; padding:20px 0; }
+.tribemd-nav { display:flex; align-items:center; gap:6px; margin-bottom:10px; }
+.tribemd-nav-btn { background:var(--bg3); border:none; color:var(--text); border-radius:6px; padding:4px 8px; cursor:pointer; font-size:.7rem; }
+.tribemd-nav-btn:hover { background:rgba(108,142,191,.2); }
+.tribemd-nav-date { font-size:.75rem; font-weight:600; color:var(--text); flex:1; text-align:center; }
+.tribemd-open-btn { display:flex; align-items:center; gap:5px; background:rgba(26,115,232,.15); border:1px solid rgba(26,115,232,.3); color:#4285f4; border-radius:8px; padding:6px 12px; font-size:.72rem; font-weight:600; cursor:pointer; text-decoration:none; }
+.tribemd-open-btn:hover { background:rgba(26,115,232,.25); }
 </style>
 
 <div class="aurora">
@@ -1935,6 +1962,47 @@ body::before {
           <button class="wa-btn" onclick="sendCalWA()">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Agenda
           </button>
+        </div>
+      </div>
+    </div><div class="card card-tribemd" data-widget-id="tribemd">
+      <div class="card-head"><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor" opacity=".4"><circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
+      <circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle>
+      <circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle>
+    </svg></button>
+        <div class="c-icon" style="background:linear-gradient(135deg,#1a73e8,#0d47a1)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r="1.5" fill="#fff"/><circle cx="12" cy="15" r="1.5" fill="#fff"/></svg></div>
+        <div><div class="c-title">TribeMD</div><div class="c-sub">Agenda médica</div></div>
+        <div class="c-spacer"></div>
+        <span class="c-tag tag-live" id="tribemd-status" style="cursor:pointer" onclick="loadTribeMD()" title="Atualizar agenda">live 🔄</span>
+      <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
+      <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
+    </svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M18 6L6 18M6 6l12 12"></path>
+    </svg></button></div></div>
+      <div class="card-body">
+        <div class="tribemd-stats">
+          <div class="tribemd-stat"><div class="ts-num" id="tribemd-total">—</div><div class="ts-lbl">Hoje</div></div>
+          <div class="tribemd-stat"><div class="ts-num" id="tribemd-semana">—</div><div class="ts-lbl">Semana</div></div>
+          <div class="tribemd-stat"><div class="ts-num" id="tribemd-prox">—</div><div class="ts-lbl">Próxima</div></div>
+        </div>
+        <div class="tribemd-nav">
+          <button class="tribemd-nav-btn" onclick="tribeMDPrevDay()">◀</button>
+          <div class="tribemd-nav-date" id="tribemd-nav-date">Carregando...</div>
+          <button class="tribemd-nav-btn" onclick="tribeMDNextDay()">▶</button>
+          <button class="tribemd-nav-btn" onclick="tribeMDToday()" title="Hoje">Hoje</button>
+        </div>
+        <div class="tribemd-consult" id="tribemd-list"><div class="tribemd-empty">⏳ Carregando agenda...</div></div>
+      </div>
+      <div class="card-foot">
+        <div class="card-foot-row" style="justify-content:space-between">
+          <a class="tribemd-open-btn" href="https://app.tribemd.com/atendimentos/agenda" target="_blank">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Abrir TribeMD
+          </a>
+          <a class="tribemd-open-btn" href="https://app.tribemd.com/atendimentos/agenda?view=day" target="_blank" style="background:rgba(0,229,181,.1);border-color:rgba(0,229,181,.3);color:var(--teal);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Agendar
+          </a>
         </div>
       </div>
     </div><div class="card" data-widget-id="ig" draggable="false" style="">
@@ -2569,7 +2637,12 @@ body::before {
       <div style="border-top:1px solid var(--border);padding-top:16px;margin-top:4px">
         <div style="font-size:.72rem;font-weight:700;color:var(--teal);letter-spacing:.05em;margin-bottom:10px">⚡ CREDENCIAIS DE API</div>
         <div class="form-group">
-          <label class="form-label">Google Client ID</label>
+      <div class="form-group">
+        <label class="form-label">TribeMD Token (Bearer)</label>
+        <input class="form-input" id="sTribeMDToken" placeholder="Cole o token do TribeMD aqui" type="password">
+        <small style="color:var(--muted);font-size:.68rem;">Obtido em: TribeMD &gt; F12 &gt; localStorage['bipp-user-token']</small>
+      </div>
+                <label class="form-label">Google Client ID</label>
           <input class="form-input" id="sGoogleId" placeholder="Obtido no Google Cloud Console">
         </div>
         <div class="form-group">
@@ -3023,6 +3096,9 @@ function openSettings(){
   const co=$('cfg-origin');     if(co) co.textContent=ori;
   const cr=$('cfg-redirect');   if(cr) cr.textContent=ori+'/oauth/google';
   const cm=$('cfg-meta-redirect'); if(cm) cm.textContent=ori;
+  const _sTok = LS.get('dash_tribemd_token')||'';
+  const _sTokEl = document.getElementById('sTribeMDToken');
+  if(_sTokEl) _sTokEl.value = _sTok;
   openModal('settingsBackdrop');
 }
 function saveSettings(){
@@ -3032,6 +3108,8 @@ function saveSettings(){
   settings.googleSecret=($('sGoogleSecret')||{value:''}).value.trim();
   settings.metaId=$('sMetaId').value.trim();
   LS.set('dash_settings',settings);
+  const _ttok = document.getElementById('sTribeMDToken')?.value||'';
+  if(_ttok) { LS.set('dash_tribemd_token',_ttok); loadTribeMD(); }
   closeModal('settingsBackdrop');
   showToast('✅ Configurações salvas!','#00e5b5');
   // Override config if IDs entered here
@@ -4927,6 +5005,128 @@ function _umClearMsgs(prefix){
   if(s) s.style.display='none';
 }
 
+
+/* ─── TRIBEMD AGENDA ─────────────────────────────────── */
+let _tribeDate = new Date();
+_tribeDate.setHours(0,0,0,0);
+
+function _tribeFmtDate(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function _tribeFmtHour(iso) {
+  // iso is UTC, convert to local (BRT = UTC-3)
+  const d = new Date(iso);
+  return d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',timeZone:'America/Sao_Paulo'});
+}
+function _tribeFmtDatePT(d) {
+  const DIAS = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const MESES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return DIAS[d.getDay()]+', '+d.getDate()+' '+MESES[d.getMonth()];
+}
+function tribeMDToday(){ _tribeDate = new Date(); _tribeDate.setHours(0,0,0,0); loadTribeMD(); }
+function tribeMDPrevDay(){ _tribeDate.setDate(_tribeDate.getDate()-1); loadTribeMD(); }
+function tribeMDNextDay(){ _tribeDate.setDate(_tribeDate.getDate()+1); loadTribeMD(); }
+
+async function loadTribeMD() {
+  const listEl = document.getElementById('tribemd-list');
+  const navDate = document.getElementById('tribemd-nav-date');
+  const statusEl = document.getElementById('tribemd-status');
+  const totalEl = document.getElementById('tribemd-total');
+  const semanaEl = document.getElementById('tribemd-semana');
+  const proxEl = document.getElementById('tribemd-prox');
+
+  if(!listEl) return;
+
+  // Get token from tribemd tab (stored in dashboard LS if user configured)
+  const tribeToken = localStorage.getItem('dash_tribemd_token');
+  const instId = localStorage.getItem('dash_tribemd_inst') || '14678';
+  const medicoId = localStorage.getItem('dash_tribemd_medico') || '56528';
+
+  if(!tribeToken) {
+    listEl.innerHTML = '<div class="tribemd-empty">🔐 Configure o token TribeMD nas <button onclick="openSettings()" style="background:none;border:none;color:var(--accent);cursor:pointer;text-decoration:underline;font-size:inherit">Configurações ⚙️</button></div>';
+    if(navDate) navDate.textContent = 'Não conectado';
+    return;
+  }
+
+  const hdrs = { 'Authorization': 'Bearer '+tribeToken, 'X-Instituicao': instId };
+  const dateStr = _tribeFmtDate(_tribeDate);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const isToday = _tribeDate.getTime() === today.getTime();
+
+  if(navDate) navDate.textContent = isToday ? 'Hoje — '+_tribeFmtDatePT(_tribeDate) : _tribeFmtDatePT(_tribeDate);
+  if(listEl) listEl.innerHTML = '<div class="tribemd-empty">⏳ Carregando...</div>';
+
+  try {
+    // Fetch agenda for selected day
+    const r = await fetch('https://app.tribemd.com/api/atendimentos/agenda?usuario_id='+medicoId+'&inicio='+dateStr+'&fim='+dateStr,
+      { headers: hdrs });
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const d = await r.json();
+    const atts = (d.data?.atendimentos || []).filter(a => a.pacientes || a.observacao);
+
+    // Fetch week stats
+    const weekStart = new Date(today);
+    weekStart.setDate(today.getDate() - today.getDay() + 1); // Monday
+    const weekEnd = new Date(weekStart); weekEnd.setDate(weekStart.getDate()+6);
+    const rW = await fetch('https://app.tribemd.com/api/atendimentos/agenda?usuario_id='+medicoId+'&inicio='+_tribeFmtDate(weekStart)+'&fim='+_tribeFmtDate(weekEnd),
+      { headers: hdrs });
+    const dW = await rW.json();
+    const weekAtts = (dW.data?.atendimentos || []).filter(a => a.pacientes);
+    const weekCount = weekAtts.length;
+    const todayCount = atts.filter(a => a.pacientes).length;
+
+    // Find next appointment time
+    const now = new Date();
+    const futureAtts = atts.filter(a => new Date(a.datahora_marcada) > now && a.pacientes);
+    const nextAtt = futureAtts[0];
+    const proxText = nextAtt ? _tribeFmtHour(nextAtt.datahora_marcada) : (isToday ? '—' : '—');
+
+    if(totalEl) totalEl.textContent = todayCount;
+    if(semanaEl) semanaEl.textContent = weekCount;
+    if(proxEl) proxEl.textContent = proxText;
+
+    // STATUS MAP
+    const ST = {1:'Agendado',2:'Confirmado',3:'Cancelado',4:'Faltou',6:'Bloqueio',8:'Encaixe',10:'Atendido'};
+    const ST_CLASS = {1:'',2:'status-confirmado',3:'status-cancelado',4:'status-cancelado',10:'status-atendido'};
+    const MOD = {1:'Presencial',2:'Teleconsulta',3:'Domiciliar'};
+
+    if(atts.length === 0) {
+      listEl.innerHTML = '<div class="tribemd-empty">📅 Sem consultas para este dia</div>';
+    } else {
+      const dayStr = dateStr;
+      listEl.innerHTML = atts.map(a => {
+        const hora = _tribeFmtHour(a.datahora_marcada);
+        const pac = a.pacientes?.nome || a.observacao || 'Consulta';
+        const stLabel = ST[a.status] || 'Agendado';
+        const stClass = ST_CLASS[a.status] || '';
+        const modLabel = MOD[a.modalidade] || '';
+        const dur = a.previsao_duracao_minutos ? a.previsao_duracao_minutos+'min' : '';
+        const linkUrl = 'https://app.tribemd.com/atendimentos/agenda?view=day&search='+encodeURIComponent(JSON.stringify({medico_id:parseInt(medicoId),from:dayStr,to:dayStr}));
+        return '<a class="tribemd-item '+stClass+'" href="'+linkUrl+'" target="_blank">'+
+          '<div class="ti-hora">'+hora+'</div>'+
+          '<div class="ti-info">'+
+            '<div class="ti-pac">'+pac+'</div>'+
+            '<div class="ti-meta">'+modLabel+(dur?' · '+dur:'')+'</div>'+
+          '</div>'+
+          '<div class="ti-badge">'+stLabel+'</div>'+
+        '</a>';
+      }).join('');
+    }
+
+    if(statusEl) { statusEl.textContent = 'Online ✅'; statusEl.style.background='rgba(0,229,181,.15)'; statusEl.style.color='var(--teal)'; }
+
+    // WhatsApp summary
+    window._tribeEventsForWA = atts.filter(a=>a.pacientes).map(a =>
+      '• '+_tribeFmtHour(a.datahora_marcada)+' — '+(a.pacientes?.nome||'Consulta')
+    );
+
+  } catch(ex) {
+    console.error('TribeMD:', ex);
+    if(listEl) listEl.innerHTML = '<div class="tribemd-empty" style="color:var(--coral)">❌ Erro ao carregar: '+ex.message+'</div>';
+    if(statusEl) { statusEl.textContent = 'Offline ❌'; statusEl.style.background='rgba(255,77,109,.15)'; statusEl.style.color='var(--coral)'; }
+  }
+}
+
 /* ─── RESTAURAR AUTH SALVO ────────────────────────────── */
 async function checkStoredAuth(){
   await loadApiConfig();
@@ -4945,6 +5145,7 @@ async function checkStoredAuth(){
     }
   }
   loadCalendar(); // mostra botão conectar se sem token
+  loadTribeMD();
   if(tiktokToken){
     setConnStatus('tt', true);
     updateConnBtn('tt', true);
