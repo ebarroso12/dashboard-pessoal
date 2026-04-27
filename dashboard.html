@@ -5036,17 +5036,22 @@ async function loadInstagram(token){
     // ── Passo 4: Insights 7 dias ─────────────────────────────────────────
     const since = Math.floor((Date.now()-7*24*60*60*1000)/1000);
     const until = Math.floor(Date.now()/1000);
+    // Busca reach, impressions E engajamento real (likes+comments+saved)
     const ins = await fetch(
-      `https://graph.facebook.com/v19.0/${chosen.igId}/insights?metric=reach,impressions&period=day&since=${since}&until=${until}&access_token=${chosen.pageToken}`
+      `https://graph.facebook.com/v19.0/${chosen.igId}/insights?metric=reach,impressions,likes,comments,saved&period=day&since=${since}&until=${until}&access_token=${chosen.pageToken}`
     ).then(r=>r.json()).catch(()=>({}));
-    let reach=0, impressions=0;
+    let reach=0, impressions=0, likes=0, comments=0, saved=0;
     ins.data?.forEach(m => {
-      if(m.name==='reach')       m.values?.forEach(v => reach += (v.value||0));
-      if(m.name==='impressions') m.values?.forEach(v => impressions += (v.value||0));
+      if(m.name==='reach')       m.values?.forEach(v => reach       += (v.value||0));
+      if(m.name==='impressions') m.values?.forEach(v => impressions  += (v.value||0));
+      if(m.name==='likes')       m.values?.forEach(v => likes        += (v.value||0));
+      if(m.name==='comments')    m.values?.forEach(v => comments     += (v.value||0));
+      if(m.name==='saved')       m.values?.forEach(v => saved        += (v.value||0));
     });
+    // Se API não retornou likes/comments/saved, usa reach como proxy
+    const totalEngagements = (likes+comments+saved) > 0 ? (likes+comments+saved) : reach;
 
     const followers = profile.followers_count || 0;
-    // Cache por 1 hora (não 24h — para mostrar dados frescos)
     if(followers > 0) LS.set('ig_cache', JSON.stringify({
       followers, reach, impressions,
       username: profile.username||profile.name,
@@ -5057,7 +5062,8 @@ async function loadInstagram(token){
     setIgFollowers(fmtN(followers));
     if($('ig-reach'))    $('ig-reach').textContent    = fmtN(reach);
     if($('ig-likes'))    $('ig-likes').textContent    = fmtN(impressions);
-    if($('ig-engage'))   $('ig-engage').textContent   = followers > 0 ? ((reach/followers)*100).toFixed(1)+'%' : '—';
+    // Engajamento = (likes+comments+saves) / seguidores × 100 (padrão de mercado)
+    if($('ig-engage'))   $('ig-engage').textContent   = followers > 0 ? ((totalEngagements/followers)*100).toFixed(1)+'%' : '—';
     if($('ig-followers-d')) $('ig-followers-d').textContent = profile.username ? `@${profile.username}` : (profile.name || '');
     setConnStatus('ig', true);
     console.log('✅ Instagram carregado:', profile.username||profile.name, '| Seguidores:', followers, '| ID:', chosen.igId);
@@ -5090,33 +5096,56 @@ async function loadInstagram(token){
 /* ─── FACEBOOK PAGE API ───────────────────────────────── */
 async function loadFacebook(token){
   try {
-    const pages = await fetch(`https://graph.facebook.com/me/accounts?access_token=${token}`).then(r=>r.json());
+    const pages = await fetch(`https://graph.facebook.com/me/accounts?fields=id,name,fan_count,access_token&access_token=${token}`).then(r=>r.json());
     if(!pages.data?.length) return;
-    const page  = pages.data[0];
-    const pageInfo = await fetch(`https://graph.facebook.com/${page.id}?fields=fan_count,published_posts.limit(30){created_time}&access_token=${page.access_token}`).then(r=>r.json());
-    const since = Math.floor((Date.now()-7*24*60*60*1000)/1000);
+
+    // Escolhe a página correta: prioriza "Edson Barroso" ou "Dr." no nome,
+    // depois a de maior fan_count (evita páginas secundárias com poucos seguidores)
+    const nameMatch = pages.data.find(p =>
+      /edson|barroso|dr\./i.test(p.name)
+    );
+    const byFans = [...pages.data].sort((a,b)=>(b.fan_count||0)-(a.fan_count||0))[0];
+    const page   = nameMatch || byFans || pages.data[0];
+
+    console.log(`📘 FB: usando página "${page.name}" (${page.id}) — ${page.fan_count} fãs`);
+    if(pages.data.length > 1){
+      console.log('📘 FB: outras páginas disponíveis:', pages.data.filter(p=>p.id!==page.id).map(p=>`"${p.name}"(${p.fan_count||0})`).join(', '));
+    }
+
+    // Busca métricas com reach REAL (page_impressions_unique = reach)
+    const since = Math.floor((Date.now()-30*24*60*60*1000)/1000);
     const until = Math.floor(Date.now()/1000);
-    const ins = await fetch(`https://graph.facebook.com/${page.id}/insights?metric=page_impressions,page_post_engagements&period=day&since=${since}&until=${until}&access_token=${page.access_token}`).then(r=>r.json());
-    let impressions=0, engagements=0;
+    const [pageInfo, ins] = await Promise.all([
+      fetch(`https://graph.facebook.com/${page.id}?fields=fan_count,published_posts.limit(30){created_time}&access_token=${page.access_token}`).then(r=>r.json()),
+      fetch(`https://graph.facebook.com/${page.id}/insights?metric=page_impressions_unique,page_post_engagements&period=day&since=${since}&until=${until}&access_token=${page.access_token}`).then(r=>r.json())
+    ]);
+
+    let reach=0, engagements=0;
     ins.data?.forEach(m => {
-      if(m.name==='page_impressions')     m.values.forEach(v => impressions  += (v.value||0));
-      if(m.name==='page_post_engagements') m.values.forEach(v => engagements += (v.value||0));
+      // page_impressions_unique = pessoas únicas que viram qualquer conteúdo = ALCANCE REAL
+      if(m.name==='page_impressions_unique') m.values?.forEach(v => reach       += (v.value||0));
+      if(m.name==='page_post_engagements')   m.values?.forEach(v => engagements += (v.value||0));
     });
-    const fans  = pageInfo.fan_count || 0;
+
+    const fans  = pageInfo.fan_count || page.fan_count || 0;
     const posts = pageInfo.published_posts?.data?.length || 0;
+
     $('fb-likes').textContent  = fmtN(fans);
-    $('fb-reach').textContent  = fmtN(impressions);
+    $('fb-reach').textContent  = fmtN(reach);
     $('fb-posts').textContent  = posts;
-    $('fb-engage').textContent = impressions > 0 ? ((engagements/impressions)*100).toFixed(1)+'%' : '—';
+    // Engajamento = engagements / fans (padrão de mercado)
+    $('fb-engage').textContent = fans > 0 ? ((engagements/fans)*100).toFixed(1)+'%' : '—';
+    // Mostra nome da página no subtítulo para confirmar qual está sendo usada
+    const fbSub = document.querySelector('[data-widget-id="fb"] .c-sub');
+    if(fbSub) fbSub.textContent = `${page.name} · 30 dias`;
     setConnStatus('fb', true);
-    // ── Sincroniza com Supabase para o assistente de voz ──
     sbSyncMetrica('facebook', {
-      pagina: page.name || '',
+      pagina: page.name||'',
       seguidores: fans,
       curtidas: fans,
       posts,
-      alcance: impressions,
-      engajamento: impressions > 0 ? ((engagements/impressions)*100).toFixed(1)+'%' : '0%'
+      alcance: reach,
+      engajamento: fans > 0 ? ((engagements/fans)*100).toFixed(1)+'%' : '0%'
     }).catch(()=>{});
   } catch(ex){ showToast('⚠️ Erro na API do Facebook','var(--gold)'); console.error('FB:', ex); }
 }
