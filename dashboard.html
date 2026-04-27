@@ -438,7 +438,33 @@ html[data-theme="legendarios"] #widget-contacts{background-image:url('https://im
 
 .card-body{padding:16px;flex:1}
 .card-foot{padding:11px 16px;border-top:1px solid var(--border)}
-.card-foot-row{display:flex;gap:8px}
+.card-foot-row{display:flex;gap:8px;flex-wrap:wrap}
+/* ── AI BUTTONS ── */
+.btn-ai-analyze{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;font-size:.72rem;font-weight:700;background:linear-gradient(135deg,rgba(108,142,191,.18),rgba(138,123,181,.18));border:1px solid rgba(108,142,191,.35);color:#a8c4f0;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.btn-ai-analyze:hover{background:linear-gradient(135deg,rgba(108,142,191,.3),rgba(138,123,181,.3));box-shadow:0 0 16px rgba(108,142,191,.25);transform:translateY(-1px)}
+.btn-ai-report{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;font-size:.72rem;font-weight:700;background:linear-gradient(135deg,rgba(200,160,82,.15),rgba(200,82,82,.12));border:1px solid rgba(200,160,82,.35);color:#e8c98a;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.btn-ai-report:hover{background:linear-gradient(135deg,rgba(200,160,82,.28),rgba(200,82,82,.2));box-shadow:0 0 16px rgba(200,160,82,.25);transform:translateY(-1px)}
+/* ── AI MODAL ── */
+.ai-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:2000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:16px}
+.ai-modal-overlay.open{display:flex}
+.ai-modal-box{background:linear-gradient(145deg,#0d1520,#111928);border:1px solid rgba(108,142,191,.25);border-radius:18px;width:100%;max-width:780px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 32px 80px rgba(0,0,0,.8),0 0 0 1px rgba(108,142,191,.1)}
+.ai-modal-head{padding:18px 22px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:12px;flex-shrink:0}
+.ai-modal-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,rgba(108,142,191,.25),rgba(138,123,181,.2));border:1px solid rgba(108,142,191,.3);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0}
+.ai-modal-title{font-size:.95rem;font-weight:800;letter-spacing:-.02em}
+.ai-modal-sub{font-size:.72rem;color:var(--muted2);margin-top:2px}
+.ai-modal-close{margin-left:auto;width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:var(--muted2);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.ai-modal-close:hover{background:rgba(255,77,109,.15);border-color:rgba(255,77,109,.3);color:#ff6b85}
+.ai-modal-body{padding:20px 22px;overflow-y:auto;flex:1;font-size:.82rem;line-height:1.7;color:var(--text)}
+.ai-modal-body strong,.ai-modal-body b{color:var(--teal)}
+.ai-modal-body h3,.ai-modal-body h4{color:#e8c98a;margin:14px 0 6px;font-size:.85rem}
+.ai-modal-loading{display:flex;align-items:center;gap:10px;color:var(--muted2);padding:20px 0}
+.ai-dot{width:8px;height:8px;border-radius:50%;background:var(--teal);animation:blink 1.2s infinite}
+.ai-dot:nth-child(2){animation-delay:.2s}.ai-dot:nth-child(3){animation-delay:.4s}
+.ai-modal-foot{padding:12px 22px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0}
+.ai-copy-btn{padding:7px 16px;border-radius:8px;font-size:.76rem;font-weight:700;background:rgba(108,142,191,.12);border:1px solid rgba(108,142,191,.25);color:#a8c4f0;cursor:pointer;transition:all .2s}
+.ai-copy-btn:hover{background:rgba(108,142,191,.22);transform:translateY(-1px)}
+.ai-wa-btn{padding:7px 16px;border-radius:8px;font-size:.76rem;font-weight:700;background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.25);color:#25d366;cursor:pointer;transition:all .2s}
+.ai-wa-btn:hover{background:rgba(37,211,102,.18);transform:translateY(-1px)}
 
 /* KPI */
 .kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
@@ -2457,6 +2483,8 @@ body::before {
         <div class="chart-box"><canvas id="igChart" width="338" height="175" style="display: block; box-sizing: border-box; height: 140px; width: 270px;"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-analyze" onclick="analisarIG('analise')">🧠 Analisar</button>
+        <button class="btn-ai-report" onclick="analisarIG('relatorio')">📊 Relatório</button>
         <button class="connect" id="ig-btn" onclick="connectMeta()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('instagram')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -2489,6 +2517,8 @@ body::before {
         <div class="chart-box"><canvas id="fbChart" width="371" height="175" style="display: block; box-sizing: border-box; height: 140px; width: 297px;"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-analyze" onclick="analisarFB('analise')">🧠 Analisar</button>
+        <button class="btn-ai-report" onclick="analisarFB('relatorio')">📊 Relatório</button>
         <button class="connect" id="fb-btn" onclick="connectMeta()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('facebook')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -2526,6 +2556,8 @@ body::before {
         </div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-analyze" onclick="analisarGMB('analise')">🧠 Analisar</button>
+        <button class="btn-ai-report" onclick="analisarGMB('relatorio')">📊 Relatório</button>
         <button class="connect" id="gmb-btn" onclick="connectGoogle()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('gmb')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -2558,6 +2590,8 @@ body::before {
         <div class="chart-box"><canvas id="ytChart" style="box-sizing: border-box; display: block; height: 140px; width: 270px;" width="338" height="175"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-analyze" onclick="analisarYT('analise')">🧠 Analisar</button>
+        <button class="btn-ai-report" onclick="analisarYT('relatorio')">📊 Relatório</button>
         <button class="connect" id="yt-btn" onclick="connectGoogle()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('youtube')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -2590,6 +2624,8 @@ body::before {
         <div class="chart-box"><canvas id="gaChart" style="box-sizing: border-box; display: block; height: 140px; width: 297px;" width="371" height="175"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-analyze" onclick="analisarGA('analise')">🧠 Analisar</button>
+        <button class="btn-ai-report" onclick="analisarGA('relatorio')">📊 Relatório</button>
         <button class="connect" id="ga-btn" onclick="connectGoogle()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('ga')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -2639,6 +2675,8 @@ body::before {
         <div class="chart-box"><canvas id="ttChart" width="371" height="175" style="display: block; box-sizing: border-box; height: 140px; width: 297px;"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-analyze" onclick="analisarTT('analise')">🧠 Analisar</button>
+        <button class="btn-ai-report" onclick="analisarTT('relatorio')">📊 Relatório</button>
         <button class="connect" id="tt-btn" onclick="openTTEdit()" style="background:rgba(105,201,208,.1);border-color:rgba(105,201,208,.25);color:#69c9d0">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Inserir Dados
         </button>
@@ -2691,6 +2729,8 @@ body::before {
         </div>
       </div>
       <div class="card-foot">
+        <button class="btn-ai-analyze" onclick="analisarTasks('analise')">🧠 Analisar</button>
+        <button class="btn-ai-report" onclick="analisarTasks('relatorio')">📊 Relatório</button>
         <button class="wa-btn" onclick="sendTasksWA()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>
           Enviar via WhatsApp
@@ -2751,6 +2791,8 @@ body::before {
           </div>
         </div>
         <div class="card-foot"><div class="card-foot-row">
+          <button class="btn-ai-analyze" onclick="analisarWAB('analise')">🧠 Analisar</button>
+          <button class="btn-ai-report" onclick="analisarWAB('relatorio')">📊 Relatório</button>
           <button class="wa-btn" onclick="sendMetricWA('wabusiness')" style="flex:1">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2z"></path></svg>Enviar Relatório WA
           </button>
@@ -2861,7 +2903,9 @@ body::before {
       <button class="goal-edit-btn" onclick="deleteGoal(5)">Remover</button>
     </div></div>
       </div>
-      <div class="card-foot">
+      <div class="card-foot" style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-ai-analyze" onclick="analisarGoals('analise')">🧠 Analisar</button>
+        <button class="btn-ai-report" onclick="analisarGoals('relatorio')">📊 Relatório</button>
         <button class="wa-btn" onclick="sendGoalsWA()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>
           Enviar Relatório de Metas via WhatsApp
@@ -8847,6 +8891,858 @@ setInterval(infraScanNow, 5*60*1000);
 
   if(document.readyState==='complete'){setTimeout(applyPatch,300);}
   else{window.addEventListener('load',function(){setTimeout(applyPatch,300);});}
+})();
+</script>
+<!-- ══ MODAL IA ══════════════════════════════════════════════════════ -->
+<div class="ai-modal-overlay" id="aiModalOverlay" onclick="if(event.target===this)fecharModalIA()">
+  <div class="ai-modal-box">
+    <div class="ai-modal-head">
+      <div class="ai-modal-icon" id="aiModalIcon">🧠</div>
+      <div>
+        <div class="ai-modal-title" id="aiModalTitle">Análise IA</div>
+        <div class="ai-modal-sub" id="aiModalSub">Processando dados...</div>
+      </div>
+      <button class="ai-modal-close" onclick="fecharModalIA()">✕</button>
+    </div>
+    <div class="ai-modal-body" id="aiModalBody">
+      <div class="ai-modal-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span style="margin-left:6px">Consultando IA especializada...</span></div>
+    </div>
+    <div class="ai-modal-foot">
+      <button class="ai-copy-btn" onclick="copiarResultadoIA()">📋 Copiar</button>
+      <button class="ai-wa-btn" onclick="enviarResultadoWA()">📲 Enviar WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ SISTEMA IA WIDGETS ══════════════════════════════════════════════
+(function(){
+  const AI_URL   = 'https://dashboard-pessoal-edson.vercel.app/api/assistente';
+  const AI_TOKEN = 'oc_edson_2026_secure';
+  let   _iaResultado = '';
+
+  function g(id){ return (document.getElementById(id)||{}).textContent||'—'; }
+
+  window.fecharModalIA = function(){ document.getElementById('aiModalOverlay').classList.remove('open'); };
+
+  window.copiarResultadoIA = function(){
+    navigator.clipboard?.writeText(_iaResultado).then(()=>showToast('✅ Copiado!')).catch(()=>{});
+  };
+
+  window.enviarResultadoWA = function(){
+    const num = window._waNumber || '';
+    if(!num){ showToast('⚠️ Número WhatsApp não configurado'); return; }
+    const msg = encodeURIComponent(_iaResultado.substring(0,1500));
+    window.open(`https://wa.me/${num}?text=${msg}`,'_blank');
+  };
+
+  function abrirModal(icon, titulo, subtitulo){
+    document.getElementById('aiModalIcon').textContent  = icon;
+    document.getElementById('aiModalTitle').textContent = titulo;
+    document.getElementById('aiModalSub').textContent   = subtitulo;
+    document.getElementById('aiModalBody').innerHTML    =
+      '<div class="ai-modal-loading"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span style="margin-left:8px;font-size:.8rem;color:var(--muted2)">Consultando IA especializada...</span></div>';
+    document.getElementById('aiModalOverlay').classList.add('open');
+    _iaResultado = '';
+  }
+
+  async function chamarIA(prompt){
+    try {
+      const res = await fetch(AI_URL, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','X-Webhook-Token':AI_TOKEN},
+        body: JSON.stringify({ q: prompt, origem:'dashboard-ia-widget' })
+      });
+      if(!res.ok) throw new Error(res.status);
+      const d = await res.json();
+      return d.resposta || 'Sem resposta da IA.';
+    } catch(e) {
+      return '❌ Assistente indisponível. Verifique sua conexão com a internet.';
+    }
+  }
+
+  function renderizarResposta(texto){
+    _iaResultado = texto;
+    const html = texto
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g,'<em>$1</em>')
+      .replace(/⚡|📊|📚|📈|🧠|⚠️|🚀|📝|🎯|🔴|🟡|🟢/g,'<span style="font-size:1.1em">$&</span>')
+      .replace(/\n\n/g,'</p><p style="margin:10px 0">')
+      .replace(/\n/g,'<br>');
+    document.getElementById('aiModalBody').innerHTML = '<p style="margin:0">' + html + '</p>';
+  }
+
+  // ─── INSTAGRAM ────────────────────────────────────────────────────
+  window.analisarIG = async function(tipo){
+    const dados = `Seguidores: ${g('ig-followers')} | Alcance 7d: ${g('ig-reach')} | Impressões 7d: ${g('ig-likes')} | Engajamento: ${g('ig-engage')}`;
+    const modo  = tipo==='relatorio' ? 'Gere o RELATÓRIO COMPLETO com todas as seções.' : 'Gere a ANÁLISE RÁPIDA com diagnóstico e top 3 ações imediatas.';
+    abrirModal('📸', tipo==='relatorio'?'Relatório Instagram':'Análise Instagram', dados);
+    const prompt = `Aja como um especialista em Instagram para profissionais de saúde mental, marketing médico digital e crescimento orgânico de autoridade.
+
+Você é um estrategista de redes sociais com experiência em conteúdo médico, algoritmo do Instagram, crescimento de autoridade para médicos e conversão de seguidores em pacientes.
+
+Seu objetivo é transformar métricas do Instagram em decisões práticas de conteúdo e crescimento.
+
+Pense passo a passo antes de responder.
+
+DADOS DO INSTAGRAM (últimos 30 dias):
+${dados}
+
+INTERPRETAÇÃO E VALIDAÇÃO (OBRIGATÓRIO):
+- Identifique o estágio do perfil (pequeno/médio/grande influenciador médico)
+- Valide se o engajamento está compatível com o número de seguidores
+- Detecte inconsistências ou pontos de atenção nos dados
+
+ANÁLISE TEMPORAL:
+- Compare crescimento semanal vs esperado para o nicho médico
+- Identifique tendência: aceleração, estagnação ou queda
+
+CÁLCULOS OBRIGATÓRIOS:
+- Taxa de engajamento real vs benchmark para médicos (referência: 3-8%)
+- Alcance / Seguidores (% de alcance orgânico)
+- Crescimento semanal projetado para 30/60/90 dias
+
+ANÁLISE COMPORTAMENTAL DO PERFIL:
+- Perfil: Autoridade em crescimento / Estagnado / Em queda / Viral
+- Explique com base nos dados
+
+DETECÇÃO DE RISCOS:
+- Queda de alcance orgânico
+- Engajamento abaixo do esperado
+- Ritmo de crescimento insuficiente para metas
+
+FORMATO DA RESPOSTA (OBRIGATÓRIO):
+⚡ RESUMO EXECUTIVO
+Situação geral:
+Principal oportunidade:
+Ação imediata:
+
+📊 DIAGNÓSTICO DO PERFIL
+Situação: (Excelente / Bom / Atenção / Crítico)
+Pontos fortes:
+Pontos de melhora:
+
+📚 EXPLICAÇÃO DIDÁTICA
+O que os números significam para um médico psiquiatra no Instagram:
+
+📈 ANÁLISE E INSIGHTS
+Padrões identificados:
+Oportunidades claras:
+Comparativo com benchmarks médicos:
+
+🧠 PERFIL DO CRIADOR
+Descreva o comportamento de publicação e engajamento.
+
+⚠️ ALERTAS E RISCOS
+Liste riscos ao crescimento.
+
+🚀 ESTRATÉGIAS (ESPECIALISTA)
+🔴 Alta prioridade (ação imediata):
+🟡 Média prioridade:
+🟢 Longo prazo:
+
+📝 PLANO DE CONTEÚDO
+3 tipos de post para esta semana (com formato, tema e objetivo):
+
+🎯 DECISÃO CRÍTICA
+Se o Dr. Edson só pudesse fazer UMA coisa agora para crescer no Instagram, qual seria? Explique.
+
+REGRAS:
+- Foco em médico psiquiatra (saúde mental adulto e infantil)
+- Linguagem profissional mas acessível
+- Ações práticas e específicas
+- Considere as limitações éticas do CFM para médicos nas redes sociais
+
+${modo}`;
+    const resp = await chamarIA(prompt);
+    renderizarResposta(resp);
+  };
+
+  // ─── FACEBOOK ────────────────────────────────────────────────────
+  window.analisarFB = async function(tipo){
+    const dados = `Curtidas na Página: ${g('fb-likes')} | Alcance 7d: ${g('fb-reach')} | Posts no mês: ${g('fb-posts')} | Engajamento: ${g('fb-engage')}`;
+    const modo  = tipo==='relatorio' ? 'Gere o RELATÓRIO COMPLETO com todas as seções.' : 'Gere a ANÁLISE RÁPIDA com diagnóstico e top 3 ações imediatas.';
+    abrirModal('👍', tipo==='relatorio'?'Relatório Facebook':'Análise Facebook', dados);
+    const prompt = `Aja como um especialista em Facebook para negócios médicos, marketing de saúde mental e gestão de páginas profissionais de medicina.
+
+Você é um gestor de tráfego e conteúdo com experiência em páginas de saúde no Facebook, algoritmo Meta, construção de comunidade médica e geração de leads para consultório.
+
+Seu objetivo é transformar métricas da página em estratégias práticas de crescimento e captação de pacientes.
+
+Pense passo a passo antes de responder.
+
+DADOS DO FACEBOOK (últimos 30 dias):
+${dados}
+
+INTERPRETAÇÃO E VALIDAÇÃO (OBRIGATÓRIO):
+- Identifique o estágio da página (iniciante/intermediário/consolidado)
+- Valide se o engajamento está compatível com curtidas e alcance
+- Detecte se há queda ou crescimento orgânico
+
+ANÁLISE TEMPORAL:
+- Avalie o ritmo de publicação (posts/mês)
+- Identifique relação entre frequência de posts e engajamento
+
+CÁLCULOS OBRIGATÓRIOS:
+- Taxa de engajamento real (Engajamento / Alcance)
+- Alcance / Curtidas (% da base atingida organicamente)
+- Projeção de crescimento mensal
+
+ANÁLISE COMPORTAMENTAL:
+- Perfil: Página ativa / Irregular / Inativa / Em declínio
+- Explique com base nos dados
+
+DETECÇÃO DE RISCOS:
+- Alcance orgânico em queda (sinal de penalização pelo algoritmo)
+- Baixa frequência de publicação
+- Engajamento insatisfatório para uma página médica
+
+FORMATO DA RESPOSTA (OBRIGATÓRIO):
+⚡ RESUMO EXECUTIVO
+Situação geral:
+Principal problema:
+Melhor ação imediata:
+
+📊 DIAGNÓSTICO DA PÁGINA
+Situação: (Saudável / Atenção / Crítica)
+Pontos fortes:
+Pontos fracos:
+
+📚 EXPLICAÇÃO DIDÁTICA
+O que os números revelam sobre a página do Dr. Edson:
+
+📈 ANÁLISE E INSIGHTS
+Padrões de engajamento:
+Comparativo com páginas médicas similares:
+Oportunidades identificadas:
+
+🧠 PERFIL DA PÁGINA
+Descreva como a página está sendo gerida com base nos dados.
+
+⚠️ ALERTAS E RISCOS
+Liste riscos ao crescimento orgânico.
+
+🚀 ESTRATÉGIAS (ESPECIALISTA)
+🔴 Alta prioridade:
+🟡 Média prioridade:
+🟢 Longo prazo:
+
+📝 PLANO DE CONTEÚDO FACEBOOK
+3 formatos de post recomendados para esta semana:
+
+🎯 DECISÃO CRÍTICA
+Qual a UMA ação que mais impactaria o crescimento da página agora?
+
+REGRAS:
+- Foco em consultório de psiquiatria adulto e infantil
+- Considere limitações do CFM para propaganda médica
+- Priorize construção de autoridade e confiança
+
+${modo}`;
+    const resp = await chamarIA(prompt);
+    renderizarResposta(resp);
+  };
+
+  // ─── GOOGLE MEU NEGÓCIO ──────────────────────────────────────────
+  window.analisarGMB = async function(tipo){
+    const dados = `Visualizações: ${g('gmb-views')} | Cliques p/ direção: ${g('gmb-clicks')} | Buscas: ${g('gmb-searches')} | Avaliação: ${g('gmb-rating')} | ${g('gmb-reviews')}`;
+    const modo  = tipo==='relatorio' ? 'Gere o RELATÓRIO COMPLETO com todas as seções.' : 'Gere a ANÁLISE RÁPIDA com diagnóstico e top 3 ações imediatas.';
+    abrirModal('📍', tipo==='relatorio'?'Relatório Google Meu Negócio':'Análise Google Meu Negócio', dados);
+    const prompt = `Aja como um especialista em SEO local, reputação médica online e Google Meu Negócio para clínicas e consultórios de psiquiatria.
+
+Você é um consultor de presença digital local com experiência em otimização de perfil GMB, construção de reputação online médica, captação de pacientes via busca local e gestão de avaliações para profissionais de saúde.
+
+Seu objetivo é transformar métricas do Google Meu Negócio em estratégias práticas de captação de pacientes e fortalecimento da presença local.
+
+Pense passo a passo antes de responder.
+
+DADOS DO GOOGLE MEU NEGÓCIO (últimos 30 dias):
+${dados}
+
+INTERPRETAÇÃO E VALIDAÇÃO (OBRIGATÓRIO):
+- Avalie visibilidade local vs concorrência na área de psiquiatria
+- Verifique consistência entre buscas, visualizações e cliques
+- Identifique a taxa de conversão visita → ação (clique direção/ligação)
+
+CÁLCULOS OBRIGATÓRIOS:
+- Taxa de conversão: Cliques / Visualizações
+- Índice de reputação: avaliação × número de reviews
+- Buscas / Visualizações (qualidade do tráfego de busca)
+
+ANÁLISE TEMPORAL:
+- Crescimento ou queda de visibilidade
+- Ritmo de novas avaliações
+
+ANÁLISE COMPORTAMENTAL:
+- Perfil: Destaque local / Crescendo / Estagnado / Invisível
+
+DETECÇÃO DE RISCOS:
+- Avaliação abaixo de 4.5
+- Poucas avaliações para o tempo de atuação
+- Baixa taxa de conversão (baixo clique vs visualização)
+
+FORMATO DA RESPOSTA (OBRIGATÓRIO):
+⚡ RESUMO EXECUTIVO
+Situação geral:
+Principal problema:
+Ação imediata de maior impacto:
+
+📊 DIAGNÓSTICO LOCAL
+Situação: (Destaque / Bom / Atenção / Crítico)
+Pontos fortes:
+Pontos de melhora:
+
+📚 EXPLICAÇÃO DIDÁTICA
+O que esses números significam para um consultório de psiquiatria em São Paulo:
+
+📈 ANÁLISE E INSIGHTS
+Funil de visibilidade local:
+Qualidade do tráfego de busca:
+Força da reputação online:
+
+🧠 PERFIL DE PRESENÇA LOCAL
+Como o consultório aparece nas buscas de pacientes em crise.
+
+⚠️ ALERTAS E RISCOS
+Liste riscos à captação de novos pacientes.
+
+🚀 ESTRATÉGIAS (ESPECIALISTA)
+🔴 Alta prioridade:
+🟡 Média prioridade:
+🟢 Longo prazo:
+
+📝 PLANO DE AÇÃO LOCAL
+3 ações concretas para aumentar captação via Google:
+
+🎯 DECISÃO CRÍTICA
+Qual a UMA mudança que mais aumentaria o número de pacientes novos vindos do Google?
+
+REGRAS:
+- Foco em consultório de psiquiatria (adulto e infantil)
+- Considere regulamentações do CFM sobre publicidade médica
+- Priorize avaliações genuínas e presença de autoridade
+
+${modo}`;
+    const resp = await chamarIA(prompt);
+    renderizarResposta(resp);
+  };
+
+  // ─── YOUTUBE ────────────────────────────────────────────────────
+  window.analisarYT = async function(tipo){
+    const dados = `Inscritos: ${g('yt-subs')} | Views 30d: ${g('yt-views')} | Watchtime: ${g('yt-watch')}h | Likes: ${g('yt-likes')}`;
+    const modo  = tipo==='relatorio' ? 'Gere o RELATÓRIO COMPLETO com todas as seções.' : 'Gere a ANÁLISE RÁPIDA com diagnóstico e top 3 ações imediatas.';
+    abrirModal('▶️', tipo==='relatorio'?'Relatório YouTube':'Análise YouTube', dados);
+    const prompt = `Aja como um especialista em YouTube para médicos, educação em saúde mental e construção de autoridade científica em vídeo.
+
+Você é um estrategista de conteúdo audiovisual com experiência em canais médicos no YouTube, otimização de SEO de vídeos, retenção de audiência, monetização e crescimento de canal para profissionais de saúde.
+
+Seu objetivo é transformar métricas do canal em estratégias práticas de crescimento, engajamento e posicionamento de autoridade.
+
+Pense passo a passo antes de responder.
+
+DADOS DO YOUTUBE (últimos 30 dias):
+${dados}
+
+INTERPRETAÇÃO E VALIDAÇÃO (OBRIGATÓRIO):
+- Avalie o estágio do canal (micro/pequeno/médio criador médico)
+- Calcule watchtime médio por view (qualidade de retenção)
+- Identifique se o crescimento é orgânico e sustentável
+
+CÁLCULOS OBRIGATÓRIOS:
+- Watchtime por view (minutos de atenção média)
+- Likes / Views (taxa de aprovação)
+- Crescimento de inscritos: velocidade mensal
+- Benchmark: canais médicos similares (referência: 1-3% crescimento/mês)
+
+ANÁLISE TEMPORAL:
+- Tendência de crescimento
+- Consistência de publicação inferida pelas views
+
+ANÁLISE COMPORTAMENTAL:
+- Perfil: Canal em crescimento acelerado / Crescimento lento / Estagnado / Em queda
+
+DETECÇÃO DE RISCOS:
+- Watchtime baixo (retenção ruim = menos alcance orgânico)
+- Poucos likes vs views (conteúdo pouco engajador)
+- Crescimento abaixo do esperado para o nicho
+
+FORMATO DA RESPOSTA (OBRIGATÓRIO):
+⚡ RESUMO EXECUTIVO
+Situação do canal:
+Principal problema:
+Ação imediata:
+
+📊 DIAGNÓSTICO DO CANAL
+Situação: (Excelente / Bom / Atenção / Crítico)
+Pontos fortes:
+Pontos de melhora:
+
+📚 EXPLICAÇÃO DIDÁTICA
+O que esses números revelam sobre o canal do Dr. Edson:
+
+📈 ANÁLISE E INSIGHTS
+Qualidade da audiência:
+Potencial de monetização:
+Posicionamento SEO estimado:
+
+🧠 PERFIL DO CANAL
+Como o canal é percebido pelo algoritmo do YouTube.
+
+⚠️ ALERTAS E RISCOS
+Liste riscos ao crescimento do canal.
+
+🚀 ESTRATÉGIAS (ESPECIALISTA)
+🔴 Alta prioridade:
+🟡 Média prioridade:
+🟢 Longo prazo:
+
+📝 PLANO DE CONTEÚDO
+3 ideias de vídeo para psiquiatria com alto potencial de views:
+
+🎯 DECISÃO CRÍTICA
+Qual o UMA mudança que mais aceleraria o crescimento do canal?
+
+REGRAS:
+- Foco em psiquiatria adulta e infantil
+- Considere regulamentações do CFM para médicos no YouTube
+- Equilíbrio entre conteúdo educativo e de autoridade
+
+${modo}`;
+    const resp = await chamarIA(prompt);
+    renderizarResposta(resp);
+  };
+
+  // ─── GOOGLE ANALYTICS ────────────────────────────────────────────
+  window.analisarGA = async function(tipo){
+    const dados = `Sessões 30d: ${g('ga-sessions')} | Usuários: ${g('ga-users')} | Pageviews: ${g('ga-pageviews')} | Taxa de Engajamento: ${g('ga-engage')}`;
+    const modo  = tipo==='relatorio' ? 'Gere o RELATÓRIO COMPLETO com todas as seções.' : 'Gere a ANÁLISE RÁPIDA com diagnóstico e top 3 ações imediatas.';
+    abrirModal('📊', tipo==='relatorio'?'Relatório Google Analytics':'Análise Google Analytics', dados);
+    const prompt = `Aja como um especialista em analytics web para sites médicos, conversão digital e funil de captação de pacientes online.
+
+Você é um analista de dados web com experiência em Google Analytics 4, comportamento de usuários em sites de saúde, otimização de conversão (CRO) e captação de pacientes via site para consultórios médicos.
+
+Seu objetivo é transformar métricas de tráfego web em decisões práticas que aumentem agendamentos e conversão de visitantes em pacientes.
+
+Pense passo a passo antes de responder.
+
+DADOS DO GOOGLE ANALYTICS (últimos 30 dias):
+${dados}
+
+INTERPRETAÇÃO E VALIDAÇÃO (OBRIGATÓRIO):
+- Avalie o volume de tráfego para um consultório de psiquiatria
+- Calcule pageviews por sessão (profundidade de navegação)
+- Identifique a qualidade do engajamento
+
+CÁLCULOS OBRIGATÓRIOS:
+- Pageviews / Sessões (páginas por visita)
+- Sessões / Usuários (frequência de retorno)
+- Taxa de engajamento vs benchmark (referência: 50-65% para sites médicos)
+- Projeção de potencial de agendamentos com conversão de 2-5%
+
+ANÁLISE TEMPORAL:
+- Volume de tráfego: crescimento ou queda?
+- Tendência de engajamento
+
+ANÁLISE COMPORTAMENTAL:
+- Perfil do visitante: Novo paciente buscando informação / Paciente recorrente / Desengajado
+
+DETECÇÃO DE RISCOS:
+- Tráfego abaixo do potencial para a especialidade
+- Taxa de engajamento baixa (site não convence o visitante)
+- Poucas sessões por usuário (não retornam)
+
+FORMATO DA RESPOSTA (OBRIGATÓRIO):
+⚡ RESUMO EXECUTIVO
+Situação do site:
+Principal problema:
+Ação com maior ROI:
+
+📊 DIAGNÓSTICO WEB
+Situação: (Excelente / Bom / Atenção / Crítico)
+Pontos fortes:
+Pontos de melhora:
+
+📚 EXPLICAÇÃO DIDÁTICA
+O que esses dados revelam sobre o site do Dr. Edson Barroso:
+
+📈 ANÁLISE E INSIGHTS
+Qualidade do tráfego:
+Potencial de conversão estimado:
+Comparativo com sites médicos similares:
+
+🧠 PERFIL DO VISITANTE
+Quem está acessando e com qual intenção.
+
+⚠️ ALERTAS E RISCOS
+Liste riscos à captação de pacientes via site.
+
+🚀 ESTRATÉGIAS (ESPECIALISTA)
+🔴 Alta prioridade:
+🟡 Média prioridade:
+🟢 Longo prazo:
+
+📝 PLANO DE OTIMIZAÇÃO
+3 melhorias concretas no site para aumentar agendamentos:
+
+🎯 DECISÃO CRÍTICA
+Qual a UMA mudança no site que mais aumentaria o número de consultas agendadas?
+
+REGRAS:
+- Foco em site de consultório de psiquiatria
+- Considere a jornada de um paciente em busca de ajuda para saúde mental
+- Priorize conversão e experiência do usuário
+
+${modo}`;
+    const resp = await chamarIA(prompt);
+    renderizarResposta(resp);
+  };
+
+  // ─── TIKTOK ─────────────────────────────────────────────────────
+  window.analisarTT = async function(tipo){
+    const dados = `Seguidores: ${g('tt-followers')} | Views 30d: ${g('tt-views')} | Likes: ${g('tt-likes')} | Vídeos: ${g('tt-videos')}`;
+    const modo  = tipo==='relatorio' ? 'Gere o RELATÓRIO COMPLETO com todas as seções.' : 'Gere a ANÁLISE RÁPIDA com diagnóstico e top 3 ações imediatas.';
+    abrirModal('🎵', tipo==='relatorio'?'Relatório TikTok':'Análise TikTok', dados);
+    const prompt = `Aja como um especialista em TikTok para profissionais de saúde mental, conteúdo médico viral e construção de autoridade para psiquiatras.
+
+Você é um estrategista de conteúdo curto com experiência em algoritmo TikTok, viralização de conteúdo médico, construção de audiência para médicos e posicionamento de autoridade em saúde mental nas novas mídias.
+
+Seu objetivo é transformar métricas do TikTok em estratégias de conteúdo que aumentem alcance, autoridade e captação de novos pacientes.
+
+Pense passo a passo antes de responder.
+
+DADOS DO TIKTOK (últimos 30 dias):
+${dados}
+
+INTERPRETAÇÃO E VALIDAÇÃO (OBRIGATÓRIO):
+- Avalie o estágio do perfil no TikTok médico
+- Calcule views por vídeo e likes por view
+- Identifique o potencial viral do perfil
+
+CÁLCULOS OBRIGATÓRIOS:
+- Views médios por vídeo (Views / Vídeos)
+- Taxa de like: Likes / Views (engajamento real)
+- Seguidores / Views (taxa de conversão de views em seguidores)
+- Benchmark TikTok médico: 5-15% engajamento
+
+ANÁLISE TEMPORAL:
+- Ritmo de publicação (vídeos/mês inferido)
+- Crescimento semanal de seguidores
+
+ANÁLISE COMPORTAMENTAL:
+- Perfil: Viral / Em crescimento / Irregular / Estagnado
+
+DETECÇÃO DE RISCOS:
+- Views baixos vs número de seguidores (alcance caindo)
+- Poucos likes vs views (conteúdo não ressona com audiência)
+- Frequência de publicação insuficiente
+
+FORMATO DA RESPOSTA (OBRIGATÓRIO):
+⚡ RESUMO EXECUTIVO
+Situação do perfil:
+Principal oportunidade:
+Ação imediata:
+
+📊 DIAGNÓSTICO DO PERFIL
+Situação: (Viral / Crescendo / Atenção / Crítico)
+Pontos fortes:
+Pontos de melhora:
+
+📚 EXPLICAÇÃO DIDÁTICA
+O que os números revelam sobre o @dredsonbarroso no TikTok:
+
+📈 ANÁLISE E INSIGHTS
+Potencial de viralização:
+Perfil de audiência estimado:
+Oportunidades de nicho:
+
+🧠 PERFIL DO CRIADOR
+Como o algoritmo enxerga o perfil hoje.
+
+⚠️ ALERTAS E RISCOS
+Liste riscos ao crescimento no TikTok.
+
+🚀 ESTRATÉGIAS (ESPECIALISTA)
+🔴 Alta prioridade:
+🟡 Média prioridade:
+🟢 Longo prazo:
+
+📝 PLANO DE CONTEÚDO TIKTOK
+3 ideias de vídeo curto para psiquiatria com alto potencial viral:
+
+🎯 DECISÃO CRÍTICA
+Qual o UMA tipo de vídeo que mais aceleraria o crescimento agora?
+
+REGRAS:
+- Foco em psiquiatria adulto e infantil
+- Linguagem acessível para o público leigo sobre saúde mental
+- Considere regulamentações do CFM para médicos em redes sociais
+- Equilibre entretenimento educativo com autoridade médica
+
+${modo}`;
+    const resp = await chamarIA(prompt);
+    renderizarResposta(resp);
+  };
+
+  // ─── WHATSAPP BUSINESS ───────────────────────────────────────────
+  window.analisarWAB = async function(tipo){
+    const dados = `Msgs Enviadas 30d: ${g('wab-sent')} | Msgs Recebidas: ${g('wab-recv')} | Taxa de Leitura: ${g('wab-read')} | Contatos Ativos: ${g('wab-contacts')}`;
+    const modo  = tipo==='relatorio' ? 'Gere o RELATÓRIO COMPLETO com todas as seções.' : 'Gere a ANÁLISE RÁPIDA com diagnóstico e top 3 ações imediatas.';
+    abrirModal('💬', tipo==='relatorio'?'Relatório WhatsApp Business':'Análise WhatsApp Business', dados);
+    const prompt = `Aja como um especialista em comunicação médica via WhatsApp Business, CRM para consultórios e atendimento humanizado em saúde mental.
+
+Você é um consultor de relacionamento com pacientes com experiência em automação de atendimento médico via WhatsApp, funil de agendamento, taxa de resposta e conversão de contatos em consultas para consultórios de psiquiatria.
+
+Seu objetivo é transformar métricas do WhatsApp Business em estratégias que melhorem o atendimento, reduzam o no-show e aumentem a conversão de leads em pacientes.
+
+Pense passo a passo antes de responder.
+
+DADOS DO WHATSAPP BUSINESS (últimos 30 dias):
+${dados}
+
+INTERPRETAÇÃO E VALIDAÇÃO (OBRIGATÓRIO):
+- Avalie o volume de comunicação para um consultório de psiquiatria
+- Calcule a relação entre mensagens enviadas e recebidas
+- Identifique a qualidade do atendimento via taxa de leitura
+
+CÁLCULOS OBRIGATÓRIOS:
+- Ratio Enviadas/Recebidas (quem inicia mais a conversa)
+- Taxa de leitura vs benchmark (referência: 80-95% para WhatsApp Business)
+- Contatos ativos / Total de pacientes estimado
+- Estimativa de agendamentos gerados via WhatsApp
+
+ANÁLISE TEMPORAL:
+- Volume de atendimento crescendo ou caindo?
+- Qualidade do engajamento dos contatos
+
+ANÁLISE COMPORTAMENTAL:
+- Perfil do canal: Ativo e eficiente / Subutilizado / Sobrecarregado / Automatizado
+
+DETECÇÃO DE RISCOS:
+- Taxa de leitura baixa (mensagens não chegam ou são ignoradas)
+- Muitas mensagens enviadas mas poucas recebidas (comunicação unilateral)
+- Poucos contatos ativos para o tamanho do consultório
+
+FORMATO DA RESPOSTA (OBRIGATÓRIO):
+⚡ RESUMO EXECUTIVO
+Situação do canal:
+Principal problema:
+Ação imediata:
+
+📊 DIAGNÓSTICO DO ATENDIMENTO
+Situação: (Excelente / Bom / Atenção / Crítico)
+Pontos fortes:
+Pontos de melhora:
+
+📚 EXPLICAÇÃO DIDÁTICA
+O que esses números revelam sobre o atendimento do consultório:
+
+📈 ANÁLISE E INSIGHTS
+Qualidade da comunicação com pacientes:
+Potencial de automação:
+Oportunidades de melhoria no funil:
+
+🧠 PERFIL DO CANAL
+Como os pacientes percebem o atendimento via WhatsApp.
+
+⚠️ ALERTAS E RISCOS
+Liste riscos ao relacionamento com pacientes.
+
+🚀 ESTRATÉGIAS (ESPECIALISTA)
+🔴 Alta prioridade:
+🟡 Média prioridade:
+🟢 Longo prazo:
+
+📝 PLANO DE COMUNICAÇÃO
+3 melhorias práticas para o atendimento via WhatsApp:
+
+🎯 DECISÃO CRÍTICA
+Qual a UMA mudança que mais reduziria no-show e aumentaria agendamentos via WhatsApp?
+
+REGRAS:
+- Foco em consultório de psiquiatria
+- Considere a sensibilidade do paciente de saúde mental
+- Priorize humanização sem perder eficiência
+- Respeite o sigilo médico no canal
+
+${modo}`;
+    const resp = await chamarIA(prompt);
+    renderizarResposta(resp);
+  };
+
+  // ─── TAREFAS & NOTAS ────────────────────────────────────────────
+  window.analisarTasks = async function(tipo){
+    const tarefas = [...document.querySelectorAll('#taskList .task-item')]
+      .map(el=>el.querySelector('.task-text')?.textContent||'').filter(Boolean);
+    const notas   = (document.getElementById('notesArea')||{}).value||'';
+    const dados   = `Tarefas (${tarefas.length}): ${tarefas.length?tarefas.join(' | '):'Nenhuma registrada'} | Notas: ${notas.trim().substring(0,200)||'Sem notas'}`;
+    const modo    = tipo==='relatorio' ? 'Gere o RELATÓRIO COMPLETO com todas as seções.' : 'Gere a ANÁLISE RÁPIDA com diagnóstico e top 3 ações imediatas.';
+    abrirModal('✅', tipo==='relatorio'?'Relatório de Produtividade':'Análise de Produtividade', `${tarefas.length} tarefas`);
+    const prompt = `Aja como um especialista em produtividade médica, gestão de tempo para profissionais de saúde e organização de consultório de psiquiatria.
+
+Você é um coach de performance para médicos com experiência em metodologias de produtividade (GTD, Eisenhower, Pomodoro), gestão de agenda médica, equilíbrio entre vida pessoal e profissional e prevenção de burnout em psiquiatras.
+
+Seu objetivo é transformar lista de tarefas e notas em um sistema de prioridades claro que maximize a produtividade e reduza o estresse.
+
+Pense passo a passo antes de responder.
+
+DADOS DE PRODUTIVIDADE:
+${dados}
+
+INTERPRETAÇÃO E VALIDAÇÃO (OBRIGATÓRIO):
+- Analise as tarefas por urgência e importância
+- Identifique categorias: clínica, administrativa, marketing, pessoal, estratégica
+- Detecte tarefas críticas vs secundárias
+
+ANÁLISE OBRIGATÓRIA:
+- Classifique cada tarefa na Matriz de Eisenhower (urgente/importante)
+- Identifique tarefas que podem ser delegadas ou eliminadas
+- Estime carga de trabalho total
+
+ANÁLISE COMPORTAMENTAL:
+- Perfil: Organizado e focado / Sobrecarregado / Desorganizado / Em risco de burnout
+
+DETECÇÃO DE RISCOS:
+- Acúmulo de tarefas críticas
+- Ausência de foco estratégico
+- Sinais de sobrecarga no texto das notas
+
+FORMATO DA RESPOSTA (OBRIGATÓRIO):
+⚡ RESUMO EXECUTIVO
+Situação da produtividade:
+Tarefa mais crítica agora:
+Ação imediata:
+
+📊 DIAGNÓSTICO DE PRODUTIVIDADE
+Situação: (Organizado / Atenção / Sobrecarga / Crítico)
+Pontos fortes:
+Pontos de melhora:
+
+📚 EXPLICAÇÃO DIDÁTICA
+O que essa lista de tarefas revela sobre o momento atual do Dr. Edson:
+
+📈 ANÁLISE E INSIGHTS
+Priorização sugerida:
+Tarefas para delegar:
+Tarefas para eliminar:
+
+🧠 PERFIL DE PRODUTIVIDADE
+Como o Dr. Edson está gerenciando seu tempo hoje.
+
+⚠️ ALERTAS E RISCOS
+Liste riscos ao bem-estar e produtividade.
+
+🚀 ESTRATÉGIAS (ESPECIALISTA)
+🔴 Fazer AGORA (urgente + importante):
+🟡 Agendar (importante, não urgente):
+🟢 Delegar ou eliminar:
+
+📝 PLANO DE AÇÃO DO DIA
+Ordem ideal de execução das tarefas hoje:
+
+🎯 DECISÃO CRÍTICA
+Se o Dr. Edson só pudesse completar UMA tarefa hoje, qual geraria mais resultado? Por quê?
+
+REGRAS:
+- Foco no contexto de médico psiquiatra com consultório
+- Equilibre demandas clínicas, administrativas e de marketing
+- Considere bem-estar mental do próprio médico
+
+${modo}`;
+    const resp = await chamarIA(prompt);
+    renderizarResposta(resp);
+  };
+
+  // ─── METAS ──────────────────────────────────────────────────────
+  window.analisarGoals = async function(tipo){
+    const metas = [...document.querySelectorAll('#goalsGrid .goal-item')]
+      .map(el=>{
+        const nome=el.querySelector('.goal-name')?.textContent||'';
+        const pct=el.querySelector('.goal-pct')?.textContent||'';
+        const vals=el.querySelector('.goal-vals')?.textContent||'';
+        return `${nome}: ${pct} (${vals})`;
+      }).filter(Boolean);
+    const dados = metas.length ? metas.join(' | ') : 'Nenhuma meta cadastrada';
+    const modo  = tipo==='relatorio' ? 'Gere o RELATÓRIO COMPLETO com todas as seções.' : 'Gere a ANÁLISE RÁPIDA com diagnóstico e top 3 ações imediatas.';
+    abrirModal('🎯', tipo==='relatorio'?'Relatório de Metas':'Análise de Metas', `${metas.length} metas ativas`);
+    const prompt = `Aja como um especialista em OKRs, gestão de metas para profissionais de saúde e crescimento digital estratégico para consultórios médicos.
+
+Você é um consultor de performance com experiência em definição e acompanhamento de KPIs para médicos, aceleração de metas de marketing digital, crescimento de redes sociais para profissionais de saúde e planejamento estratégico de consultório.
+
+Seu objetivo é analisar o progresso das metas e gerar estratégias práticas para atingi-las dentro do prazo.
+
+Pense passo a passo antes de responder.
+
+DADOS DAS METAS DO MÊS:
+${dados}
+
+INTERPRETAÇÃO E VALIDAÇÃO (OBRIGATÓRIO):
+- Analise o progresso de cada meta individualmente
+- Identifique metas em risco de não serem atingidas
+- Calcule a velocidade necessária para completar cada meta
+
+CÁLCULOS OBRIGATÓRIOS:
+- % restante para cada meta
+- Velocidade atual vs necessária (dado o tempo restante no mês)
+- Metas que precisam de aceleração urgente
+- Score geral de progresso (média ponderada)
+
+ANÁLISE TEMPORAL:
+- Considerando que estamos em ${new Date().toLocaleDateString('pt-BR')}, calcule quantos dias restam no mês
+- Avalie se o ritmo atual é suficiente para cada meta
+
+ANÁLISE COMPORTAMENTAL:
+- Perfil: Bem encaminhado / Atenção em algumas metas / Em risco / Fora da rota
+
+DETECÇÃO DE RISCOS:
+- Metas abaixo de 50% com menos de 15 dias no mês
+- Metas conflitantes que disputam recursos/tempo
+- Dependência excessiva de uma única estratégia
+
+FORMATO DA RESPOSTA (OBRIGATÓRIO):
+⚡ RESUMO EXECUTIVO
+Score geral do mês:
+Meta mais crítica:
+Ação imediata:
+
+📊 DIAGNÓSTICO DAS METAS
+Situação geral: (No caminho / Atenção / Em risco / Fora do prazo)
+Metas on track:
+Metas em risco:
+
+📚 EXPLICAÇÃO DIDÁTICA
+O que o progresso atual revela sobre a estratégia digital do Dr. Edson:
+
+📈 ANÁLISE META A META
+Para cada meta: situação atual, projeção de conclusão e ação necessária.
+
+🧠 PERFIL ESTRATÉGICO
+Como o Dr. Edson está gerenciando seu crescimento digital.
+
+⚠️ ALERTAS E RISCOS
+Liste metas em risco e impactos caso não sejam atingidas.
+
+🚀 ESTRATÉGIAS (ESPECIALISTA)
+🔴 Metas críticas (ação imediata):
+🟡 Metas em atenção:
+🟢 Metas no caminho:
+
+📝 PLANO DE ACELERAÇÃO
+3 ações concretas para recuperar ou acelerar as metas em risco:
+
+🎯 DECISÃO CRÍTICA
+Qual a UMA meta que, se atingida, teria maior impacto positivo no consultório? Qual a estratégia para bater ela?
+
+REGRAS:
+- Considere o contexto de consultório de psiquiatria e marketing digital médico
+- Seja específico nas ações (não generalize)
+- Priorize metas com maior impacto na captação de pacientes
+
+${modo}`;
+    const resp = await chamarIA(prompt);
+    renderizarResposta(resp);
+  };
+
 })();
 </script>
 </div><!-- /.wrapper -->
