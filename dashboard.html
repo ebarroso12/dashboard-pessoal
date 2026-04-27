@@ -5105,14 +5105,36 @@ async function loadFacebook(token){
 
     if(!pages.data?.length){ console.warn('FB: nenhuma página encontrada'); return; }
 
-    // Loga todas as páginas disponíveis para diagnóstico
-    console.log('📘 FB: páginas disponíveis:', pages.data.map(p=>`"${p.name}" id=${p.id} fans=${p.fan_count||0}`).join(' | '));
+    console.log('📘 FB páginas:', pages.data.map(p=>`"${p.name}"(${p.id}) fans=${p.fan_count||0}`).join(' | '));
 
-    // Seleciona: 1º por nome (Dr./Edson/Barroso), 2º maior fan_count
-    const byName = pages.data.find(p => /edson|barroso|dr\s*\./i.test(p.name));
-    const byFans = [...pages.data].sort((a,b)=>(b.fan_count||0)-(a.fan_count||0))[0];
-    const page   = byName || byFans || pages.data[0];
-    const tok    = page.access_token || token;
+    // Verifica se já há uma página fixada pelo usuário
+    const fixedId = localStorage.getItem('dash_fb_page_id');
+    let page;
+    if(fixedId){
+      page = pages.data.find(p => p.id === fixedId) || null;
+      if(page) console.log(`📘 FB: usando página FIXADA "${page.name}" (${page.id})`);
+    }
+    if(!page){
+      // Auto-seleção: nome > maior fan_count
+      const byName = pages.data.find(p => /edson|barroso|dr\s*\./i.test(p.name));
+      const byFans = [...pages.data].sort((a,b)=>(b.fan_count||0)-(a.fan_count||0))[0];
+      page = byName || byFans || pages.data[0];
+      console.log(`📘 FB: auto-selecionada "${page.name}" (${page.id})`);
+    }
+
+    // Se há várias páginas e nenhuma fixada, mostra seletor no subtítulo
+    if(pages.data.length > 1 && !fixedId){
+      const fbSub2 = document.querySelector('[data-widget-id="fb"] .c-sub');
+      if(fbSub2){
+        fbSub2.innerHTML = `<span style="cursor:pointer;color:#ffb649;text-decoration:underline" onclick="escolherPaginaFB()">⚠️ ${page.name} — clique para trocar</span>`;
+      }
+      // Guarda as páginas para o seletor
+      window._fbPages = pages.data;
+    }
+
+    // Usa token fixado se disponível (tem permissões de página)
+    const fixedTok = localStorage.getItem('dash_fb_page_tok');
+    const tok = fixedTok || page.access_token || token;
 
     console.log(`📘 FB: selecionada "${page.name}" (${page.id}) — fans: ${page.fan_count||0}`);
 
@@ -8968,6 +8990,38 @@ setInterval(infraScanNow, 5*60*1000);
 </div>
 
 <script>
+// ══ SELETOR DE PÁGINA FACEBOOK ══════════════════════════════════════
+window.escolherPaginaFB = function(){
+  const pages = window._fbPages;
+  if(!pages?.length){ showToast('Reconecte o Facebook primeiro','var(--gold)'); return; }
+  abrirModal('📄','Escolher Página do Facebook','Selecione a página correta para exibir os dados');
+  let html = '<p style="margin-bottom:14px;color:var(--muted2);font-size:.8rem">Foram encontradas várias páginas. Clique na correta:</p>';
+  pages.forEach(p => {
+    html += `<div onclick="fixarPaginaFB('${p.id}','${p.name.replace(/'/g,"\\'")}','${p.access_token}')"
+      style="padding:12px 16px;margin-bottom:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);
+      border-radius:10px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:space-between"
+      onmouseover="this.style.borderColor='rgba(24,119,242,.5)';this.style.background='rgba(24,119,242,.08)'"
+      onmouseout="this.style.borderColor='rgba(255,255,255,.1)';this.style.background='rgba(255,255,255,.04)'">
+      <div>
+        <div style="font-weight:700;font-size:.88rem">${p.name}</div>
+        <div style="font-size:.72rem;color:var(--muted2);margin-top:3px">ID: ${p.id}</div>
+      </div>
+      <div style="font-size:1rem;font-weight:800;color:#4d9fff">${(p.fan_count||0).toLocaleString('pt-BR')} <span style="font-size:.7rem;font-weight:400;color:var(--muted2)">fãs</span></div>
+    </div>`;
+  });
+  document.getElementById('aiModalBody').innerHTML = html;
+};
+
+window.fixarPaginaFB = function(id, name, tok){
+  localStorage.setItem('dash_fb_page_id', id);
+  localStorage.setItem('dash_fb_page_tok', tok);
+  fecharModalIA();
+  showToast(`✅ Página "${name}" fixada!`,'#1877f2');
+  // Recarrega os dados com a página correta
+  const metaToken = window.metaToken || localStorage.getItem('dash_meta_token');
+  if(metaToken) loadFacebook(typeof metaToken==='string' ? metaToken : JSON.stringify(metaToken));
+};
+
 // ══ DIAGNÓSTICO META ════════════════════════════════════════════════
 window.diagMeta = async function(tipo){
   const token = window.metaToken || (()=>{ try{ return JSON.parse(localStorage.getItem('dash_meta_token')||'null'); }catch(e){return null;} })();
