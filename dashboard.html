@@ -2476,8 +2476,8 @@ body::before {
       <div class="card-body">
         <div class="kpi-row">
           <div class="kpi"><div class="kpi-label">Seguidores</div><div class="kpi-val" id="ig-followers" style="color:#e1306c;text-shadow:0 0 16px rgba(225,48,108,.45)">15.5K</div><div class="kpi-delta delta-up" id="ig-followers-d">▲ +258 esta semana</div></div>
-          <div class="kpi"><div class="kpi-label">Alcance 7d</div><div class="kpi-val glow-b" id="ig-reach">47.9K</div><div class="kpi-delta delta-up">▲ +18%</div></div>
-          <div class="kpi"><div class="kpi-label">Impressões 7d</div><div class="kpi-val glow-t" id="ig-likes">1.3K</div><div class="kpi-delta delta-up">▲ +7%</div></div>
+          <div class="kpi"><div class="kpi-label">Alcance 28d</div><div class="kpi-val glow-b" id="ig-reach">—</div><div class="kpi-delta delta-up" id="ig-reach-d"></div></div>
+          <div class="kpi"><div class="kpi-label">Impressões 28d</div><div class="kpi-val glow-t" id="ig-likes">—</div><div class="kpi-delta delta-up" id="ig-imp-d"></div></div>
           <div class="kpi"><div class="kpi-label">Engajamento</div><div class="kpi-val glow-g" id="ig-engage">9.2%</div><div class="kpi-delta delta-up">▲ +1.2pp</div></div>
         </div>
         <div class="chart-box"><canvas id="igChart" width="338" height="175" style="display: block; box-sizing: border-box; height: 140px; width: 270px;"></canvas></div>
@@ -2511,7 +2511,7 @@ body::before {
       <div class="card-body">
         <div class="kpi-row">
           <div class="kpi"><div class="kpi-label">Curtidas Página</div><div class="kpi-val glow-b" id="fb-likes">5.4K</div><div class="kpi-delta delta-up">▲ +56</div></div>
-          <div class="kpi"><div class="kpi-label">Alcance 7d</div><div class="kpi-val glow-p" id="fb-reach">24.4K</div><div class="kpi-delta delta-dn">▼ −4%</div></div>
+          <div class="kpi"><div class="kpi-label">Alcance 28d</div><div class="kpi-val glow-p" id="fb-reach">—</div><div class="kpi-delta" id="fb-reach-d"></div></div>
           <div class="kpi"><div class="kpi-label">Posts mês</div><div class="kpi-val glow-t" id="fb-posts">24</div><div class="kpi-delta delta-up">▲ +3</div></div>
           <div class="kpi"><div class="kpi-label">Engajamento</div><div class="kpi-val glow-g" id="fb-engage">4.8%</div><div class="kpi-delta delta-up">▲ +0.5pp</div></div>
         </div>
@@ -5035,22 +5035,37 @@ async function loadInstagram(token){
       return;
     }
 
-    // ── Passo 4: Insights 7 dias ─────────────────────────────────────────
-    const since = Math.floor((Date.now()-7*24*60*60*1000)/1000);
-    const until = Math.floor(Date.now()/1000);
-    // Busca reach, impressions E engajamento real (likes+comments+saved)
+    // ── Passo 4: Insights 28 dias (igual ao Meta Business Suite) ──────────
+    // Usa period=days_28 → valor ÚNICO de 28 dias sem double-count
     const ins = await fetch(
-      `https://graph.facebook.com/v19.0/${chosen.igId}/insights?metric=reach,impressions,likes,comments,saved&period=day&since=${since}&until=${until}&access_token=${chosen.pageToken}`
+      `https://graph.facebook.com/v19.0/${chosen.igId}/insights?metric=reach,impressions,likes,comments,saved&period=days_28&access_token=${chosen.pageToken}`
     ).then(r=>r.json()).catch(()=>({}));
+
+    // Com period=days_28, cada métrica retorna um único valor (o mais recente)
     let reach=0, impressions=0, likes=0, comments=0, saved=0;
-    ins.data?.forEach(m => {
-      if(m.name==='reach')       m.values?.forEach(v => reach       += (v.value||0));
-      if(m.name==='impressions') m.values?.forEach(v => impressions  += (v.value||0));
-      if(m.name==='likes')       m.values?.forEach(v => likes        += (v.value||0));
-      if(m.name==='comments')    m.values?.forEach(v => comments     += (v.value||0));
-      if(m.name==='saved')       m.values?.forEach(v => saved        += (v.value||0));
-    });
-    // Se API não retornou likes/comments/saved, usa reach como proxy
+    if(!ins.error && ins.data?.length){
+      ins.data.forEach(m => {
+        const val = m.values?.slice(-1)[0]?.value || 0;
+        if(m.name==='reach')       reach       = val;
+        if(m.name==='impressions') impressions = val;
+        if(m.name==='likes')       likes       = val;
+        if(m.name==='comments')    comments    = val;
+        if(m.name==='saved')       saved       = val;
+      });
+    } else if(ins.error){
+      console.warn('IG insights period=days_28 falhou:', ins.error.message, '— tentando fallback day');
+      // Fallback: soma dos últimos 28 dias com period=day
+      const since28 = Math.floor((Date.now()-28*24*60*60*1000)/1000);
+      const until28 = Math.floor(Date.now()/1000);
+      const ins2 = await fetch(
+        `https://graph.facebook.com/v19.0/${chosen.igId}/insights?metric=reach,impressions&period=day&since=${since28}&until=${until28}&access_token=${chosen.pageToken}`
+      ).then(r=>r.json()).catch(()=>({}));
+      ins2.data?.forEach(m => {
+        if(m.name==='reach')       m.values?.forEach(v => reach       += (v.value||0));
+        if(m.name==='impressions') m.values?.forEach(v => impressions += (v.value||0));
+      });
+    }
+    console.log(`📸 IG Insights 28d: reach=${reach} impressions=${impressions} likes=${likes} comments=${comments} saved=${saved}`);
     const totalEngagements = (likes+comments+saved) > 0 ? (likes+comments+saved) : reach;
 
     const followers = profile.followers_count || 0;
@@ -5106,30 +5121,37 @@ async function loadFacebook(token){
     if(!pages.data?.length){ console.warn('FB: nenhuma página encontrada'); return; }
 
     console.log('📘 FB páginas:', pages.data.map(p=>`"${p.name}"(${p.id}) fans=${p.fan_count||0}`).join(' | '));
+    window._fbPages = pages.data;
 
-    // Verifica se já há uma página fixada pelo usuário
+    // Verifica se há uma página FIXADA pelo usuário (única fonte confiável)
     const fixedId = localStorage.getItem('dash_fb_page_id');
-    let page;
-    if(fixedId){
-      page = pages.data.find(p => p.id === fixedId) || null;
-      if(page) console.log(`📘 FB: usando página FIXADA "${page.name}" (${page.id})`);
-    }
-    if(!page){
-      // Auto-seleção: nome > maior fan_count
-      const byName = pages.data.find(p => /edson|barroso|dr\s*\./i.test(p.name));
-      const byFans = [...pages.data].sort((a,b)=>(b.fan_count||0)-(a.fan_count||0))[0];
-      page = byName || byFans || pages.data[0];
-      console.log(`📘 FB: auto-selecionada "${page.name}" (${page.id})`);
+    let page = fixedId ? pages.data.find(p => p.id === fixedId) : null;
+
+    if(page){
+      console.log(`📘 FB: usando página FIXADA "${page.name}" (${page.id}) — ${page.fan_count||0} fãs`);
+    } else {
+      // Sem fixação: usa a ÚNICA página se só tem uma, senão pede para escolher
+      if(pages.data.length === 1){
+        page = pages.data[0];
+        console.log(`📘 FB: única página disponível "${page.name}" (${page.id})`);
+      } else {
+        // Múltiplas páginas sem fixação → mostra seletor e usa menor fan_count
+        // (menor fan_count é mais provável de ser o consultório, não uma fanpage grande)
+        // MAS não carrega dados até o usuário escolher
+        const fbSub2 = document.querySelector('[data-widget-id="fb"] .c-sub');
+        if(fbSub2){
+          fbSub2.innerHTML = `<span style="cursor:pointer;color:#ff6b35;font-weight:700;text-decoration:underline" onclick="escolherPaginaFB()">⚠️ Escolha a página correta</span>`;
+        }
+        // Abre o seletor automaticamente
+        setTimeout(() => escolherPaginaFB(), 600);
+        return; // Não carrega dados até escolher
+      }
     }
 
-    // Se há várias páginas e nenhuma fixada, mostra seletor no subtítulo
-    if(pages.data.length > 1 && !fixedId){
+    // Exibe aviso para trocar se desejar
+    if(pages.data.length > 1){
       const fbSub2 = document.querySelector('[data-widget-id="fb"] .c-sub');
-      if(fbSub2){
-        fbSub2.innerHTML = `<span style="cursor:pointer;color:#ffb649;text-decoration:underline" onclick="escolherPaginaFB()">⚠️ ${page.name} — clique para trocar</span>`;
-      }
-      // Guarda as páginas para o seletor
-      window._fbPages = pages.data;
+      if(fbSub2) fbSub2.innerHTML = `${page.name} · 28d <span style="cursor:pointer;color:#ffb649;font-size:.65rem" onclick="escolherPaginaFB()">✎ trocar</span>`;
     }
 
     // Usa token fixado se disponível (tem permissões de página)
