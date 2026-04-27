@@ -449,6 +449,15 @@ input,textarea{font-family:inherit}
 .fin-insight-sev-low{border-left:3px solid #4ade80}
 /* Transaction modal */
 .fin-tx-modal{background:#0d1a28;border:1px solid rgba(74,222,128,.2);border-radius:18px;padding:28px 26px;width:min(480px,96vw);box-shadow:0 24px 80px rgba(0,0,0,.7);position:relative}
+/* ── AI INSIGHT BOX ── */
+.ai-insight-box{display:none;margin:10px 16px 4px;padding:12px 14px;background:rgba(108,142,191,.08);border:1px solid rgba(108,142,191,.2);border-radius:10px;font-size:.78rem;line-height:1.6;color:var(--text)}
+.ai-insight-box strong{color:var(--teal)}
+.ai-insight-dots{display:inline-flex;gap:4px;align-items:center}
+.ai-insight-dots span{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:blink 1.2s infinite}
+.ai-insight-dots span:nth-child(2){animation-delay:.2s}
+.ai-insight-dots span:nth-child(3){animation-delay:.4s}
+.btn-ai-insight{display:flex;align-items:center;gap:6px;padding:6px 13px;border-radius:8px;font-size:.74rem;font-weight:700;background:rgba(108,142,191,.1);border:1px solid rgba(108,142,191,.25);color:var(--teal);cursor:pointer;transition:all .18s;white-space:nowrap;flex-shrink:0}
+.btn-ai-insight:hover{background:rgba(108,142,191,.2);box-shadow:0 0 14px rgba(108,142,191,.2)}
 </style>
 <style>@keyframes ocFadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}</style><meta id="dcngeagmmhegagicpcmpinaoklddcgon"><style id="claude-agent-animation-styles">
       @keyframes claude-pulse {
@@ -1961,9 +1970,11 @@ body::before {
           <div class="kpi"><div class="kpi-label">Impressões 7d</div><div class="kpi-val glow-t" id="ig-likes">1.3K</div><div class="kpi-delta delta-up">▲ +7%</div></div>
           <div class="kpi"><div class="kpi-label">Engajamento</div><div class="kpi-val glow-g" id="ig-engage">9.2%</div><div class="kpi-delta delta-up">▲ +1.2pp</div></div>
         </div>
+        <div id="ai-insight-ig" class="ai-insight-box"></div>
         <div class="chart-box"><canvas id="igChart" width="338" height="175" style="display: block; box-sizing: border-box; height: 140px; width: 270px;"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-insight" onclick="analisarIG()">🤖 Análise IA</button>
         <button class="connect" id="ig-btn" onclick="connectMeta()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('instagram')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -1993,9 +2004,11 @@ body::before {
           <div class="kpi"><div class="kpi-label">Posts mês</div><div class="kpi-val glow-t" id="fb-posts">24</div><div class="kpi-delta delta-up">▲ +3</div></div>
           <div class="kpi"><div class="kpi-label">Engajamento</div><div class="kpi-val glow-g" id="fb-engage">4.8%</div><div class="kpi-delta delta-up">▲ +0.5pp</div></div>
         </div>
+        <div id="ai-insight-fb" class="ai-insight-box"></div>
         <div class="chart-box"><canvas id="fbChart" width="371" height="175" style="display: block; box-sizing: border-box; height: 140px; width: 297px;"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-insight" onclick="analisarFB()">🤖 Análise IA</button>
         <button class="connect" id="fb-btn" onclick="connectMeta()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('facebook')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -2025,6 +2038,7 @@ body::before {
           <div class="kpi"><div class="kpi-label">Buscas</div><div class="kpi-val" id="gmb-searches" style="color:var(--gold);text-shadow:0 0 14px rgba(255,182,73,.45)">2.3K</div><div class="kpi-delta delta-up">▲ +22%</div></div>
           <div class="kpi"><div class="kpi-label">Avaliação</div><div class="kpi-val glow-g" id="gmb-rating">4.5 ★</div><div class="kpi-delta delta-neu" id="gmb-reviews">126 avaliações</div></div>
         </div>
+        <div id="ai-insight-gmb" class="ai-insight-box"></div>
         <div class="divider" style="margin-top:4px">Origem</div>
         <div class="src-list">
           <div class="src-row"><div class="src-name">Pesquisa direta</div><div class="src-track"><div class="src-fill" style="width:65%;background:linear-gradient(90deg,#4285f4,var(--teal))"></div></div><div class="src-pct" style="color:var(--blue)">65%</div></div>
@@ -2033,6 +2047,7 @@ body::before {
         </div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-insight" onclick="analisarGMB()">🤖 Análise IA</button>
         <button class="connect" id="gmb-btn" onclick="connectGoogle()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('gmb')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -2062,9 +2077,11 @@ body::before {
           <div class="kpi"><div class="kpi-label">Watchtime (h)</div><div class="kpi-val glow-t" id="yt-watch">4</div><div class="kpi-delta delta-up">▲ +8%</div></div>
           <div class="kpi"><div class="kpi-label">Likes</div><div class="kpi-val glow-g" id="yt-likes">5</div><div class="kpi-delta delta-up">▲ +5%</div></div>
         </div>
+        <div id="ai-insight-yt" class="ai-insight-box"></div>
         <div class="chart-box"><canvas id="ytChart" style="box-sizing: border-box; display: block; height: 140px; width: 270px;" width="338" height="175"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-insight" onclick="analisarYT()">🤖 Análise IA</button>
         <button class="connect" id="yt-btn" onclick="connectGoogle()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('youtube')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -2094,9 +2111,11 @@ body::before {
           <div class="kpi"><div class="kpi-label">Pageviews</div><div class="kpi-val" id="ga-pageviews" style="color:var(--gold);text-shadow:0 0 14px rgba(255,182,73,.45)">0</div><div class="kpi-delta delta-up">▲ +18%</div></div>
           <div class="kpi"><div class="kpi-label">Engaj. Rate</div><div class="kpi-val glow-g" id="ga-engage">—%</div><div class="kpi-delta delta-up">▲ +3pp</div></div>
         </div>
+        <div id="ai-insight-ga" class="ai-insight-box"></div>
         <div class="chart-box"><canvas id="gaChart" style="box-sizing: border-box; display: block; height: 140px; width: 297px;" width="371" height="175"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-insight" onclick="analisarGA()">🤖 Análise IA</button>
         <button class="connect" id="ga-btn" onclick="connectGoogle()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('ga')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -2143,9 +2162,11 @@ body::before {
           <div class="kpi"><div class="kpi-label">Likes</div><div class="kpi-val glow-t" id="tt-likes">8.8K</div></div>
           <div class="kpi"><div class="kpi-label">Vídeos</div><div class="kpi-val glow-g" id="tt-videos">48</div></div>
         </div>
+        <div id="ai-insight-tt" class="ai-insight-box"></div>
         <div class="chart-box"><canvas id="ttChart" width="371" height="175" style="display: block; box-sizing: border-box; height: 140px; width: 297px;"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
+        <button class="btn-ai-insight" onclick="analisarTT()">🤖 Análise IA</button>
         <button class="connect" id="tt-btn" onclick="openTTEdit()" style="background:rgba(105,201,208,.1);border-color:rgba(105,201,208,.25);color:#69c9d0">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>Inserir Dados
         </button>
@@ -2197,7 +2218,9 @@ body::before {
           </div>
         </div>
       </div>
-      <div class="card-foot">
+      <div id="ai-insight-tasks" class="ai-insight-box"></div>
+      <div class="card-foot" style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-ai-insight" onclick="analisarTasks()">🤖 Análise IA</button>
         <button class="wa-btn" onclick="sendTasksWA()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>
           Enviar via WhatsApp
@@ -2257,7 +2280,9 @@ body::before {
             <button onclick="saveWABManual()" style="margin-top:10px;width:100%;padding:8px;background:rgba(37,211,102,.15);border:1px solid rgba(37,211,102,.3);border-radius:8px;color:#25d366;font-size:.78rem;font-weight:700;cursor:pointer">💾 Salvar Métricas</button>
           </div>
         </div>
+        <div id="ai-insight-wab" class="ai-insight-box"></div>
         <div class="card-foot"><div class="card-foot-row">
+          <button class="btn-ai-insight" onclick="analisarWAB()">🤖 Análise IA</button>
           <button class="wa-btn" onclick="sendMetricWA('wabusiness')" style="flex:1">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2z"></path></svg>Enviar Relatório WA
           </button>
@@ -2368,7 +2393,9 @@ body::before {
       <button class="goal-edit-btn" onclick="deleteGoal(5)">Remover</button>
     </div></div>
       </div>
-      <div class="card-foot">
+      <div id="ai-insight-goals" class="ai-insight-box"></div>
+      <div class="card-foot" style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-ai-insight" onclick="analisarGoals()">🤖 Análise IA</button>
         <button class="wa-btn" onclick="sendGoalsWA()">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>
           Enviar Relatório de Metas via WhatsApp
@@ -7200,6 +7227,138 @@ setInterval(infraScanNow, 5*60*1000);
 
   if(document.readyState==='complete'){setTimeout(applyPatch,300);}
   else{window.addEventListener('load',function(){setTimeout(applyPatch,300);});}
+})();
+</script>
+<script>
+// ══ ANÁLISE IA POR WIDGET ══════════════════════════════════════════
+(function(){
+  const AI_URL   = 'https://dashboard-pessoal-edson.vercel.app/api/assistente';
+  const AI_TOKEN = 'oc_edson_2026_secure';
+
+  function txt(id){ return (document.getElementById(id)||{}).textContent||'—'; }
+
+  async function analisarWidget(panelId, prompt){
+    const box = document.getElementById(panelId);
+    if(!box) return;
+    box.style.display = 'block';
+    box.innerHTML = '<span style="color:var(--muted2);font-size:.76rem">🤖 Analisando dados... </span><span class="ai-insight-dots"><span></span><span></span><span></span></span>';
+    try {
+      const res = await fetch(AI_URL, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','X-Webhook-Token':AI_TOKEN},
+        body: JSON.stringify({ q: prompt, origem:'dashboard-analise' })
+      });
+      if(!res.ok) throw new Error(res.status);
+      const data = await res.json();
+      const txt2 = (data.resposta||'Sem resposta')
+        .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g,'<strong>$1</strong>')
+        .replace(/\n/g,'<br>');
+      box.innerHTML = '<div style="font-size:.7rem;color:var(--teal);font-weight:700;margin-bottom:6px;letter-spacing:.04em">🤖 ANÁLISE IA</div>' + txt2;
+    } catch(e) {
+      box.innerHTML = '<span style="color:var(--coral);font-size:.76rem">❌ Assistente indisponível. Verifique a conexão.</span>';
+    }
+  }
+
+  window.analisarIG = function(){
+    const prompt = `Você é especialista em marketing digital para médicos. Analise meu desempenho no Instagram nos últimos 30 dias:
+- Seguidores: ${txt('ig-followers')}
+- Alcance 7d: ${txt('ig-reach')}
+- Impressões 7d: ${txt('ig-likes')}
+- Engajamento: ${txt('ig-engage')}
+Dê 3 insights práticos e 2 ações concretas para crescer como médico psiquiatra no Instagram. Seja direto e objetivo.`;
+    analisarWidget('ai-insight-ig', prompt);
+  };
+
+  window.analisarFB = function(){
+    const prompt = `Você é especialista em marketing digital para médicos. Analise meu Facebook nos últimos 30 dias:
+- Curtidas na página: ${txt('fb-likes')}
+- Alcance 7d: ${txt('fb-reach')}
+- Posts no mês: ${txt('fb-posts')}
+- Engajamento: ${txt('fb-engage')}
+Dê 3 insights e 2 ações específicas para aumentar alcance orgânico como médico. Seja direto e objetivo.`;
+    analisarWidget('ai-insight-fb', prompt);
+  };
+
+  window.analisarGMB = function(){
+    const prompt = `Você é especialista em marketing local para médicos. Analise meu Google Meu Negócio nos últimos 30 dias:
+- Visualizações: ${txt('gmb-views')}
+- Cliques para direção: ${txt('gmb-clicks')}
+- Buscas: ${txt('gmb-searches')}
+- Avaliação: ${txt('gmb-rating')} (${txt('gmb-reviews')})
+Dê 3 insights e 2 ações para melhorar minha presença local como clínica de psiquiatria. Seja direto e objetivo.`;
+    analisarWidget('ai-insight-gmb', prompt);
+  };
+
+  window.analisarYT = function(){
+    const prompt = `Você é especialista em YouTube para profissionais de saúde. Analise meu canal nos últimos 30 dias:
+- Inscritos: ${txt('yt-subs')}
+- Views 30d: ${txt('yt-views')}
+- Watchtime: ${txt('yt-watch')} horas
+- Likes: ${txt('yt-likes')}
+Dê 3 insights e 2 estratégias de conteúdo para crescer como médico psiquiatra no YouTube. Seja direto e objetivo.`;
+    analisarWidget('ai-insight-yt', prompt);
+  };
+
+  window.analisarGA = function(){
+    const prompt = `Você é especialista em analytics para sites médicos. Analise meu Google Analytics nos últimos 30 dias:
+- Sessões: ${txt('ga-sessions')}
+- Usuários: ${txt('ga-users')}
+- Pageviews: ${txt('ga-pageviews')}
+- Taxa de engajamento: ${txt('ga-engage')}
+Dê 3 insights sobre o tráfego e 2 ações para melhorar conversão em pacientes. Seja direto e objetivo.`;
+    analisarWidget('ai-insight-ga', prompt);
+  };
+
+  window.analisarTT = function(){
+    const prompt = `Você é especialista em TikTok para profissionais de saúde. Analise meu perfil:
+- Seguidores: ${txt('tt-followers')}
+- Views 30d: ${txt('tt-views')}
+- Likes totais: ${txt('tt-likes')}
+- Vídeos publicados: ${txt('tt-videos')}
+Dê 3 insights e 2 ideias de conteúdo para crescer como médico psiquiatra no TikTok. Seja direto e objetivo.`;
+    analisarWidget('ai-insight-tt', prompt);
+  };
+
+  window.analisarWAB = function(){
+    const sent     = txt('wab-sent');
+    const recv     = txt('wab-recv');
+    const readRate = txt('wab-read');
+    const contacts = txt('wab-contacts');
+    const prompt = `Você é especialista em atendimento médico via WhatsApp Business. Analise minhas métricas:
+- Mensagens enviadas 30d: ${sent}
+- Mensagens recebidas: ${recv}
+- Taxa de leitura: ${readRate}
+- Contatos ativos: ${contacts}
+Dê 3 insights sobre meu atendimento e 2 melhorias práticas para otimizar o canal de comunicação com pacientes. Seja direto e objetivo.`;
+    analisarWidget('ai-insight-wab', prompt);
+  };
+
+  window.analisarTasks = function(){
+    const tarefas = [...document.querySelectorAll('#taskList .task-item')]
+      .map(el => el.querySelector('.task-text')?.textContent||'').filter(Boolean);
+    const notas = (document.getElementById('notesArea')||{}).value||'';
+    const prompt = `Você é um assistente pessoal médico. Analise minhas tarefas pendentes e notas:
+Tarefas (${tarefas.length}): ${tarefas.length ? tarefas.join(', ') : 'Nenhuma tarefa registrada'}
+Notas: ${notas.trim() ? notas.trim().substring(0,300) : 'Sem notas'}
+Dê 3 sugestões de priorização e produtividade para um médico psiquiatra. Seja direto e objetivo.`;
+    analisarWidget('ai-insight-tasks', prompt);
+  };
+
+  window.analisarGoals = function(){
+    const metas = [...document.querySelectorAll('#goalsGrid .goal-item')]
+      .map(el => {
+        const nome = el.querySelector('.goal-name')?.textContent||'';
+        const pct  = el.querySelector('.goal-pct')?.textContent||'';
+        const vals = el.querySelector('.goal-vals')?.textContent||'';
+        return `${nome}: ${pct} (${vals})`;
+      }).filter(Boolean);
+    const prompt = `Você é um coach de marketing para médicos. Analise meu progresso nas metas do mês:
+${metas.length ? metas.join('\n') : 'Nenhuma meta cadastrada'}
+Dê um diagnóstico do progresso geral, destaque o que está bem e o que precisa de atenção. Sugira 2 ações prioritárias. Seja direto e objetivo.`;
+    analisarWidget('ai-insight-goals', prompt);
+  };
+
 })();
 </script>
 </body></html>
