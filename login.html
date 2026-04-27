@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Login · Dr. Edson Barroso</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Space Grotesk',system-ui,sans-serif;background:#07111e;color:#eef2ff;
+  display:flex;align-items:center;justify-content:center;min-height:100vh;overflow:hidden}
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);animation:drift 18s ease-in-out infinite alternate}
+.orb-1{width:600px;height:600px;background:radial-gradient(circle,rgba(201,169,110,.1) 0%,transparent 70%);top:-150px;left:-100px;animation-duration:22s}
+.orb-2{width:500px;height:500px;background:radial-gradient(circle,rgba(11,25,41,.8) 0%,transparent 70%);bottom:0;right:-80px;animation-duration:16s;animation-delay:-6s}
+.orb-3{width:400px;height:400px;background:radial-gradient(circle,rgba(201,169,110,.07) 0%,transparent 70%);bottom:10%;left:20%;animation-duration:20s;animation-delay:-10s}
+@keyframes drift{from{transform:translate(0,0) scale(1)}to{transform:translate(50px,35px) scale(1.1)}}
+.card{position:relative;z-index:2;width:100%;max-width:400px;margin:16px;
+  background:rgba(255,255,255,.032);border:1px solid rgba(201,169,110,.18);border-radius:20px;
+  padding:36px 32px 30px;box-shadow:0 24px 80px rgba(0,0,0,.65);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+.logo-wrap{text-align:center;margin-bottom:28px}
+.logo-wrap img{width:200px;height:auto;border-radius:8px}
+.divider{height:1px;background:linear-gradient(90deg,transparent,rgba(201,169,110,.25),transparent);margin:0 -10px 24px}
+h2{font-size:1.1rem;font-weight:700;margin-bottom:5px;letter-spacing:-.02em}
+.subtitle{font-size:.8rem;color:#8892aa;margin-bottom:22px}
+.field{margin-bottom:14px}
+label{display:block;font-size:.76rem;font-weight:600;color:#8892aa;margin-bottom:6px;letter-spacing:.02em}
+input[type=email],input[type=password]{width:100%;padding:11px 13px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+  border-radius:9px;color:#eef2ff;font-family:inherit;font-size:.88rem;outline:none;transition:all .2s}
+input:focus{border-color:rgba(201,169,110,.5);box-shadow:0 0 0 3px rgba(201,169,110,.1);background:rgba(255,255,255,.09)}
+input::placeholder{color:#4e566e}
+.btn{width:100%;padding:12px;border-radius:11px;font-family:inherit;font-size:.92rem;font-weight:700;
+  cursor:pointer;border:none;transition:all .22s;margin-top:4px;
+  background:linear-gradient(135deg,#C9A96E,#e8c98a);color:#07111e;
+  box-shadow:0 4px 20px rgba(201,169,110,.3)}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 28px rgba(201,169,110,.45)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.error-msg{background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.25);border-radius:8px;
+  padding:9px 13px;font-size:.8rem;color:#ff6b85;margin-top:12px;display:none}
+.footer-txt{text-align:center;font-size:.72rem;color:#4e566e;margin-top:20px;line-height:1.7}
+.reset-link{color:rgba(201,169,110,.45);text-decoration:none;font-size:.68rem}
+.reset-link:hover{color:rgba(201,169,110,.7)}
+</style>
+</head>
+<body>
+<div class="aurora">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<div class="card">
+  <div class="logo-wrap">
+    <img src="logo-dr-edson-dark.png" alt="Dr. Edson Barroso" onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='block'"/>
+    <div id="logo-fallback" style="display:none;font-size:1.1rem;font-weight:800;color:#C9A96E">Dr. Edson Barroso</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h2>Acesso ao Painel</h2>
+  <p class="subtitle">Entre com suas credenciais para continuar</p>
+
+  <form id="login-form" onsubmit="handleLogin(event)">
+    <div class="field">
+      <label for="email">E-mail</label>
+      <input type="email" id="email" placeholder="seu@email.com" autocomplete="username" required/>
+    </div>
+    <div class="field">
+      <label for="password">Senha</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required/>
+    </div>
+    <button class="btn" type="submit" id="btn-enter">Entrar</button>
+    <div class="error-msg" id="error-msg">E-mail ou senha incorretos.</div>
+  </form>
+
+  <div class="footer-txt">
+    Dashboard Pessoal · Dr. Edson Barroso<br>
+    <a href="#" class="reset-link" onclick="emergencyReset();return false">Problemas para entrar? Clique aqui</a>
+  </div>
+</div>
+
+<script>
+/* ── Storage helpers ─────────────────────────────── */
+const LS={
+  get:k=>{try{return JSON.parse(localStorage.getItem(k))}catch{return null}},
+  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),
+  del:k=>localStorage.removeItem(k)
+};
+
+/* ── SHA-256 async ───────────────────────────────── */
+async function sha256(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+/* ── Admin default (hash de "mudar123" pré-computado) ── */
+const ADMIN_HASH='edc6e9fd91117fcccdd0612fd64ef7e754b3cf20349b9fc2da693f6ed82544a2';
+const ADMIN_USER={
+  id:'admin',name:'Dr. Edson Barroso',email:'edson.barroso@gmail.com',
+  passwordHash:ADMIN_HASH,role:'admin',
+  idade:'',cpf:'',telefone:'',permissions:['all']
+};
+
+function getUsers(){
+  const u=LS.get('dash_users');
+  if(!Array.isArray(u)||u.length===0){
+    LS.set('dash_users',[ADMIN_USER]);
+    return [ADMIN_USER];
+  }
+  return u;
+}
+
+function sessionValid(){
+  const s=LS.get('dash_session');
+  return s&&s.userId&&s.expires&&Date.now()<s.expires;
+}
+
+/* ── Redirect se já logado ───────────────────────── */
+if(sessionValid()) location.replace('dashboard.html');
+
+/* ── Login ───────────────────────────────────────── */
+async function handleLogin(e){
+  e.preventDefault();
+  const btn=document.getElementById('btn-enter');
+  const err=document.getElementById('error-msg');
+  const email=document.getElementById('email').value.trim().toLowerCase();
+  const password=document.getElementById('password').value;
+  err.style.display='none';
+  btn.disabled=true;
+  btn.textContent='Verificando…';
+
+  try{
+    const users=getUsers();
+    const user=users.find(u=>u.email.toLowerCase()===email);
+    if(!user) throw new Error('not found');
+
+    const hash=await sha256(password);
+    if(hash!==user.passwordHash) throw new Error('wrong pw');
+
+    LS.set('dash_session',{
+      userId:user.id,name:user.name,email:user.email,
+      role:user.role,permissions:user.permissions,
+      expires:Date.now()+24*60*60*1000
+    });
+
+    btn.textContent='✓ Entrando…';
+    setTimeout(()=>location.replace('dashboard.html'),300);
+
+  }catch{
+    err.style.display='block';
+    btn.disabled=false;
+    btn.textContent='Entrar';
+    document.getElementById('password').value='';
+    document.getElementById('password').focus();
+  }
+}
+
+/* ── Reset de emergência ─────────────────────────── */
+function emergencyReset(){
+  LS.del('dash_users');
+  LS.del('dash_session');
+  LS.set('dash_users',[ADMIN_USER]);
+  document.getElementById('email').value='edson.barroso@gmail.com';
+  document.getElementById('password').value='';
+  document.getElementById('password').focus();
+  document.getElementById('error-msg').style.display='none';
+  alert('Dados reiniciados! Use a senha: mudar123');
+}
+</script>
+</body>
+</html>
