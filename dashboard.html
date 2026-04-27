@@ -2485,6 +2485,7 @@ body::before {
       <div class="card-foot"><div class="card-foot-row">
         <button class="btn-ai-analyze" onclick="analisarIG('analise')">🧠 Analisar</button>
         <button class="btn-ai-report" onclick="analisarIG('relatorio')">📊 Relatório</button>
+        <button onclick="diagMeta('ig')" style="display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:8px;font-size:.72rem;font-weight:700;background:rgba(255,182,73,.1);border:1px solid rgba(255,182,73,.3);color:#ffb649;cursor:pointer;white-space:nowrap">🔍 Diagnóstico</button>
         <button class="connect" id="ig-btn" onclick="connectMeta()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('instagram')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -2519,6 +2520,7 @@ body::before {
       <div class="card-foot"><div class="card-foot-row">
         <button class="btn-ai-analyze" onclick="analisarFB('analise')">🧠 Analisar</button>
         <button class="btn-ai-report" onclick="analisarFB('relatorio')">📊 Relatório</button>
+        <button onclick="diagMeta('fb')" style="display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:8px;font-size:.72rem;font-weight:700;background:rgba(255,182,73,.1);border:1px solid rgba(255,182,73,.3);color:#ffb649;cursor:pointer;white-space:nowrap">🔍 Diagnóstico</button>
         <button class="connect" id="fb-btn" onclick="connectMeta()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
         <button class="wa-btn" onclick="sendMetricWA('facebook')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
@@ -5096,57 +5098,79 @@ async function loadInstagram(token){
 /* ─── FACEBOOK PAGE API ───────────────────────────────── */
 async function loadFacebook(token){
   try {
-    const pages = await fetch(`https://graph.facebook.com/me/accounts?fields=id,name,fan_count,access_token&access_token=${token}`).then(r=>r.json());
-    if(!pages.data?.length) return;
+    // 1. Busca todas as páginas com detalhes
+    const pages = await fetch(
+      `https://graph.facebook.com/me/accounts?fields=id,name,fan_count,access_token&access_token=${token}&limit=50`
+    ).then(r=>r.json());
 
-    // Escolhe a página correta: prioriza "Edson Barroso" ou "Dr." no nome,
-    // depois a de maior fan_count (evita páginas secundárias com poucos seguidores)
-    const nameMatch = pages.data.find(p =>
-      /edson|barroso|dr\./i.test(p.name)
-    );
+    if(!pages.data?.length){ console.warn('FB: nenhuma página encontrada'); return; }
+
+    // Loga todas as páginas disponíveis para diagnóstico
+    console.log('📘 FB: páginas disponíveis:', pages.data.map(p=>`"${p.name}" id=${p.id} fans=${p.fan_count||0}`).join(' | '));
+
+    // Seleciona: 1º por nome (Dr./Edson/Barroso), 2º maior fan_count
+    const byName = pages.data.find(p => /edson|barroso|dr\s*\./i.test(p.name));
     const byFans = [...pages.data].sort((a,b)=>(b.fan_count||0)-(a.fan_count||0))[0];
-    const page   = nameMatch || byFans || pages.data[0];
+    const page   = byName || byFans || pages.data[0];
+    const tok    = page.access_token || token;
 
-    console.log(`📘 FB: usando página "${page.name}" (${page.id}) — ${page.fan_count} fãs`);
-    if(pages.data.length > 1){
-      console.log('📘 FB: outras páginas disponíveis:', pages.data.filter(p=>p.id!==page.id).map(p=>`"${p.name}"(${p.fan_count||0})`).join(', '));
-    }
+    console.log(`📘 FB: selecionada "${page.name}" (${page.id}) — fans: ${page.fan_count||0}`);
 
-    // Busca métricas com reach REAL (page_impressions_unique = reach)
-    const since = Math.floor((Date.now()-30*24*60*60*1000)/1000);
-    const until = Math.floor(Date.now()/1000);
-    const [pageInfo, ins] = await Promise.all([
-      fetch(`https://graph.facebook.com/${page.id}?fields=fan_count,published_posts.limit(30){created_time}&access_token=${page.access_token}`).then(r=>r.json()),
-      fetch(`https://graph.facebook.com/${page.id}/insights?metric=page_impressions_unique,page_post_engagements&period=day&since=${since}&until=${until}&access_token=${page.access_token}`).then(r=>r.json())
+    // 2. Métricas: usa period=days_28 → valor ÚNICO de 28 dias (sem double-count)
+    //    page_fans = fãs atuais | page_impressions_unique = alcance único 28d
+    //    page_post_engagements = interações (curtidas+comentários+shares) 28d
+    //    published_posts = contagem de posts do período
+    const [insRes, pageRes] = await Promise.all([
+      fetch(
+        `https://graph.facebook.com/${page.id}/insights` +
+        `?metric=page_fans,page_impressions_unique,page_post_engagements` +
+        `&period=days_28&access_token=${tok}`
+      ).then(r=>r.json()),
+      fetch(
+        `https://graph.facebook.com/${page.id}` +
+        `?fields=fan_count,name,published_posts.limit(30){created_time}` +
+        `&access_token=${tok}`
+      ).then(r=>r.json())
     ]);
 
-    let reach=0, engagements=0;
-    ins.data?.forEach(m => {
-      // page_impressions_unique = pessoas únicas que viram qualquer conteúdo = ALCANCE REAL
-      if(m.name==='page_impressions_unique') m.values?.forEach(v => reach       += (v.value||0));
-      if(m.name==='page_post_engagements')   m.values?.forEach(v => engagements += (v.value||0));
-    });
+    // Extrai o valor mais recente de cada métrica (último elemento dos values)
+    let fans=0, reach=0, engagements=0;
+    if(!insRes.error && insRes.data?.length){
+      for(const m of insRes.data){
+        const val = m.values?.slice(-1)[0]?.value || 0; // último período = mais recente
+        if(m.name==='page_fans')               fans        = val;
+        if(m.name==='page_impressions_unique') reach       = val;
+        if(m.name==='page_post_engagements')   engagements = val;
+      }
+    } else if(insRes.error){
+      console.warn('FB insights error:', insRes.error.message);
+    }
 
-    const fans  = pageInfo.fan_count || page.fan_count || 0;
-    const posts = pageInfo.published_posts?.data?.length || 0;
+    // Fallback para fan_count da página se insights não trouxer
+    if(!fans) fans = pageRes.fan_count || page.fan_count || 0;
+
+    const posts = pageRes.published_posts?.data?.length || 0;
+
+    console.log(`📘 FB resultado: fans=${fans} | reach=${reach} | engaj=${engagements} | posts=${posts}`);
+
+    // Engajamento = engagements / fans × 100 (padrão de mercado)
+    const engRate = fans > 0 ? ((engagements / fans) * 100).toFixed(1) + '%' : '—';
 
     $('fb-likes').textContent  = fmtN(fans);
     $('fb-reach').textContent  = fmtN(reach);
     $('fb-posts').textContent  = posts;
-    // Engajamento = engagements / fans (padrão de mercado)
-    $('fb-engage').textContent = fans > 0 ? ((engagements/fans)*100).toFixed(1)+'%' : '—';
-    // Mostra nome da página no subtítulo para confirmar qual está sendo usada
+    $('fb-engage').textContent = engRate;
+
+    // Exibe nome da página no subtítulo para confirmar
     const fbSub = document.querySelector('[data-widget-id="fb"] .c-sub');
-    if(fbSub) fbSub.textContent = `${page.name} · 30 dias`;
+    if(fbSub) fbSub.textContent = `${page.name} · 28 dias`;
+
     setConnStatus('fb', true);
     sbSyncMetrica('facebook', {
-      pagina: page.name||'',
-      seguidores: fans,
-      curtidas: fans,
-      posts,
-      alcance: reach,
-      engajamento: fans > 0 ? ((engagements/fans)*100).toFixed(1)+'%' : '0%'
+      pagina: page.name||'', seguidores: fans, curtidas: fans,
+      posts, alcance: reach, engajamento: engRate
     }).catch(()=>{});
+
   } catch(ex){ showToast('⚠️ Erro na API do Facebook','var(--gold)'); console.error('FB:', ex); }
 }
 
@@ -8944,6 +8968,105 @@ setInterval(infraScanNow, 5*60*1000);
 </div>
 
 <script>
+// ══ DIAGNÓSTICO META ════════════════════════════════════════════════
+window.diagMeta = async function(tipo){
+  const token = window.metaToken || (()=>{ try{ return JSON.parse(localStorage.getItem('dash_meta_token')||'null'); }catch(e){return null;} })();
+  if(!token){ showToast('⚠️ Meta não conectado — clique em Conectado primeiro','var(--coral)'); return; }
+
+  abrirModal('🔍','Diagnóstico Meta — Dados Brutos da API','Consultando Graph API...');
+
+  let html = '';
+  try {
+    if(tipo==='fb' || tipo==='ig'){
+      // ── Mostra todas as páginas disponíveis ──
+      const pages = await fetch(`https://graph.facebook.com/me/accounts?fields=id,name,fan_count,category&access_token=${token}&limit=50`).then(r=>r.json());
+      html += '<strong>📄 Páginas Facebook encontradas:</strong><br>';
+      if(pages.error){ html += `❌ Erro: ${pages.error.message}<br>`; }
+      else if(!pages.data?.length){ html += '⚠️ Nenhuma página encontrada<br>'; }
+      else {
+        pages.data.forEach((p,i) => {
+          html += `${i+1}. <strong>${p.name}</strong> (ID: ${p.id}) — ${(p.fan_count||0).toLocaleString('pt-BR')} fãs — ${p.category||''}<br>`;
+        });
+      }
+      html += '<br>';
+    }
+
+    if(tipo==='fb'){
+      // ── Métricas brutas do Facebook ──
+      const pages = await fetch(`https://graph.facebook.com/me/accounts?fields=id,name,fan_count,access_token&access_token=${token}&limit=50`).then(r=>r.json());
+      const byName = pages.data?.find(p => /edson|barroso|dr\s*\./i.test(p.name));
+      const byFans = pages.data?.length ? [...pages.data].sort((a,b)=>(b.fan_count||0)-(a.fan_count||0))[0] : null;
+      const page   = byName || byFans || pages.data?.[0];
+      if(page){
+        html += `<strong>✅ Página selecionada:</strong> ${page.name} (${page.id})<br><br>`;
+        const ins = await fetch(`https://graph.facebook.com/${page.id}/insights?metric=page_fans,page_impressions_unique,page_post_engagements&period=days_28&access_token=${page.access_token||token}`).then(r=>r.json());
+        html += '<strong>📊 Métricas brutas (28 dias):</strong><br>';
+        if(ins.error){ html += `❌ Erro insights: ${ins.error.message}<br>`; }
+        else {
+          ins.data?.forEach(m => {
+            const v = m.values?.slice(-1)[0]?.value;
+            html += `• ${m.name}: <strong>${(v||0).toLocaleString('pt-BR')}</strong><br>`;
+          });
+        }
+        const pinfo = await fetch(`https://graph.facebook.com/${page.id}?fields=fan_count,published_posts.limit(30){created_time}&access_token=${page.access_token||token}`).then(r=>r.json());
+        html += `• fan_count (direto): <strong>${(pinfo.fan_count||0).toLocaleString('pt-BR')}</strong><br>`;
+        html += `• published_posts (30): <strong>${pinfo.published_posts?.data?.length||0}</strong><br>`;
+      }
+    }
+
+    if(tipo==='ig'){
+      // ── Conta pessoal e IG vinculado ──
+      const me = await fetch(`https://graph.facebook.com/v19.0/me?fields=id,name,instagram_business_account&access_token=${token}`).then(r=>r.json());
+      html += `<strong>👤 Conta Facebook:</strong> ${me.name} (${me.id})<br>`;
+      html += `<strong>📸 IG vinculado ao perfil:</strong> ${me.instagram_business_account?.id || '⚠️ Nenhum'}<br><br>`;
+
+      // Testa acesso direto ao ID hardcoded
+      const directId = '597818000075846';
+      const direct = await fetch(`https://graph.facebook.com/v19.0/${directId}?fields=id,username,followers_count,media_count&access_token=${token}`).then(r=>r.json());
+      if(!direct.error){
+        html += `<strong>✅ Acesso ao ID hardcoded (${directId}):</strong><br>`;
+        html += `• @${direct.username}: <strong>${(direct.followers_count||0).toLocaleString('pt-BR')}</strong> seguidores | ${direct.media_count||0} posts<br><br>`;
+      } else {
+        html += `<strong>❌ ID hardcoded ${directId}:</strong> ${direct.error.message}<br><br>`;
+      }
+
+      // Busca via páginas
+      const pages = await fetch(`https://graph.facebook.com/v19.0/me/accounts?fields=id,name,access_token,instagram_business_account&access_token=${token}&limit=50`).then(r=>r.json());
+      html += '<strong>📄 IG via páginas Facebook:</strong><br>';
+      for(const pg of pages.data||[]){
+        if(pg.instagram_business_account?.id){
+          const igInfo = await fetch(`https://graph.facebook.com/v19.0/${pg.instagram_business_account.id}?fields=username,followers_count&access_token=${pg.access_token||token}`).then(r=>r.json());
+          html += `• Página "${pg.name}" → IG @${igInfo.username||'?'} (${pg.instagram_business_account.id}): <strong>${(igInfo.followers_count||0).toLocaleString('pt-BR')}</strong> seguidores<br>`;
+        }
+      }
+
+      // Insights do ID hardcoded (se acessível)
+      if(!direct.error){
+        const since = Math.floor((Date.now()-7*24*60*60*1000)/1000);
+        const until = Math.floor(Date.now()/1000);
+        const ins = await fetch(`https://graph.facebook.com/v19.0/${directId}/insights?metric=reach,impressions&period=day&since=${since}&until=${until}&access_token=${token}`).then(r=>r.json());
+        html += '<br><strong>📊 Insights IG (7d bruto):</strong><br>';
+        if(ins.error){ html += `❌ ${ins.error.message}<br>`; }
+        else {
+          let reach=0,imp=0;
+          ins.data?.forEach(m=>{
+            if(m.name==='reach')       m.values?.forEach(v=>reach+=v.value||0);
+            if(m.name==='impressions') m.values?.forEach(v=>imp+=v.value||0);
+          });
+          html += `• Reach 7d: <strong>${reach.toLocaleString('pt-BR')}</strong><br>`;
+          html += `• Impressions 7d: <strong>${imp.toLocaleString('pt-BR')}</strong><br>`;
+        }
+      }
+    }
+
+  } catch(e){
+    html += `<br>❌ Erro inesperado: ${e.message}`;
+  }
+
+  html += '<br><br><em style="color:var(--muted2);font-size:.75rem">Compare esses valores com os números que você vê no Instagram/Facebook e me diga qual está errado.</em>';
+  document.getElementById('aiModalBody').innerHTML = html;
+};
+
 // ══ SISTEMA IA WIDGETS ══════════════════════════════════════════════
 (function(){
   const AI_URL   = 'https://dashboard-pessoal-edson.vercel.app/api/assistente';
