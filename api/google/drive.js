@@ -24,7 +24,10 @@ export default async function handler(req, res) {
       body: new URLSearchParams({ client_id: clientId, client_secret: clientSecret, refresh_token, grant_type: 'refresh_token' }).toString(),
     });
     const tokenData = await tokenRes.json();
-    if (!tokenRes.ok) return res.status(401).json({ error: 'Token refresh failed', details: tokenData.error_description || tokenData.error });
+    if (!tokenRes.ok) {
+      const code = tokenData.error === 'invalid_grant' ? 'token_expired' : 'token_refresh_failed';
+      return res.status(401).json({ error: 'Token refresh failed', error_code: code, details: tokenData.error_description || tokenData.error });
+    }
 
     const accessToken = tokenData.access_token;
 
@@ -34,7 +37,10 @@ export default async function handler(req, res) {
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     const driveData = await driveRes.json();
-    if (!driveRes.ok) return res.status(driveRes.status).json({ error: 'Failed to fetch drive files', details: driveData.error });
+    if (!driveRes.ok) {
+      const code = driveRes.status === 403 ? 'insufficient_scope' : 'api_error';
+      return res.status(driveRes.status).json({ error: 'Failed to fetch drive files', error_code: code, details: driveData.error });
+    }
 
     return res.status(200).json({
       ok:             true,

@@ -5303,6 +5303,22 @@ async function connectMeta(){
   if(!popup || popup.closed){ showToast('⚠️ Popup bloqueado - libere popups','var(--coral)'); }
 }
 
+/* ─── GOOGLE API ERROR HELPER ──────────────────────────── */
+function _googleApiError(listId, statusEl, errorCode) {
+  const msgs = {
+    token_expired:        '🔄 Sessão expirada. Reconecte o Google.',
+    token_refresh_failed: '🔄 Sessão expirada. Reconecte o Google.',
+    insufficient_scope:   '🔐 Permissão insuficiente. Reconecte o Google.',
+  };
+  const msg = msgs[errorCode] || 'Erro na integração';
+  const el = document.getElementById(listId);
+  if (el) el.innerHTML = `<div style="padding:12px;text-align:center">
+    <div style="font-size:.78rem;color:var(--muted2);margin-bottom:8px">${msg}</div>
+    <button onclick="connectGoogle()" style="padding:6px 14px;background:rgba(66,133,244,.15);border:1px solid rgba(66,133,244,.35);color:#4285f4;border-radius:8px;font-size:.75rem;font-weight:700;cursor:pointer;font-family:inherit">🔄 Reconectar Google</button>
+  </div>`;
+  if (statusEl) { statusEl.textContent = 'erro'; statusEl.className = 'c-tag'; }
+}
+
 /* ─── GMAIL API ──────────────────────────────────────────── */
 async function loadGmail() {
   const list   = document.getElementById('gmail-list');
@@ -5334,8 +5350,7 @@ async function loadGmail() {
     const data = await r.json();
 
     if (!r.ok || !data.ok) {
-      setWidgetState('gmail-list', 'error');
-      if (status) { status.textContent = 'erro'; status.className = 'c-tag'; }
+      _googleApiError('gmail-list', status, data.error_code);
       return;
     }
 
@@ -5365,7 +5380,7 @@ async function loadGmail() {
     }).join('');
 
   } catch (err) {
-    setWidgetState('gmail-list', 'error');
+    _googleApiError('gmail-list', status, null);
     console.error('[gmail]', err.message);
   }
 }
@@ -5400,8 +5415,7 @@ async function loadDrive() {
     const data = await r.json();
 
     if (!r.ok || !data.ok) {
-      setWidgetState('drive-list', 'error');
-      if (status) { status.textContent = 'erro'; status.className = 'c-tag'; }
+      _googleApiError('drive-list', status, data.error_code);
       return;
     }
 
@@ -5440,7 +5454,7 @@ async function loadDrive() {
     }).join('');
 
   } catch (err) {
-    setWidgetState('drive-list', 'error');
+    _googleApiError('drive-list', status, null);
     console.error('[drive]', err.message);
   }
 }

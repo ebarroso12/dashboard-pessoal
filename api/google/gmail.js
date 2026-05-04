@@ -24,7 +24,10 @@ export default async function handler(req, res) {
       body: new URLSearchParams({ client_id: clientId, client_secret: clientSecret, refresh_token, grant_type: 'refresh_token' }).toString(),
     });
     const tokenData = await tokenRes.json();
-    if (!tokenRes.ok) return res.status(401).json({ error: 'Token refresh failed', details: tokenData.error_description || tokenData.error });
+    if (!tokenRes.ok) {
+      const code = tokenData.error === 'invalid_grant' ? 'token_expired' : 'token_refresh_failed';
+      return res.status(401).json({ error: 'Token refresh failed', error_code: code, details: tokenData.error_description || tokenData.error });
+    }
 
     const accessToken = tokenData.access_token;
 
@@ -34,7 +37,10 @@ export default async function handler(req, res) {
       { headers: { Authorization: `Bearer ${accessToken}` } }
     );
     const listData = await listRes.json();
-    if (!listRes.ok) return res.status(listRes.status).json({ error: 'Failed to fetch messages', details: listData.error });
+    if (!listRes.ok) {
+      const code = listRes.status === 403 ? 'insufficient_scope' : 'api_error';
+      return res.status(listRes.status).json({ error: 'Failed to fetch messages', error_code: code, details: listData.error });
+    }
 
     const messages = listData.messages || [];
     if (!messages.length) return res.status(200).json({ ok: true, emails: [], total: 0, newAccessToken: accessToken });
