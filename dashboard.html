@@ -2334,9 +2334,9 @@ body::before {
           <div class="c-sub">Comandos de áudio via WhatsApp</div>
         </div>
         <div class="c-spacer"></div>
-        <div id="oc-status-badge" style="display: flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 700; padding: 4px 11px; border-radius: 20px; background: rgba(255, 107, 53, 0.08); border: 1px solid rgba(255, 107, 53, 0.35); color: rgb(255, 107, 53);">
-          <span id="oc-dot" style="width: 6px; height: 6px; border-radius: 50%; background: rgb(255, 107, 53); display: inline-block; box-shadow: rgb(255, 107, 53) 0px 0px 6px; animation: 2s ease 0s infinite normal none running blink;"></span>
-          <span id="oc-status-txt">Online</span>
+        <div id="oc-status-badge" style="display: flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 700; padding: 4px 11px; border-radius: 20px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: var(--muted2);">
+          <span id="oc-dot" style="width: 6px; height: 6px; border-radius: 50%; background: var(--muted2); display: inline-block; box-shadow: none; animation: none;"></span>
+          <span id="oc-status-txt">⏳ Verificando...</span>
         </div>
         <button onclick="toggleOCSetup()" id="oc-setup-btn" style="margin-left:8px;padding:5px 12px;border-radius:8px;font-size:.72rem;font-weight:700;background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.25);color:#ff6b35;cursor:pointer">⚙️ Configurar</button>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -2655,10 +2655,10 @@ body::before {
     </svg></button></div></div>
       <div class="card-body">
         <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Sessões 30d</div><div class="kpi-val glow-b" id="ga-sessions">0</div><div class="kpi-delta delta-up" id="ga-sessions-d">▲ +14%</div></div>
-          <div class="kpi"><div class="kpi-label">Usuários</div><div class="kpi-val glow-t" id="ga-users">0</div><div class="kpi-delta delta-up">▲ +9%</div></div>
-          <div class="kpi"><div class="kpi-label">Pageviews</div><div class="kpi-val" id="ga-pageviews" style="color:var(--gold);text-shadow:0 0 14px rgba(255,182,73,.45)">0</div><div class="kpi-delta delta-up">▲ +18%</div></div>
-          <div class="kpi"><div class="kpi-label">Engaj. Rate</div><div class="kpi-val glow-g" id="ga-engage">—%</div><div class="kpi-delta delta-up">▲ +3pp</div></div>
+          <div class="kpi"><div class="kpi-label">Sessões 30d</div><div class="kpi-val glow-b" id="ga-sessions">—</div><div class="kpi-delta" id="ga-sessions-d">—</div></div>
+          <div class="kpi"><div class="kpi-label">Usuários</div><div class="kpi-val glow-t" id="ga-users">—</div><div class="kpi-delta">—</div></div>
+          <div class="kpi"><div class="kpi-label">Pageviews</div><div class="kpi-val" id="ga-pageviews" style="color:var(--gold);text-shadow:0 0 14px rgba(255,182,73,.45)">—</div><div class="kpi-delta">—</div></div>
+          <div class="kpi"><div class="kpi-label">Engaj. Rate</div><div class="kpi-val glow-g" id="ga-engage">—</div><div class="kpi-delta">—</div></div>
         </div>
         <div class="chart-box"><canvas id="gaChart" style="box-sizing: border-box; display: block; height: 140px; width: 297px;" width="371" height="175"></canvas></div>
       </div>
