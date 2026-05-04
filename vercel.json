@@ -16,6 +16,7 @@
     { "source": "/api/google/token",      "destination": "/api/google/token" },
     { "source": "/api/google/refresh",    "destination": "/api/google/refresh" },
     { "source": "/api/google/calendar",   "destination": "/api/google/calendar" },
+    { "source": "/api/google/gmail",      "destination": "/api/google/gmail" },
     { "source": "/api/tiktok/token",      "destination": "/api/tiktok/token" },
     { "source": "/login",                 "destination": "/login.html" },
     { "source": "/",                      "destination": "/dashboard.html" }

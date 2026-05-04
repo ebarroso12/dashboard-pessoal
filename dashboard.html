@@ -1879,6 +1879,10 @@ body::before {
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       Calendário
     </a>
+    <a class="sb-link" href="#widget-gmail" onclick="showPage('home');setTimeout(()=>document.getElementById('widget-gmail')?.scrollIntoView({behavior:'smooth'}),50);return false">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+      Gmail
+    </a>
     <a class="sb-link" href="#widget-facebook" onclick="showPage('home');setTimeout(()=>document.getElementById('widget-facebook')?.scrollIntoView({behavior:'smooth'}),50);return false">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
       Facebook
@@ -2489,6 +2493,26 @@ body::before {
           </button>
         </div>
       </div>
+    </div><div class="card" id="widget-gmail" data-widget-id="gmail">
+      <div class="card-head"><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor"><circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle><circle cx="3" cy="8" r="1.4"></circle><circle cx="7" cy="8" r="1.4"></circle><circle cx="3" cy="14" r="1.4"></circle><circle cx="7" cy="14" r="1.4"></circle></svg></button>
+        <div class="c-icon" style="background:linear-gradient(135deg,#ea4335,#c5221f);box-shadow:0 0 14px rgba(234,67,53,.28)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+        </div>
+        <div>
+          <div class="c-title">Gmail</div>
+          <div class="c-sub" id="gmail-sub">Emails não lidos</div>
+        </div>
+        <div class="c-spacer"></div>
+        <span class="c-tag" id="gmail-status">demo</span>
+        <button onclick="loadGmail()" title="Atualizar" style="padding:5px 10px;border-radius:8px;font-size:.72rem;font-weight:700;background:rgba(234,67,53,.1);border:1px solid rgba(234,67,53,.25);color:#ea4335;cursor:pointer;margin-left:6px">↻</button>
+      <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg></button><button class="card-remove-btn" title="Remover widget do painel"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"></path></svg></button></div></div>
+      <div class="card-body" style="padding:12px 16px">
+        <div id="gmail-list" style="display:flex;flex-direction:column;gap:6px;min-height:60px"></div>
+      </div>
+      <div class="card-foot"><div class="card-foot-row">
+        <a href="https://mail.google.com" target="_blank" rel="noopener" style="font-size:.75rem;color:var(--muted2);text-decoration:none">✉️ Abrir Gmail</a>
+        <button onclick="loadGmail()" style="font-size:.72rem;color:var(--muted2);background:none;border:none;cursor:pointer">Atualizar</button>
+      </div></div>
     </div><div class="card" id="widget-instagram" data-widget-id="ig" draggable="false" style="">
       <div class="card-head"><button class="drag-handle" title="Arrastar para mover"><svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor">
       <circle cx="3" cy="2" r="1.4"></circle><circle cx="7" cy="2" r="1.4"></circle>
@@ -3774,6 +3798,7 @@ function setWidgetState(elementId, state, message) {
   if (state !== 'ready') el.textContent = message !== undefined ? message : (defaults[state] || '—');
 }
 /* Estado inicial: loading até dados reais chegarem */
+setWidgetState('gmail-list',    'loading');
 setWidgetState('oc-status-txt', 'loading');
 setWidgetState('ga-sessions',   'loading');
 setWidgetState('ga-users',      'loading');
@@ -4894,7 +4919,7 @@ async function genChallenge(verifier){
       try { window.opener.postMessage({type:'google_auth_success', token: tokenData}, window.location.origin); } catch(e){}
       window.close();
     } else {
-      setTimeout(function(){ try { if(typeof showToast === 'function') showToast('✅ Google conectado com sucesso','var(--green)'); } catch(e){} try { if(typeof loadCalendar === 'function') loadCalendar(); } catch(e){} }, 500);
+      setTimeout(function(){ try { if(typeof showToast === 'function') showToast('✅ Google conectado com sucesso','var(--green)'); } catch(e){} try { if(typeof loadCalendar === 'function') loadCalendar(); } catch(e){} try { if(typeof loadGmail === 'function') loadGmail(); } catch(e){} }, 500);
     }
   } catch(err){ console.error('OAuth callback error', err); }
 })();
@@ -4903,6 +4928,7 @@ window.addEventListener('message', function(ev){
   if(ev.data && ev.data.type === 'google_auth_success'){
     try { if(typeof showToast === 'function') showToast('✅ Google conectado','var(--green)'); } catch(e){}
     try { if(typeof loadCalendar === 'function') setTimeout(loadCalendar, 300); } catch(e){}
+    try { if(typeof loadGmail === 'function') setTimeout(loadGmail, 600); } catch(e){}
   }
 });
 
@@ -5179,6 +5205,69 @@ async function connectMeta(){
   showToast('🔐 Abrindo autenticação Meta...','#1877f2');
   const popup = window.open('https://www.facebook.com/dialog/oauth?' + params, 'meta_auth', 'width=580,height=680,left=200,top=80');
   if(!popup || popup.closed){ showToast('⚠️ Popup bloqueado - libere popups','var(--coral)'); }
+}
+
+/* ─── GMAIL API ──────────────────────────────────────────── */
+async function loadGmail() {
+  const list   = document.getElementById('gmail-list');
+  const status = document.getElementById('gmail-status');
+  const sub    = document.getElementById('gmail-sub');
+  if (!list) return;
+
+  // Obtém refresh_token — mesma lógica do loadCalendar
+  let refreshToken = googleTokens?.refresh_token;
+  if (!refreshToken) {
+    await sbLoadGoogleTokens();
+    refreshToken = googleTokens?.refresh_token;
+  }
+  if (!refreshToken) {
+    setWidgetState('gmail-list', 'disconnected');
+    if (status) { status.textContent = 'demo'; status.className = 'c-tag tag-demo'; }
+    return;
+  }
+
+  setWidgetState('gmail-list', 'loading');
+  if (status) { status.textContent = 'live ●'; status.className = 'c-tag tag-live'; }
+
+  try {
+    const r = await fetch('/api/google/gmail', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh_token: refreshToken }),
+    });
+    const data = await r.json();
+
+    if (!r.ok || !data.ok) {
+      setWidgetState('gmail-list', 'error');
+      if (status) { status.textContent = 'erro'; status.className = 'c-tag'; }
+      return;
+    }
+
+    if (!data.emails || data.emails.length === 0) {
+      setWidgetState('gmail-list', 'empty', '✅ Caixa de entrada limpa!');
+      if (sub) sub.textContent = '0 não lidos';
+      return;
+    }
+
+    const count = data.total || data.emails.length;
+    if (sub) sub.textContent = `${count} não lido${count !== 1 ? 's' : ''}`;
+
+    list.innerHTML = data.emails.map(e => {
+      const date = e.date ? new Date(e.date).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
+      return `<a href="${e.link}" target="_blank" rel="noopener" style="display:block;padding:9px 11px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:9px;text-decoration:none;transition:background .15s" onmouseover="this.style.background='rgba(234,67,53,.06)'" onmouseout="this.style.background='rgba(255,255,255,.03)'">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:3px">
+          <span style="font-size:.78rem;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%">${e.from}</span>
+          <span style="font-size:.68rem;color:var(--muted);flex-shrink:0">${date}</span>
+        </div>
+        <div style="font-size:.76rem;color:var(--muted2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.subject}</div>
+        <div style="font-size:.7rem;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${e.snippet}</div>
+      </a>`;
+    }).join('');
+
+  } catch (err) {
+    setWidgetState('gmail-list', 'error');
+    console.error('[gmail]', err.message);
+  }
 }
 
 /* ─── INSTAGRAM GRAPH API ─────────────────────────────── */
@@ -9704,6 +9793,10 @@ window.loadRates = async function() {
 // Carrega cotações ao iniciar
 setTimeout(loadRates, 2000);
 setInterval(loadRates, 5 * 60 * 1000); // atualiza a cada 5 min
+
+// Gmail — carrega ao iniciar e auto-refresh a cada 5 min
+setTimeout(loadGmail, 1500);
+setInterval(loadGmail, 5 * 60 * 1000);
 
 // ══ BRIEFING MATINAL ════════════════════════════════════════════════
 window.abrirBriefingMatinal = async function() {
