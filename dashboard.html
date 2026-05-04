@@ -3072,6 +3072,20 @@ body::before {
             <div class="fin-kpi-sub">da renda</div>
           </div>
         </div>
+        <!-- Meta de Receita Mensal -->
+        <div id="fin-meta-wrap" style="display:none;margin:10px 0 4px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+            <span style="font-size:.7rem;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em">🎯 Meta de Receita</span>
+            <span id="fin-meta-pct-lbl" style="font-size:.75rem;font-weight:700;color:var(--teal)">0%</span>
+          </div>
+          <div style="height:7px;background:rgba(255,255,255,.07);border-radius:4px;overflow:hidden">
+            <div id="fin-meta-bar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--teal),#00b0ff);border-radius:4px;transition:width .4s ease"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:4px">
+            <span id="fin-meta-atual-lbl" style="font-size:.68rem;color:var(--muted2)"></span>
+            <span id="fin-meta-val-lbl" style="font-size:.68rem;color:var(--muted)"></span>
+          </div>
+        </div>
         <div class="fin-cat-bars" id="fin-cat-bars"></div>
         <div class="fin-quick-btns">
           <button class="fin-qbtn fin-qbtn-add" onclick="openTxModal()">＋ Lançar Gasto</button>
@@ -3825,6 +3839,11 @@ function setWidgetState(elementId, state, message) {
 setWidgetState('gmail-list',    'loading');
 setWidgetState('drive-list',    'loading');
 setWidgetState('oc-status-txt', 'loading');
+/* Finanças — estado inicial até updateFinCard() rodar */
+setWidgetState('fin-renda', 'loading');
+setWidgetState('fin-desp',  'loading');
+setWidgetState('fin-saldo', 'loading');
+setWidgetState('fin-pct',   'loading');
 setWidgetState('ga-sessions',   'loading');
 setWidgetState('ga-users',      'loading');
 setWidgetState('ga-pageviews',  'loading');
@@ -7057,11 +7076,36 @@ function updateFinCard(){
   const pct=renda>0?(desp/renda*100):0;
   const elR=$('fin-renda'),elD=$('fin-desp'),elS=$('fin-saldo'),elP=$('fin-pct');
   if(!elR)return;
-  elR.textContent=renda?fBRL(renda):'—';
-  elD.textContent=desp?fBRL(desp):'—';
-  elS.textContent=(saldo||renda)?fBRL(saldo):'—';
-  elS.style.color=saldo>=0?'#4ade80':'var(--coral)';
-  elP.textContent=renda?fPct(pct):'—';
+  const semDados=!renda&&!desp;
+  if(semDados){
+    setWidgetState('fin-renda','empty','Sem dados'); setWidgetState('fin-desp','empty','Sem dados');
+    setWidgetState('fin-saldo','empty','Sem dados'); setWidgetState('fin-pct','empty','—');
+  } else {
+    elR.textContent=renda?fBRL(renda):'—';
+    elD.textContent=desp?fBRL(desp):'—';
+    elS.textContent=(saldo||renda)?fBRL(saldo):'—';
+    elS.style.color=saldo>=0?'#4ade80':'var(--coral)';
+    elP.textContent=renda?fPct(pct):'—';
+  }
+  /* ── Barra de meta de receita ── */
+  const meta=_finV('meta_receita');
+  const wrap=$('fin-meta-wrap');
+  if(wrap){
+    if(meta>0){
+      wrap.style.display='block';
+      const pctMeta=Math.min(100,renda>0?(renda/meta*100):0);
+      const bar=$('fin-meta-bar'), pctLbl=$('fin-meta-pct-lbl');
+      const atualLbl=$('fin-meta-atual-lbl'), valLbl=$('fin-meta-val-lbl');
+      if(bar)    bar.style.width=pctMeta+'%';
+      if(bar)    bar.style.background=pctMeta>=100?'linear-gradient(90deg,#4ade80,#22c55e)':'linear-gradient(90deg,var(--teal),#00b0ff)';
+      if(pctLbl) pctLbl.textContent=pctMeta.toFixed(0)+'%';
+      if(pctLbl) pctLbl.style.color=pctMeta>=100?'#4ade80':'var(--teal)';
+      if(atualLbl) atualLbl.textContent=renda?fBRL(renda):'R$ 0,00';
+      if(valLbl)   valLbl.textContent='Meta: '+fBRL(meta);
+    } else {
+      wrap.style.display='none';
+    }
+  }
   const bars=$('fin-cat-bars');
   if(bars){
     const tot=desp||1;
@@ -7160,7 +7204,16 @@ function _renderOrcamento(){
     +'<td><span class="fin-calc pos" id="fc_renda_tot">'+(rt?fBRL(rt):'—')+'</span></td>'
     +'<td><span class="fin-calc pos" id="fc_renda_ano">'+(rt?fBRL(rt*12):'—')+'</span></td>'
   ));
-  tblR.appendChild(tbR); secR.appendChild(tblR); tab.appendChild(secR);
+  tblR.appendChild(tbR); secR.appendChild(tblR);
+  /* Campo de meta de receita */
+  const metaV=_finV('meta_receita');
+  const metaDiv=document.createElement('div');
+  metaDiv.style.cssText='margin:8px 0 4px;display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.15);border-radius:9px';
+  metaDiv.innerHTML='<span style="font-size:.78rem;font-weight:700;color:var(--teal);white-space:nowrap">🎯 Meta Receita</span>'
+    +'<input class="fin-inp" type="number" step="0.01" min="0" id="fin-meta-inp" value="'+(metaV||'')+'" placeholder="Ex: 30000,00" style="flex:1" oninput="_finSet(\'meta_receita\',this.value);updateFinCard()"/>'
+    +'<span style="font-size:.7rem;color:var(--muted2);white-space:nowrap">mensal</span>';
+  secR.appendChild(metaDiv);
+  tab.appendChild(secR);
 
   /* ── DESPESAS ───────────────────── */
   const secD=document.createElement('div'); secD.className='fin-section';
