@@ -147,6 +147,15 @@ input,textarea{font-family:inherit}
 #sv-chat::-webkit-scrollbar{width:4px}
 #sv-chat::-webkit-scrollbar-thumb{background:rgba(99,102,241,.3);border-radius:2px}
 
+/* ── INSIGHTS BOX ───────────────────────────────────── */
+#insights-box{display:none;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+#insights-box.has-insights{display:flex}
+.insight-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-size:.75rem;font-weight:600;line-height:1.2;white-space:nowrap}
+.insight-ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.25);color:#4ade80}
+.insight-warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fbbf24}
+.insight-alert{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#f87171}
+.insight-info{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);color:#93c5fd}
+
 /* ── SECTION TABS ───────────────────────────────────── */
 .section-tabs{display:flex;gap:4px;margin-bottom:18px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:4px}
 .section-tab{flex:1;padding:8px 12px;border-radius:9px;font-size:.78rem;font-weight:700;color:var(--muted2);cursor:pointer;border:none;background:none;font-family:inherit;transition:all .15s;text-align:center;white-space:nowrap}
@@ -2239,6 +2248,9 @@ body::before {
     <button class="section-tab tab-marketing" onclick="showSection('marketing')" id="stab-marketing">📱 Marketing</button>
     <button class="section-tab tab-infra" onclick="showSection('infra')" id="stab-infra">🖥️ Infraestrutura</button>
   </div>
+
+  <!-- INSIGHTS -->
+  <div id="insights-box"></div>
 
   <div class="grid" id="maingrid">
 
@@ -5310,12 +5322,16 @@ async function loadGmail() {
     }
 
     if (!data.emails || data.emails.length === 0) {
+      _insightsData.gmailUnread = 0;
+      generateInsights();
       setWidgetState('gmail-list', 'empty', '✅ Caixa de entrada limpa!');
       if (sub) sub.textContent = '0 não lidos';
       return;
     }
 
     const count = data.total || data.emails.length;
+    _insightsData.gmailUnread = count;
+    generateInsights();
     if (sub) sub.textContent = `${count} não lido${count !== 1 ? 's' : ''}`;
 
     list.innerHTML = data.emails.map(e => {
@@ -5372,11 +5388,15 @@ async function loadDrive() {
     }
 
     if (!data.files || data.files.length === 0) {
+      _insightsData.driveFiles = [];
+      generateInsights();
       setWidgetState('drive-list', 'empty');
       if (sub) sub.textContent = '0 arquivos';
       return;
     }
 
+    _insightsData.driveFiles = data.files;
+    generateInsights();
     if (sub) sub.textContent = `${data.files.length} arquivo${data.files.length !== 1 ? 's' : ''} recentes`;
 
     const mimeIcon = (mime) => {
@@ -7194,7 +7214,7 @@ function finChangeMonth(){
   _renderOrcamento();
   _renderPatrimonio();
 }
-function saveFinData(){ updateFinCard(); closeFinModal(); showToast('✅ Dados financeiros salvos!'); sbSyncFinanceiro(); }
+function saveFinData(){ updateFinCard(); generateInsights(); closeFinModal(); showToast('✅ Dados financeiros salvos!'); sbSyncFinanceiro(); }
 
 /* ── Render Orçamento ───────────────────── */
 function _renderOrcamento(){
@@ -9965,6 +9985,60 @@ window.loadRates = async function() {
 setTimeout(loadRates, 2000);
 setInterval(loadRates, 5 * 60 * 1000); // atualiza a cada 5 min
 
+/* ─── INSIGHTS ──────────────────────────────────────────── */
+const _insightsData = { gmailUnread: null, driveFiles: null };
+
+function generateInsights() {
+  const box = document.getElementById('insights-box');
+  if (!box) return;
+
+  const chips = [];
+
+  // ── FINANCEIRO ──────────────────────────────────────────
+  const renda = typeof finTotRenda === 'function' ? finTotRenda() : 0;
+  const desp  = typeof finTotDesp  === 'function' ? (finTotDesp() + (typeof finTotSeg === 'function' ? finTotSeg() : 0) + (typeof finTotEmp === 'function' ? finTotEmp() : 0)) : 0;
+  const meta  = typeof _finV === 'function' ? _finV('meta_receita') : 0;
+
+  if (renda > 0 && desp > renda) {
+    chips.push({ cls: 'insight-alert', txt: '⚠️ Despesas acima da renda' });
+  }
+  if (meta > 0 && renda > 0) {
+    const pct = (renda / meta) * 100;
+    if (pct >= 100) {
+      chips.push({ cls: 'insight-ok', txt: '🎯 Meta de receita atingida!' });
+    } else if (pct >= 80) {
+      chips.push({ cls: 'insight-ok', txt: `✅ Meta ${pct.toFixed(0)}% — quase lá!` });
+    }
+  }
+
+  // ── GMAIL ───────────────────────────────────────────────
+  if (_insightsData.gmailUnread !== null) {
+    if (_insightsData.gmailUnread > 10) {
+      chips.push({ cls: 'insight-warn', txt: `📬 ${_insightsData.gmailUnread} emails pendentes` });
+    } else if (_insightsData.gmailUnread === 0) {
+      chips.push({ cls: 'insight-ok', txt: '✉️ Inbox zerado' });
+    }
+  }
+
+  // ── DRIVE ───────────────────────────────────────────────
+  if (_insightsData.driveFiles && _insightsData.driveFiles.length > 0) {
+    const hoje = new Date().toDateString();
+    const temHoje = _insightsData.driveFiles.some(f => f.modifiedTime && new Date(f.modifiedTime).toDateString() === hoje);
+    if (temHoje) {
+      chips.push({ cls: 'insight-info', txt: '📁 Arquivos modificados hoje' });
+    }
+  }
+
+  if (!chips.length) {
+    box.className = '';
+    box.innerHTML = '';
+    return;
+  }
+
+  box.className = 'has-insights';
+  box.innerHTML = chips.map(c => `<span class="insight-chip ${c.cls}">${c.txt}</span>`).join('');
+}
+
 /* ─── SEÇÕES: Clínica / Marketing / Infra ──────────────── */
 function showSection(name) {
   const grid = document.getElementById('maingrid');
@@ -9981,6 +10055,7 @@ function showSection(name) {
 (function initSection(){
   const saved = localStorage.getItem('dash_active_section') || 'clinica';
   showSection(saved);
+  generateInsights();
 })();
 
 // Gmail — carrega ao iniciar e auto-refresh a cada 5 min
