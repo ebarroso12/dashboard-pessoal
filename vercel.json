@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "name": "dashboard-pessoal-edson",
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/oauth/google",          "destination": "/api/oauth/google" },
+    { "source": "/oauth/tiktok",          "destination": "/api/oauth/tiktok" },
+    { "source": "/api/webhook",           "destination": "/api/webhook" },
+    { "source": "/api/comandos",          "destination": "/api/comandos" },
+    { "source": "/api/supervisor",        "destination": "/api/supervisor" },
+    { "source": "/api/assistente",        "destination": "/api/assistente" },
+    { "source": "/api/analisa-foto",      "destination": "/api/analisa-foto" },
+    { "source": "/api/config",            "destination": "/api/config" },
+    { "source": "/api/google/token",      "destination": "/api/google/token" },
+    { "source": "/api/google/refresh",    "destination": "/api/google/refresh" },
+    { "source": "/api/google/calendar",   "destination": "/api/google/calendar" },
+    { "source": "/api/tiktok/token",      "destination": "/api/tiktok/token" },
+    { "source": "/login",                 "destination": "/login.html" },
+    { "source": "/",                      "destination": "/dashboard.html" }
+  ]
+}

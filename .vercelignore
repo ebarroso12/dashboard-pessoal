@@ -1,0 +1,10 @@
+config.json
+server.js
+server-vps.js
+iniciar.bat
+iniciar.sh
+retomar.sh
+publicar.bat
+node_modules
+.env
+backups/

@@ -1,0 +1,17 @@
+.vercel
+node_modules/
+.env
+.env.local
+config.json
+backups/
+*.log
+.aiox-core/
+.aiox/
+.claude/
+.claude-aiox/
+.cursor/
+.gemini/
+.antigravity/
+.agent/
+.codex/
+.github/
