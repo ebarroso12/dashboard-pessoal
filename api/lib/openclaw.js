@@ -21,11 +21,13 @@ export async function sendWhatsApp(to, message, timeoutMs = 15000) {
     let   reqId   = 1;
     let   authed  = false;
 
-    ws.on('error', (e) => { clearTimeout(timer); reject(e); });
+    ws.on('open',  ()  => { console.log('[openclaw] connected'); });
+    ws.on('error', (e) => { console.error('[openclaw] ws error:', e.message); clearTimeout(timer); reject(e); });
 
     ws.on('message', (raw) => {
       let msg;
       try { msg = JSON.parse(raw); } catch { return; }
+      console.log('[openclaw] msg:', JSON.stringify(msg).slice(0, 200));
 
       // Passo 1 — desafio de conexão
       if (msg.event === 'connect.challenge') {
