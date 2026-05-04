@@ -2336,7 +2336,7 @@ body::before {
         <div class="c-spacer"></div>
         <div id="oc-status-badge" style="display: flex; align-items: center; gap: 6px; font-size: 0.7rem; font-weight: 700; padding: 4px 11px; border-radius: 20px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: var(--muted2);">
           <span id="oc-dot" style="width: 6px; height: 6px; border-radius: 50%; background: var(--muted2); display: inline-block; box-shadow: none; animation: none;"></span>
-          <span id="oc-status-txt">⏳ Verificando...</span>
+          <span id="oc-status-txt"></span>
         </div>
         <button onclick="toggleOCSetup()" id="oc-setup-btn" style="margin-left:8px;padding:5px 12px;border-radius:8px;font-size:.72rem;font-weight:700;background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.25);color:#ff6b35;cursor:pointer">⚙️ Configurar</button>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
@@ -2655,10 +2655,10 @@ body::before {
     </svg></button></div></div>
       <div class="card-body">
         <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Sessões 30d</div><div class="kpi-val glow-b" id="ga-sessions">—</div><div class="kpi-delta" id="ga-sessions-d">—</div></div>
-          <div class="kpi"><div class="kpi-label">Usuários</div><div class="kpi-val glow-t" id="ga-users">—</div><div class="kpi-delta">—</div></div>
-          <div class="kpi"><div class="kpi-label">Pageviews</div><div class="kpi-val" id="ga-pageviews" style="color:var(--gold);text-shadow:0 0 14px rgba(255,182,73,.45)">—</div><div class="kpi-delta">—</div></div>
-          <div class="kpi"><div class="kpi-label">Engaj. Rate</div><div class="kpi-val glow-g" id="ga-engage">—</div><div class="kpi-delta">—</div></div>
+          <div class="kpi"><div class="kpi-label">Sessões 30d</div><div class="kpi-val glow-b" id="ga-sessions"></div><div class="kpi-delta" id="ga-sessions-d"></div></div>
+          <div class="kpi"><div class="kpi-label">Usuários</div><div class="kpi-val glow-t" id="ga-users"></div><div class="kpi-delta">—</div></div>
+          <div class="kpi"><div class="kpi-label">Pageviews</div><div class="kpi-val" id="ga-pageviews" style="color:var(--gold);text-shadow:0 0 14px rgba(255,182,73,.45)"></div><div class="kpi-delta">—</div></div>
+          <div class="kpi"><div class="kpi-label">Engaj. Rate</div><div class="kpi-val glow-g" id="ga-engage"></div><div class="kpi-delta">—</div></div>
         </div>
         <div class="chart-box"><canvas id="gaChart" style="box-sizing: border-box; display: block; height: 140px; width: 297px;" width="371" height="175"></canvas></div>
       </div>
@@ -3765,6 +3765,21 @@ function _setTheme(t){
 }
 _initTheme();
 tick(); setInterval(tick,1000);
+
+/* ─── WIDGET STATE UTILITY ──────────────────────────── */
+function setWidgetState(elementId, state, message) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const defaults = { loading:'Carregando...', ready:'', empty:'Sem dados', error:'Erro na integração', disconnected:'Não conectado' };
+  if (state !== 'ready') el.textContent = message !== undefined ? message : (defaults[state] || '—');
+}
+/* Estado inicial: loading até dados reais chegarem */
+setWidgetState('oc-status-txt', 'loading');
+setWidgetState('ga-sessions',   'loading');
+setWidgetState('ga-users',      'loading');
+setWidgetState('ga-pageviews',  'loading');
+setWidgetState('ga-engage',     'loading');
+setWidgetState('ga-sessions-d', 'empty', '—');
 
 /* ─── FORMAT HELPER (precisa vir antes dos engines) ─── */
 const fmtN = n => n >= 1000 ? (n/1000).toFixed(1).replace('.0','')+'K' : String(n);
