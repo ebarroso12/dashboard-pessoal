@@ -156,6 +156,17 @@ input,textarea{font-family:inherit}
 .insight-alert{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);color:#f87171}
 .insight-info{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);color:#93c5fd}
 
+/* ── ALERTS BOX ─────────────────────────────────────── */
+#alerts-box{display:none;flex-direction:column;gap:6px;margin-bottom:14px}
+#alerts-box.has-alerts{display:flex}
+.alert-row{display:flex;align-items:center;gap:10px;padding:9px 13px;border-radius:10px;font-size:.78rem;font-weight:500;line-height:1.3}
+.alert-row.alert-critical{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.25);color:#fca5a5}
+.alert-row.alert-warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:#fde68a}
+.alert-row-msg{flex:1}
+.alert-row-src{font-size:.65rem;color:var(--muted);margin-top:2px}
+.alert-resolve-btn{padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:700;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:var(--muted2);cursor:pointer;flex-shrink:0;font-family:inherit;transition:all .15s}
+.alert-resolve-btn:hover{background:rgba(255,255,255,.1);color:var(--text)}
+
 /* ── SECTION TABS ───────────────────────────────────── */
 .section-tabs{display:flex;gap:4px;margin-bottom:18px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:4px}
 .section-tab{flex:1;padding:8px 12px;border-radius:9px;font-size:.78rem;font-weight:700;color:var(--muted2);cursor:pointer;border:none;background:none;font-family:inherit;transition:all .15s;text-align:center;white-space:nowrap}
@@ -2248,6 +2259,9 @@ body::before {
     <button class="section-tab tab-marketing" onclick="showSection('marketing')" id="stab-marketing">📱 Marketing</button>
     <button class="section-tab tab-infra" onclick="showSection('infra')" id="stab-infra">🖥️ Infraestrutura</button>
   </div>
+
+  <!-- ALERTS -->
+  <div id="alerts-box"></div>
 
   <!-- INSIGHTS -->
   <div id="insights-box"></div>
@@ -9985,6 +9999,46 @@ window.loadRates = async function() {
 setTimeout(loadRates, 2000);
 setInterval(loadRates, 5 * 60 * 1000); // atualiza a cada 5 min
 
+/* ─── ALERTS ────────────────────────────────────────────── */
+const ALERTS_KEY = 'dash_alerts_v1';
+
+function loadAlerts() {
+  try { return JSON.parse(localStorage.getItem(ALERTS_KEY) || '[]'); } catch { return []; }
+}
+
+function saveAlert(alert) {
+  const alerts = loadAlerts();
+  if (alerts.find(a => a.id === alert.id)) return; // sem duplicata
+  alerts.push(alert);
+  localStorage.setItem(ALERTS_KEY, JSON.stringify(alerts));
+  renderAlerts();
+}
+
+function resolveAlert(id) {
+  const alerts = loadAlerts().filter(a => a.id !== id);
+  localStorage.setItem(ALERTS_KEY, JSON.stringify(alerts));
+  renderAlerts();
+}
+
+function renderAlerts() {
+  const box = document.getElementById('alerts-box');
+  if (!box) return;
+  const active = loadAlerts().filter(a => !a.resolved);
+  if (!active.length) { box.className = ''; box.innerHTML = ''; return; }
+  box.className = 'has-alerts';
+  box.innerHTML = active.map(a => {
+    const cls = a.type === 'critical' ? 'alert-critical' : 'alert-warn';
+    const ts  = a.createdAt ? new Date(a.createdAt).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
+    return `<div class="alert-row ${cls}">
+      <div class="alert-row-msg">
+        <div>${a.message}</div>
+        <div class="alert-row-src">${a.source}${ts ? ' · ' + ts : ''}</div>
+      </div>
+      <button class="alert-resolve-btn" onclick="resolveAlert('${a.id}')">✓ Resolver</button>
+    </div>`;
+  }).join('');
+}
+
 /* ─── INSIGHTS ──────────────────────────────────────────── */
 const _insightsData = { gmailUnread: null, driveFiles: null };
 
@@ -10001,6 +10055,7 @@ function generateInsights() {
 
   if (renda > 0 && desp > renda) {
     chips.push({ cls: 'insight-alert', txt: '⚠️ Despesas acima da renda' });
+    saveAlert({ id: 'fin-desp-acima', type: 'critical', message: '⚠️ Despesas acima da renda este mês', source: 'Finanças', createdAt: new Date().toISOString() });
   }
   if (meta > 0 && renda > 0) {
     const pct = (renda / meta) * 100;
@@ -10015,6 +10070,7 @@ function generateInsights() {
   if (_insightsData.gmailUnread !== null) {
     if (_insightsData.gmailUnread > 10) {
       chips.push({ cls: 'insight-warn', txt: `📬 ${_insightsData.gmailUnread} emails pendentes` });
+      saveAlert({ id: `gmail-unread-${_insightsData.gmailUnread}`, type: 'warn', message: `📬 ${_insightsData.gmailUnread} emails não lidos acumulados`, source: 'Gmail', createdAt: new Date().toISOString() });
     } else if (_insightsData.gmailUnread === 0) {
       chips.push({ cls: 'insight-ok', txt: '✉️ Inbox zerado' });
     }
@@ -10055,6 +10111,7 @@ function showSection(name) {
 (function initSection(){
   const saved = localStorage.getItem('dash_active_section') || 'clinica';
   showSection(saved);
+  renderAlerts();
   generateInsights();
 })();
 
