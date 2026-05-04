@@ -11,6 +11,7 @@
     { "source": "/api/supervisor",        "destination": "/api/supervisor" },
     { "source": "/api/assistente",        "destination": "/api/assistente" },
     { "source": "/api/analisa-foto",      "destination": "/api/analisa-foto" },
+    { "source": "/api/cron",              "destination": "/api/cron" },
     { "source": "/api/config",            "destination": "/api/config" },
     { "source": "/api/google/token",      "destination": "/api/google/token" },
     { "source": "/api/google/refresh",    "destination": "/api/google/refresh" },
