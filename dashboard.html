@@ -10012,12 +10012,26 @@ function saveAlert(alert) {
   alerts.push(alert);
   localStorage.setItem(ALERTS_KEY, JSON.stringify(alerts));
   renderAlerts();
+  syncAlertsToServer();
 }
 
 function resolveAlert(id) {
-  const alerts = loadAlerts().filter(a => a.id !== id);
+  const alerts = loadAlerts().map(a =>
+    a.id === id ? { ...a, resolved: true, resolvedAt: new Date().toISOString() } : a
+  );
   localStorage.setItem(ALERTS_KEY, JSON.stringify(alerts));
   renderAlerts();
+  syncAlertsToServer();
+}
+
+function syncAlertsToServer() {
+  const alerts = loadAlerts();
+  if (!alerts.length) return;
+  fetch('/api/alerts/sync', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ alerts }),
+  }).catch(() => {}); // fire-and-forget — falha silenciosa
 }
 
 function renderAlerts() {

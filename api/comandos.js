@@ -221,22 +221,20 @@ async function handleResumo() {
 }
 
 async function handleAlertas() {
-  // Alertas vivem no localStorage do browser — ainda não sincronizados com backend.
-  // Tenta buscar do Supabase (tabela supervisor_logs como proxy); fallback seguro se indisponível.
   try {
-    const rows = await sbFetch(
-      '/supervisor_logs?select=severidade,mensagem,componente,criado_em&severidade=eq.erro&order=criado_em.desc&limit=5'
-    );
-    if (!Array.isArray(rows) || !rows.length) {
-      return '✅ Nenhum alerta ativo.\n\n_Dica: alertas locais do dashboard ainda não sincronizados com o servidor._';
-    }
-    const lista = rows.map((r, i) => {
-      const ts = r.criado_em ? new Date(r.criado_em).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
-      return `${i + 1}. ${r.mensagem}\n   📍 ${r.componente}${ts ? ' · ' + ts : ''}`;
+    const r = await fetch('https://dashboard-pessoal-edson.vercel.app/api/alerts');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    const alerts = data.alerts || [];
+    if (!alerts.length) return '✅ Nenhum alerta ativo.';
+    const lista = alerts.map((a, i) => {
+      const ts = a.created_at ? new Date(a.created_at).toLocaleString('pt-BR', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' }) : '';
+      const icon = a.type === 'critical' ? '🔴' : '🟡';
+      return `${i + 1}. ${icon} ${a.message}\n   📍 ${a.source}${ts ? ' · ' + ts : ''}`;
     }).join('\n\n');
-    return `🚨 *Alertas recentes (${rows.length})*\n\n${lista}`;
-  } catch {
-    return '⚠️ Alertas locais ainda não sincronizados com o servidor.';
+    return `🚨 *Alertas ativos (${alerts.length})*\n\n${lista}`;
+  } catch (e) {
+    return `⚠️ Não foi possível consultar alertas. Tente novamente.\n_${e.message}_`;
   }
 }
 
