@@ -12,11 +12,11 @@
  *   warn     → cooldown de 30 min por source (não repete mesma fonte em 30 min)
  */
 
+import { sendWhatsApp } from './lib/openclaw.js';
+
 const SUPABASE_URL  = 'https://jaewjscbigfwjiaeavft.supabase.co';
-const SUPABASE_ANON = process.env.SUPABASE_ANON_KEY    || '';
-const WA_TOKEN      = process.env.WA_BUSINESS_TOKEN    || '';
-const WA_PHONE_ID   = process.env.WA_BUSINESS_PHONE_ID || '';
-const WA_DEST       = process.env.PHONE_BRIEFING        || '';
+const SUPABASE_ANON = process.env.SUPABASE_ANON_KEY || '';
+const WA_DEST       = process.env.PHONE_BRIEFING    || '';
 
 const NOTIFY_TYPES     = ['critical', 'warn'];
 const WARN_COOLDOWN_MS = 30 * 60 * 1000; // 30 min entre warns da mesma source
@@ -60,21 +60,18 @@ function sanitize(a) {
   return out;
 }
 
-// ── WhatsApp ──────────────────────────────────────────────────────
+// ── WhatsApp via OpenClaw ─────────────────────────────────────────
 async function sendWhatsAppAlert(alert) {
-  if (!WA_TOKEN || !WA_PHONE_ID || !WA_DEST) return false;
+  if (!WA_DEST) { console.warn('[alerts] PHONE_BRIEFING ausente'); return false; }
   const icon  = alert.type === 'critical' ? '🔴' : '🟡';
-  const texto = `${icon} *Alerta do Dashboard*\n\nTipo: ${alert.type}\nOrigem: ${alert.source}\nMensagem: ${alert.message}\n\nPara ver todos: envie *alertas*\nPara resolver: envie *resolver 1*`;
+  const texto = `${icon} *Alerta do Dashboard*\n\nTipo: ${alert.type}\nOrigem: ${alert.source}\nMensagem: ${alert.message}\n\nPara ver todos: envie *alertas*`;
   try {
-    const r = await fetch(`https://graph.facebook.com/v19.0/${WA_PHONE_ID}/messages`, {
-      method:  'POST',
-      headers: { Authorization: `Bearer ${WA_TOKEN}`, 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ messaging_product: 'whatsapp', to: WA_DEST, type: 'text', text: { body: texto } }),
-    });
-    const d = await r.json();
-    if (!r.ok) { console.error('[alerts] WA failed:', r.status, d?.error?.message || ''); return false; }
-    return !!d.messages?.[0]?.id;
-  } catch (e) { console.error('[alerts] WA error:', e.message); return false; }
+    await sendWhatsApp(WA_DEST, texto);
+    return true;
+  } catch (e) {
+    console.error('[alerts] OpenClaw send error:', e.message);
+    return false;
+  }
 }
 
 async function markNotified(id) {
