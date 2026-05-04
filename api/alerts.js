@@ -45,8 +45,10 @@ async function sb(path, opts = {}) {
 }
 
 // Campos aceitos — descarta qualquer campo extra
+// notified/notified_at são gerenciados pelo backend (cron Phase 7.5B), não pelo frontend.
+// Incluídos aqui apenas para não resetar o flag em caso de re-sync.
 function sanitize(a) {
-  return {
+  const out = {
     id:          String(a.id        || '').slice(0, 100),
     type:        String(a.type      || 'warn').slice(0, 20),
     message:     String(a.message   || '').slice(0, 500),
@@ -55,6 +57,10 @@ function sanitize(a) {
     resolved:    !!a.resolved,
     resolved_at: a.resolved ? (a.resolvedAt || a.resolved_at || new Date().toISOString()) : null,
   };
+  // Preserva notified se vier do frontend (não força reset)
+  if (typeof a.notified === 'boolean') out.notified = a.notified;
+  if (a.notified_at) out.notified_at = a.notified_at;
+  return out;
 }
 
 export default async function handler(req, res) {
