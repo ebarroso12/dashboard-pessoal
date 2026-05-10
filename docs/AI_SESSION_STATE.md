@@ -199,7 +199,48 @@ Fonte: inspeção de código (`api/*.js`) — MCP Supabase sem permissão de man
 - Comando: `node --test tests/contract/api-comandos.p0.test.js`
 - `api/comandos.js` **não alterado**
 
-### Próxima ação segura
-- [ ] Colar conteúdo real dos docs 17/18/19 do Codex para substituir os placeholders
-- [ ] **Confirmar nomes reais das colunas** de `tarefas` e `metas` no painel Supabase antes de qualquer alteração de código
-- [ ] Criar testes P1 apenas após sincronização dos docs e confirmação de schema
+---
+
+## Encerramento de sessão — 2026-05-10
+
+### Commits registrados
+```
+23fddd5 chore(gitignore): ignora arquivos .env locais
+3ee72fb checkpoint(sp-2.5): estabiliza discovery, contratos e testes P0
+```
+
+### Status no encerramento
+- Testes P0: **15/15 passando**
+- Working tree: **limpo**
+- Migrations: **nenhuma**
+- `api/comandos.js`: **não alterado**
+- Banco Supabase: **não alterado**
+- Deploy: **não realizado**
+
+### Próxima ação recomendada
+**Validar colunas reais de `tarefas` e `metas` no painel Supabase antes de avançar para P1.**
+
+Contexto: `api/comandos.js` usa `done`/`atual`/`meta`/`created_at`; demais arquivos usam `concluida`/`valor_atual`/`valor_meta`/`criado_em`. Sem saber qual conjunto existe no banco real, qualquer correção de código pode introduzir regressão silenciosa.
+
+---
+
+## Comando de retomada
+
+```
+Reconectar ao dashboard-pessoal.
+
+Leia primeiro:
+- docs/AI_SESSION_STATE.md
+- docs/13-schema-real-extraido.md
+- docs/15-colunas-observadas-v1.md
+- docs/17-comportamento-real-api-comandos.md
+- tests/contract/api-comandos.p0.test.js
+
+Estado atual esperado:
+- commits 3ee72fb e 23fddd5 existem
+- testes P0 passam 15/15
+- não avançar para P1 antes de validar colunas reais de tarefas e metas no Supabase
+
+Continue exatamente da próxima ação recomendada.
+Não altere código, banco, deploy ou secrets sem confirmação.
+```
