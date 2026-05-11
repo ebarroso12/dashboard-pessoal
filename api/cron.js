@@ -18,7 +18,10 @@ async function sb(path, opts = {}) {
     ...opts,
     headers: { apikey: SUPA_ANON, Authorization: `Bearer ${SUPA_ANON}`, 'Content-Type': 'application/json', ...(opts.headers || {}) }
   });
-  return r.ok ? r.json() : null;
+  if (!r.ok) return null;
+  if (r.status === 204) return null;
+  if (!(r.headers.get('content-type') || '').includes('json')) return null;
+  return r.json();
 }
 
 async function enviarWA(texto) {
