@@ -226,13 +226,23 @@ async function tool_verificar_saude_servicos() {
   return checks;
 }
 
+// Redacts strings that look like tokens/secrets before writing or returning logs.
+function scrubSecrets(text) {
+  if (typeof text !== 'string') return text;
+  return text
+    .replace(/EAA[A-Za-z0-9]{30,}/g, '[TOKEN_REDACTED]')
+    .replace(/ya29\.[A-Za-z0-9._-]{30,}/g, '[TOKEN_REDACTED]')
+    .replace(/ey[A-Za-z0-9_-]{20,}\.[A-Za-z0-9._-]{10,}/g, '[TOKEN_REDACTED]')
+    .replace(/[A-Za-z0-9]{50,}/g, '[TOKEN_REDACTED]');
+}
+
 async function tool_registrar_incidente({ severidade, mensagem, componente }) {
   await sb('/supervisor_logs', {
     method: 'POST',
     headers: { Prefer: 'return=minimal' },
     body: JSON.stringify({
       severidade,
-      mensagem,
+      mensagem: scrubSecrets(mensagem),
       componente,
       criado_em: new Date().toISOString(),
     }),
@@ -242,7 +252,10 @@ async function tool_registrar_incidente({ severidade, mensagem, componente }) {
 
 async function tool_listar_logs({ limite = 10 }) {
   const rows = await sb(`/supervisor_logs?select=*&order=criado_em.desc&limit=${limite}`);
-  if (Array.isArray(rows)) return { ok: true, logs: rows };
+  if (Array.isArray(rows)) {
+    const safe = rows.map(r => ({ ...r, mensagem: scrubSecrets(r.mensagem) }));
+    return { ok: true, logs: safe };
+  }
   // Tabela pode não existir ainda
   return { ok: false, mensagem: 'Tabela supervisor_logs não encontrada. Crie-a no Supabase com: id serial, severidade text, mensagem text, componente text, criado_em timestamptz.' };
 }
@@ -280,6 +293,7 @@ Seu comportamento:
 3. Seja proativo: se algo puder quebrar, avise antes
 4. Responda sempre em português brasileiro, de forma clara e objetiva
 5. Para problemas que requerem ação humana, explique exatamente o que fazer
+6. SEGURANÇA: Nunca inclua tokens, chaves, senhas ou strings longas de autenticação na mensagem de um incidente. Use apenas '[TOKEN PRESENTE]' para indicar que uma credencial existe.
 
 Você tem acesso ao Claude Code (meu criador) via integração — se um problema for complexo demais, indique que pode ser escalado para análise de código.`;
 
@@ -373,6 +387,10 @@ export default async function handler(req, res) {
   Object.entries(cors()).forEach(([k, v]) => res.setHeader(k, v));
   if (req.method === 'OPTIONS') return res.status(204).end();
 
+  // Autenticação — obrigatória para GET e POST
+  const token = req.headers['x-webhook-token'] || req.body?.token;
+  if (token !== WEBHOOK_TOKEN) return res.status(401).json({ error: 'Token inválido' });
+
   // GET /api/supervisor → status rápido
   if (req.method === 'GET') {
     try {
@@ -385,10 +403,6 @@ export default async function handler(req, res) {
   }
 
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
-
-  // Autenticação
-  const token = req.headers['x-webhook-token'] || req.body?.token;
-  if (token !== WEBHOOK_TOKEN) return res.status(401).json({ error: 'Token inválido' });
 
   const { mensagem, historico = [] } = req.body || {};
   if (!mensagem) return res.status(400).json({ error: 'Campo "mensagem" obrigatório' });

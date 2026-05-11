@@ -370,9 +370,58 @@ Tecnicas usadas:
 - Default mock retorna `[]` simulando tabelas Supabase vazias
 - Nenhuma chamada de rede real
 
-**Proxima acao recomendada:**
-Decidir se avanca para P1 de `financas` (depende de confirmar se `financas` e `transacoes` tem dados)
-ou para testes de `alertas` (requer mock do endpoint `/api/alerts`).
+### Auditoria de producao (2026-05-11)
+
+Documento: `docs/28-auditoria-producao-minima.md`
+
+**Estado real em producao:**
+
+| Componente | Estado |
+|------------|--------|
+| Vercel / rotas | Todas 200 — operacional |
+| Google OAuth token | Presente e valido |
+| Todas env vars | Configuradas |
+| Morning briefing (cron) | **PARADO** — ultimo envio: 2026-05-03 (8 dias) |
+| OpenClaw → comandos | **INATIVO** — 2 registros de teste, nenhum real apos abr/19 |
+| `dashboard_alerts` | **NAO EXISTE** no banco |
+| Supabase health (supervisor) | Falso negativo permanente (query errada) |
+| Instagram/Facebook widgets | Dados hardcoded — token Meta ignorado |
+| Tarefas, metas, notas, lancamentos | Todas vazias |
+
+**3 reparos prioritarios:**
+1. **Urgente** — descobrir por que morning briefing parou em mai/03 (WA_BUSINESS_TOKEN expirado?)
+2. **Medio** — criar tabela `dashboard_alerts` (sistema de alertas implementado mas bloqueado)
+3. **Medio** — corrigir health check Supabase no supervisor (`select=id` → `select=servico`, 1 linha)
+
+**Risco de seguranca — INCIDENTE ATIVO:** token Meta em plaintext em `supervisor_logs` id:20.
+Documento completo: `docs/31-incidente-token-meta-supervisor-logs.md`
+
+Agravante descoberto: `GET /api/supervisor` nao requer autenticacao (handler GET roda
+antes do bloco de auth). O token e retornado publicamente sem token algum.
+
+Ordem de correcao (aguardando confirmacao do usuario):
+1. Revogar token Meta no painel Meta for Developers
+2. DELETE supervisor_logs WHERE id=20 (SQL Supabase)
+3. Gerar novo token Meta + salvar em oauth_tokens
+4. Alterar GET /api/supervisor para exigir auth (Claude Code)
+5. Adicionar scrubbing em tool_registrar_incidente (Claude Code)
+6. Habilitar RLS em supervisor_logs (Supabase)
+7. Deploy
+
+### Inventario de chamadas IA (2026-05-11)
+
+Documento: `docs/30-inventario-chamadas-ia.md`
+
+| Arquivo | Modelo | Chamadas por acionamento | Risco custo |
+|---------|--------|--------------------------|-------------|
+| `api/supervisor.js` | `claude-sonnet-4-6` | Ate 8 (loop agente) | ALTO |
+| `api/analisa-foto.js` | `claude-haiku-4-5-20251001` | 1 (visao, sem loop) | BAIXO |
+| `server-vps.js` | `claude-sonnet-4-6` | 1 (parado) | ZERO |
+| `api/assistente.js` | NENHUM | Regex puro | ZERO |
+| `api/comandos.js` | NENHUM | Keyword matching | ZERO |
+
+**Bug critico:** botao "Claude Analisa" no dashboard chama `/api/assistente` (sem IA).
+Usuario ve "Consultando Claude..." mas nenhum Claude e acionado — retorna "nao entendi".
 
 ---
 
