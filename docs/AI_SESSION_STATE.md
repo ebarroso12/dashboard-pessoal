@@ -1,6 +1,6 @@
 # AI Session State — Dashboard Pessoal
 
-> Atualizado em: 2026-05-10
+> Atualizado em: 2026-05-11
 
 ## Etapa atual
 **SP-2.5 — Contract Capture** (testes P0 criados e passando)
@@ -201,6 +201,80 @@ Fonte: inspeção de código (`api/*.js`) — MCP Supabase sem permissão de man
 
 ---
 
+---
+
+## Sessão 2026-05-11 — Mapeamento OpenClaw / CRM / Supervisor IA
+
+Documento produzido: `docs/20-mapa-openclaw-crm-supervisor.md`
+
+### Fluxo principal confirmado
+
+```
+WhatsApp → OpenClaw (WebSocket VPS) → POST /api/webhook → tabela comandos → dashboard polling a cada 4s
+```
+
+Token aceito em `X-Webhook-Token` (header) ou `body.token` (legado OpenClaw).
+Testes P0 cobrem este contrato. 15/15 passando.
+
+### Dois stacks WhatsApp paralelos
+
+| Stack | Onde roda | Funcao principal |
+|-------|-----------|------------------|
+| OpenClaw (`api/lib/openclaw.js`) | VPS via EasyPanel | Envia mensagens de saida via WebSocket |
+| `server-vps.js` (whatsapp-web.js) | VPS Hostinger | Gerencia conexoes WA, sincroniza chats, executa analises Claude |
+
+Os dois coexistem sem documentacao sobre qual recebe mensagens do usuario.
+
+### server-vps.js nao processa mensagens recebidas
+
+`server-vps.js` nao tem nenhum `client.on('message', ...)`.
+Seu papel real hoje: gerenciar conexao (QR, auth), sincronizar lista de chats
+em `wa_chats`, e executar analises sob demanda via fila `wa_requests`.
+Ele **nao** age como chatbot de entrada.
+
+### Tarefas e metas estao vazias no Supabase
+
+Confirmado pelo usuario: as tabelas `tarefas` e `metas` existem mas estao
+vazias. A divergencia de colunas (`done` vs. `concluida`, etc.) documentada
+anteriormente nao impacta o fluxo operacional ativo. **Nao deve guiar a
+proxima correcao.**
+
+### Diagnostico server-vps.js (2026-05-11)
+
+Documento completo: `docs/22-diagnostico-server-vps-openclaw.md`
+
+**Conclusao: server-vps.js nao tem rastreabilidade de deploy neste repo.**
+
+- Nenhum script de inicializacao o menciona (`iniciar.bat`, `iniciar.sh`, `publicar.bat`, `retomar.sh` — todos omitem)
+- 4 dependencias ausentes no `package.json`: `dotenv`, `whatsapp-web.js`, `qrcode`, `@anthropic-ai/sdk`
+- `package.json` tem `"type": "module"` (ESM); `server-vps.js` usa `require()` (CJS) — falha imediatamente se executado aqui
+- `.wwebjs_auth/` (pasta de sessao WA) nao existe — nunca rodou nesta maquina
+- Sem PM2/systemd/Docker config no repo
+- O arquivo provavelmente existe no VPS de forma independente, com seu proprio `package.json`
+
+**Verificacao manual necessaria (usuario):**
+- SSH no VPS: `pm2 list` ou `ps aux | grep server-vps`
+- OU inspecionar `wa_connections.updated_at` no Supabase — se antigo e status travado, processo esta parado
+- OU verificar container no EasyPanel do Hostinger
+
+**Fluxo OpenClaw nao e afetado** — `/api/webhook` → `comandos` roda 100% no Vercel.
+
+### Resultado da investigacao de tabelas (2026-05-11)
+
+Documento completo: `docs/21-mapa-tabelas-operacionais.md`
+
+| Tabela | Escritor | Leitor | Situacao |
+|--------|---------|--------|----------|
+| `wa_chats` | server-vps.js | nenhum no repo | orfa — gravado, sem consumidor |
+| `wa_analyses` | server-vps.js | nenhum no repo | orfa — gravado, sem consumidor |
+| `wa_connections` | server-vps.js | server-vps.js | produtor-dashboard nao rastreado |
+| `wa_requests` | nenhum no repo | server-vps.js | fila sem produtor rastreado |
+| `supervisor_logs` | api/supervisor.js | api/supervisor.js | operacional (pode nao existir no banco) |
+| `infra_logs` | nenhum no repo | dashboard.html | escritor desconhecido (n8n?) |
+| `infra_servicos` | nenhum no repo | dashboard.html (possivelmente morto) | canary de Supabase; patch substituiu por outra tabela |
+
+---
+
 ## Encerramento de sessão — 2026-05-10
 
 ### Commits registrados
@@ -217,10 +291,88 @@ Fonte: inspeção de código (`api/*.js`) — MCP Supabase sem permissão de man
 - Banco Supabase: **não alterado**
 - Deploy: **não realizado**
 
-### Próxima ação recomendada
-**Validar colunas reais de `tarefas` e `metas` no painel Supabase antes de avançar para P1.**
+### OpenClaw vs server-vps.js (2026-05-11)
 
-Contexto: `api/comandos.js` usa `done`/`atual`/`meta`/`created_at`; demais arquivos usam `concluida`/`valor_atual`/`valor_meta`/`criado_em`. Sem saber qual conjunto existe no banco real, qualquer correção de código pode introduzir regressão silenciosa.
+Documento completo: `docs/23-openclaw-vs-server-vps.md`
+
+**Veredicto: server-vps.js nao e necessario para o fluxo operacional atual.**
+
+- Fluxo de comandos WhatsApp roda 100% via OpenClaw + Vercel
+- Nenhum widget ativo do dashboard consome `wa_chats`, `wa_analyses` ou `wa_requests`
+- `server-vps.js` implementa CRM de conversas que **nao foi integrado ao frontend**
+- Congelar o VPS nao quebra nenhuma funcionalidade visivel hoje
+
+| O que funciona SEM VPS | O que para SEM VPS |
+|------------------------|-------------------|
+| Todos os comandos WA (audio/texto) | Ciclo QR/auth de novas conexoes WA |
+| /api/comandos, /api/assistente, /api/supervisor | wa_chats, wa_analyses (sem consumidor) |
+| Dashboard, Monitor IA, Google, Financas | wa_requests (sem produtor) |
+
+### Decisao registrada — 2026-05-11
+
+**OpenClaw/Vercel e o fluxo oficial atual.**
+
+- `server-vps.js` esta parado/desconectado — nao ressuscitar agora
+- CRM (`wa_*`) vai para backlog tecnico sem data
+- Foco exclusivo no fluxo OpenClaw/Vercel
+
+### Contrato webhook OpenClaw mapeado (2026-05-11)
+
+Documento completo: `docs/24-contrato-real-openclaw-webhook.md`
+
+**Descoberta critica:** `/api/webhook` e um endpoint de LOG, nao de processamento.
+O OpenClaw ja chega com `resposta` pronta — o webhook apenas persiste o par
+`(texto, resposta)` na tabela `comandos`. Nao ha roteamento dinamico.
+
+**Dois canais de saida WhatsApp identificados:**
+- `api/lib/openclaw.js` `sendWhatsApp()` — usado por `api/alerts.js` (alertas criticos/warn)
+- Meta WhatsApp Business API (`graph.facebook.com`) — usado por `api/cron.js` (morning, weekly, reviews)
+
+**Body em producao (formato documentado no dashboard):**
+```json
+{ "tipo": "voz", "texto": "...", "resposta": "...", "de": "WhatsApp", "token": "oc_edson_2026_secure" }
+```
+Aliases legados aceitos: `text`, `from`, `response`, `audio` (nao salvo).
+
+### Mapa de comandos WhatsApp (2026-05-11)
+
+Documento completo: `docs/26-mapa-comandos-whatsapp.md`
+
+| Comando | Risco atual | Estado |
+|---------|-------------|--------|
+| `ajuda` | Zero | Pronto para Segundo Eu |
+| `agenda` | Medio — cadeia OAuth | Funcional se token valido |
+| `resumo` | Critico — combina 3 handlers | Herda riscos de tarefas + metas + financas |
+| `tarefas` | Alto — coluna `done` provavelmente errada | Retorna todas pendentes silenciosamente |
+| `metas` | Alto — colunas `atual`/`meta` provavelmente erradas | Exibe 0% em tudo silenciosamente |
+| `financas` | Alto — le tabelas legadas | `lancamentos_financeiros` ignorado |
+| `alertas` | Medio — chama producao | Nao testavel localmente |
+| `emails`, `drive` | Baixo | Pouco usados; falha graciosamente |
+
+**10 aliases identificados como legado** (ingleses/arcaicos): `calendar`, `inbox`, `tasks`,
+`todo`, `goals`, `resume`, `docs`, `ver alertas`, `listar alertas`, `dinheiro`.
+
+### Testes P1 criados (2026-05-11)
+
+Arquivo: `tests/contract/api-comandos.p1.test.js`
+
+| Suite | Testes | Resultado |
+|-------|--------|-----------|
+| P1: ajuda | 6 | 6/6 passando |
+| P1: agenda sem token | 6 | 6/6 passando |
+| P1: resumo mocks minimos | 10 | 10/10 passando |
+| **Total P1** | **22** | **22/22** |
+| P0 (regressao) | 15 | 15/15 — sem regressao |
+
+Tecnicas usadas:
+- `global.fetch` mockado via `installMock()` / `removeMock()`
+- `before`/`after` escopados por suite (`describe`)
+- Default mock retorna `[]` simulando tabelas Supabase vazias
+- Nenhuma chamada de rede real
+
+**Proxima acao recomendada:**
+Decidir se avanca para P1 de `financas` (depende de confirmar se `financas` e `transacoes` tem dados)
+ou para testes de `alertas` (requer mock do endpoint `/api/alerts`).
 
 ---
 
