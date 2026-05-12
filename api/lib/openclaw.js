@@ -23,6 +23,7 @@ export async function sendWhatsApp(to, message, timeoutMs = 15000) {
 
     ws.on('open',  ()  => { console.log('[openclaw] connected'); });
     ws.on('error', (e) => { console.error('[openclaw] ws error:', e.message); clearTimeout(timer); reject(e); });
+    ws.on('close', (code, reason) => { if (!authed) { clearTimeout(timer); reject(new Error(`OpenClaw auth failed (${code}): ${reason}`)); } });
 
     ws.on('message', (raw) => {
       let msg;
@@ -36,11 +37,11 @@ export async function sendWhatsApp(to, message, timeoutMs = 15000) {
           params: {
             minProtocol: 3, maxProtocol: 3,
             role: 'operator',
-            scopes: ['control', 'chat'],
+            scopes: ['operator.admin', 'operator.read', 'operator.write', 'operator.approvals', 'operator.pairing'],
             caps: ['tool-events'],
-            auth: { authToken: TOKEN },
-            client: { name: 'dashboard-proxy', version: '1.0' },
-            userAgent: 'node-proxy',
+            auth: { token: TOKEN },
+            client: { id: 'dashboard-proxy', version: '1.0', mode: 'node', platform: 'linux' },
+            userAgent: 'node-proxy/1.0',
             locale: 'pt-BR',
           },
         }));
