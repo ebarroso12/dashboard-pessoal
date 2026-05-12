@@ -7,7 +7,7 @@
 
 export async function sendWhatsApp(to, message) {
   const token   = process.env.WA_BUSINESS_TOKEN    || '';
-  const phoneId = process.env.WA_BUSINESS_PHONE_ID || '607518142444507';
+  const phoneId = process.env.WA_BUSINESS_PHONE_ID || '656678347527144';
 
   if (!token) throw new Error('WA_BUSINESS_TOKEN não configurado');
 
