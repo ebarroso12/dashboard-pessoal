@@ -1,77 +1,34 @@
 /**
  * api/lib/openclaw.js
- * Envia mensagem WhatsApp via OpenClaw WebSocket (deliver:false = sem Claude responder)
+ * Envia mensagem WhatsApp via Meta Business API.
+ * Mantém a interface sendWhatsApp(to, message) para compatibilidade com
+ * api/alerts.js e api/whatsapp/test.js.
  */
 
-import { createRequire } from 'module';
-import { randomUUID }    from 'crypto';
+export async function sendWhatsApp(to, message) {
+  const token   = process.env.WA_BUSINESS_TOKEN    || '';
+  const phoneId = process.env.WA_BUSINESS_PHONE_ID || '607518142444507';
 
-const require = createRequire(import.meta.url);
-const WebSocket = require('ws');
+  if (!token) throw new Error('WA_BUSINESS_TOKEN não configurado');
 
-const GATEWAY = 'wss://openclaw.n8ndredson.com';
-const TOKEN   = process.env.OPENCLAW_TOKEN || '';
+  const number = String(to).replace(/\D/g, '');
 
-export async function sendWhatsApp(to, message, timeoutMs = 15000) {
-  if (!TOKEN) throw new Error('OPENCLAW_TOKEN não configurado');
-
-  return new Promise((resolve, reject) => {
-    const ws      = new WebSocket(GATEWAY);
-    const timer   = setTimeout(() => { ws.terminate(); reject(new Error('OpenClaw timeout')); }, timeoutMs);
-    let   reqId   = 1;
-    let   authed  = false;
-
-    ws.on('open',  ()  => { console.log('[openclaw] connected'); });
-    ws.on('error', (e) => { console.error('[openclaw] ws error:', e.message); clearTimeout(timer); reject(e); });
-    ws.on('close', (code, reason) => { if (!authed) { clearTimeout(timer); reject(new Error(`OpenClaw auth failed (${code}): ${reason}`)); } });
-
-    ws.on('message', (raw) => {
-      let msg;
-      try { msg = JSON.parse(raw); } catch { return; }
-      console.log('[openclaw] msg:', JSON.stringify(msg).slice(0, 200));
-
-      // Passo 1 — desafio de conexão
-      if (msg.event === 'connect.challenge') {
-        ws.send(JSON.stringify({
-          type: 'req', id: reqId++, method: 'connect',
-          params: {
-            minProtocol: 3, maxProtocol: 3,
-            role: 'operator',
-            scopes: ['operator.admin', 'operator.read', 'operator.write', 'operator.approvals', 'operator.pairing'],
-            caps: ['tool-events'],
-            auth: { token: TOKEN },
-            client: { id: 'dashboard-proxy', version: '1.0', mode: 'node', platform: 'linux' },
-            userAgent: 'node-proxy/1.0',
-            locale: 'pt-BR',
-          },
-        }));
-        return;
-      }
-
-      // Passo 2 — autenticado: envia a mensagem
-      if (msg.type === 'res' && msg.ok && !authed) {
-        authed = true;
-        const number     = String(to).replace(/\D/g, '');
-        const sessionKey = `agent:main:whatsapp:direct:+${number}`;
-        ws.send(JSON.stringify({
-          type: 'req', id: reqId++, method: 'chat.send',
-          params: {
-            sessionKey,
-            message,
-            deliver: false,       // envia sem acionar o Claude
-            idempotencyKey: randomUUID(),
-          },
-        }));
-        return;
-      }
-
-      // Passo 3 — resposta do chat.send
-      if (msg.type === 'res' && authed) {
-        clearTimeout(timer);
-        ws.close();
-        if (msg.ok) resolve(msg.payload || {});
-        else reject(new Error(msg.error?.message || 'OpenClaw chat.send failed'));
-      }
-    });
+  const r = await fetch(`https://graph.facebook.com/v19.0/${phoneId}/messages`, {
+    method:  'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type':  'application/json',
+    },
+    body: JSON.stringify({
+      messaging_product: 'whatsapp',
+      to:                number,
+      type:              'text',
+      text:              { body: message },
+    }),
   });
+
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error?.message || `Meta WA API error ${r.status}`);
+  console.log('[meta-wa] sent ok, id:', data.messages?.[0]?.id);
+  return data;
 }
