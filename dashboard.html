@@ -2420,7 +2420,7 @@ body::before {
           <div>
             <div style="font-size:.72rem;color:var(--muted2);font-weight:700;margin-bottom:6px">2️⃣ Token de Segurança</div>
             <div style="display:flex;gap:6px;align-items:center">
-              <input id="oc-token-display" readonly="" value="oc_edson_2026_secure" style="flex:1;padding:8px 11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,107,53,.25);border-radius:8px;color:#ff6b35;font-size:.78rem;font-family:monospace">
+              <input id="oc-token-display" readonly="" value="(configure WEBHOOK_TOKEN no Vercel)" style="flex:1;padding:8px 11px;background:rgba(255,255,255,.05);border:1px solid rgba(255,107,53,.25);border-radius:8px;color:#ff6b35;font-size:.78rem;font-family:monospace">
               <button onclick="copyOCToken()" style="padding:7px 12px;background:rgba(255,107,53,.15);border:1px solid rgba(255,107,53,.3);border-radius:8px;color:#ff6b35;font-size:.75rem;font-weight:700;cursor:pointer">📋 Copiar</button>
             </div>
             <div style="font-size:.68rem;color:var(--muted2);margin-top:5px">Envie no header: <strong style="color:#ff6b35">X-Webhook-Token</strong></div>
@@ -2428,70 +2428,13 @@ body::before {
         </div>
         <div style="margin-top:12px;padding:10px 13px;background:rgba(0,0,0,.25);border-radius:9px;font-size:.72rem;color:var(--muted2)">
           <strong style="color:#ff6b35">📋 Body JSON esperado pelo webhook:</strong><br>
-          <code style="color:#4ade80;font-size:.7rem">{ "tipo": "voz", "texto": "transcrição do áudio", "resposta": "resposta da IA", "de": "WhatsApp", "token": "oc_edson_2026_secure" }</code>
+          <code style="color:#4ade80;font-size:.7rem">{ "tipo": "voz", "texto": "transcrição do áudio", "resposta": "resposta da IA", "de": "WhatsApp", "token": "SEU_WEBHOOK_TOKEN" }</code>
         </div>
       </div>
 
       <!-- FEED DE COMANDOS -->
       <div class="card-body" style="padding:0">
-        <div id="oc-feed" style="max-height:320px;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px"><div id="oc-cmd-1" style="background: rgba(255, 107, 53, 0.08); border: 1px solid rgba(255, 107, 53, 0.2); border-radius: 12px; padding: 12px 14px; animation: 0.35s ease 0s 1 normal none running ocFadeIn;">
-      <div style="display:flex;align-items:flex-start;gap:10px">
-        <div style="font-size:1.2rem;flex-shrink:0;margin-top:2px">🎤</div>
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
-            <span style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#ff6b35">Áudio</span>
-            <span style="font-size:.65rem;color:var(--muted2)">16:06</span>
-            <span style="font-size:.65rem;color:var(--muted2);margin-left:auto">via Sistema</span>
-          </div>
-          <div style="font-size:.85rem;font-weight:600;color:#eef2ff;line-height:1.4;margin-bottom:6px">
-            Teste de conexão OpenClaw ✅
-          </div>
-          
-          <div style="background:rgba(0,0,0,.25);border-radius:8px;padding:8px 10px;font-size:.78rem;color:var(--muted2);line-height:1.45;border-left:2px solid #ff6b35">
-            <span style="font-size:.65rem;font-weight:700;color:#ff6b35;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">🤖 Resposta OpenClaw</span>
-            Dashboard conectado com sucesso! Pode enviar áudios pelo WhatsApp agora.
-          </div>
-        </div>
-      </div>
-    </div><div id="oc-cmd-1" style="background: rgba(255, 107, 53, 0.08); border: 1px solid rgba(255, 107, 53, 0.2); border-radius: 12px; padding: 12px 14px; animation: 0.35s ease 0s 1 normal none running ocFadeIn;">
-      <div style="display:flex;align-items:flex-start;gap:10px">
-        <div style="font-size:1.2rem;flex-shrink:0;margin-top:2px">🎤</div>
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
-            <span style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#ff6b35">Áudio</span>
-            <span style="font-size:.65rem;color:var(--muted2)">16:06</span>
-            <span style="font-size:.65rem;color:var(--muted2);margin-left:auto">via Sistema</span>
-          </div>
-          <div style="font-size:.85rem;font-weight:600;color:#eef2ff;line-height:1.4;margin-bottom:6px">
-            Teste de conexão OpenClaw ✅
-          </div>
-          
-          <div style="background:rgba(0,0,0,.25);border-radius:8px;padding:8px 10px;font-size:.78rem;color:var(--muted2);line-height:1.45;border-left:2px solid #ff6b35">
-            <span style="font-size:.65rem;font-weight:700;color:#ff6b35;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">🤖 Resposta OpenClaw</span>
-            Dashboard conectado com sucesso! Pode enviar áudios pelo WhatsApp agora.
-          </div>
-        </div>
-      </div>
-    </div><div id="oc-cmd-1" style="background: rgba(255, 107, 53, 0.08); border: 1px solid rgba(255, 107, 53, 0.2); border-radius: 12px; padding: 12px 14px; animation: 0.35s ease 0s 1 normal none running ocFadeIn;">
-      <div style="display:flex;align-items:flex-start;gap:10px">
-        <div style="font-size:1.2rem;flex-shrink:0;margin-top:2px">🎤</div>
-        <div style="flex:1;min-width:0">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
-            <span style="font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#ff6b35">Áudio</span>
-            <span style="font-size:.65rem;color:var(--muted2)">16:06</span>
-            <span style="font-size:.65rem;color:var(--muted2);margin-left:auto">via Sistema</span>
-          </div>
-          <div style="font-size:.85rem;font-weight:600;color:#eef2ff;line-height:1.4;margin-bottom:6px">
-            Teste de conexão OpenClaw ✅
-          </div>
-          
-          <div style="background:rgba(0,0,0,.25);border-radius:8px;padding:8px 10px;font-size:.78rem;color:var(--muted2);line-height:1.45;border-left:2px solid #ff6b35">
-            <span style="font-size:.65rem;font-weight:700;color:#ff6b35;text-transform:uppercase;letter-spacing:.04em;display:block;margin-bottom:3px">🤖 Resposta OpenClaw</span>
-            Dashboard conectado com sucesso! Pode enviar áudios pelo WhatsApp agora.
-          </div>
-        </div>
-      </div>
-    </div>
+        <div id="oc-feed" style="max-height:320px;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px">
           <!-- Placeholder inicial -->
           <div id="oc-empty" style="text-align: center; padding: 32px 20px; color: var(--muted2); display: none;">
             <div style="font-size:2.5rem;margin-bottom:10px">🦞</div>
@@ -2503,7 +2446,7 @@ body::before {
 
       <div class="card-foot">
         <div class="card-foot-row" style="align-items:center">
-          <span id="oc-count-txt" style="font-size:.72rem;color:var(--muted2)">1 comando recebido</span>
+          <span id="oc-count-txt" style="font-size:.72rem;color:var(--muted2)">0 comandos recebidos</span>
           <div class="c-spacer"></div>
           <button onclick="clearOCFeed()" style="padding:5px 12px;border-radius:8px;font-size:.72rem;font-weight:700;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted2);cursor:pointer">🗑️ Limpar</button>
         </div>
@@ -8528,13 +8471,13 @@ checkStoredAuth();
       const ct = document.getElementById('oc-count-txt');
       if (ct) ct.textContent = `${ocCount} comando${ocCount !== 1 ? 's' : ''} recebido${ocCount !== 1 ? 's' : ''}`;
 
-    } catch(e) { /* servidor local offline — silencia */ }
+    } catch(e) { ocSetStatus(false); }
   }
 
 // ── Assistente Widget ─────────────────────────────────────
 (function(){
   const AST_URL   = 'https://dashboard-pessoal-edson.vercel.app/api/assistente';
-  const AST_TOKEN = 'oc_edson_2026_secure';
+  const AST_TOKEN = '';
   let   astAberto = false;
 
   window.toggleAssistente = function() {
@@ -9323,7 +9266,7 @@ setInterval(infraScanNow, 5*60*1000);
 /* ══ SUPERVISOR IA — Frontend ══════════════════════════ */
 (function(){
   const SV_URL     = '/api/supervisor';
-  const SV_TOKEN   = 'oc_edson_2026_secure';
+  const SV_TOKEN   = '';
   let   svHistorico = [];
 
   function svAddMsg(texto, tipo){
@@ -9642,7 +9585,7 @@ Responda APENAS com o id da categoria em minúsculas, sem explicação. Exemplo:
   try {
     const res = await fetch('https://dashboard-pessoal-edson.vercel.app/api/assistente',{
       method:'POST',
-      headers:{'Content-Type':'application/json','X-Webhook-Token':'oc_edson_2026_secure'},
+      headers:{'Content-Type':'application/json','X-Webhook-Token':''},
       body: JSON.stringify({ q: prompt, origem:'fin-categorizar' })
     });
     const d   = await res.json();
@@ -10164,7 +10107,7 @@ window.abrirBriefingMatinal = async function() {
   widget.scrollIntoView({ behavior: 'smooth' });
   if (txt) txt.textContent = '⏳ Carregando briefing...';
   try {
-    const res  = await fetch('/api/morning-briefing', { headers: { 'X-Webhook-Token': 'oc_edson_2026_secure' } });
+    const res  = await fetch('/api/morning-briefing', { headers: { 'X-Webhook-Token': '' } });
     const data = await res.json();
     if (data.briefing && txt) {
       txt.textContent = data.briefing;
@@ -10360,7 +10303,7 @@ window.diagMeta = async function(tipo){
 // ══ SISTEMA IA WIDGETS ══════════════════════════════════════════════
 (function(){
   const AI_URL   = 'https://dashboard-pessoal-edson.vercel.app/api/assistente';
-  const AI_TOKEN = 'oc_edson_2026_secure';
+  const AI_TOKEN = '';
   let   _iaResultado = '';
 
   function g(id){ return (document.getElementById(id)||{}).textContent||'—'; }
@@ -11227,7 +11170,7 @@ window.iaAnalisarComClaude = function(){
   ov.classList.add('open');
   var prompt = 'Analise estas notícias recentes de inteligência artificial e faça um resumo executivo em português, destacando o que é mais relevante e impactante. Responda em bullets claros:\n\n'+titles.join('\n');
   fetch('/api/assistente', {
-    method:'POST', headers:{'Content-Type':'application/json','X-Webhook-Token':'oc_edson_2026_secure'},
+    method:'POST', headers:{'Content-Type':'application/json','X-Webhook-Token':''},
     body: JSON.stringify({q: prompt, origem:'ia-news-widget'})
   }).then(function(r){ return r.json(); }).then(function(d){
     var resp = d.resposta || d.response || 'Sem resposta.';
