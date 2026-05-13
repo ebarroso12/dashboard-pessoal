@@ -8476,8 +8476,7 @@ checkStoredAuth();
 
 // ── Assistente Widget ─────────────────────────────────────
 (function(){
-  const AST_URL   = 'https://dashboard-pessoal-edson.vercel.app/api/assistente';
-  const AST_TOKEN = '';
+  const AST_URL   = '/api/dashboard-proxy';
   let   astAberto = false;
 
   window.toggleAssistente = function() {
@@ -8533,8 +8532,8 @@ checkStoredAuth();
     try {
       const res = await fetch(AST_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-Webhook-Token': AST_TOKEN },
-        body: JSON.stringify({ q: texto, origem: 'dashboard' }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'assistente', payload: { q: texto, origem: 'dashboard' } }),
       });
       astRemoveLoading();
       if (!res.ok) throw new Error('status ' + res.status);
@@ -8543,18 +8542,7 @@ checkStoredAuth();
       if (['add_receita','add_despesa'].includes(data.intencao)) sbSyncFinanceiro();
     } catch(e) {
       astRemoveLoading();
-      // Fallback: servidor local
-      try {
-        const r2 = await fetch('/api/assistente', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-Webhook-Token': AST_TOKEN },
-          body: JSON.stringify({ q: texto, origem: 'dashboard' }),
-        });
-        const d2 = await r2.json();
-        astAddMsg('bot', d2.resposta || '❓ Sem resposta');
-      } catch {
-        astAddMsg('bot', '❌ Publique o dashboard no Vercel para usar o assistente remotamente.');
-      }
+      astAddMsg('bot', '❌ Erro ao contatar o assistente: ' + e.message);
     }
     if (btn) btn.disabled = false;
   };
@@ -9265,8 +9253,7 @@ setInterval(infraScanNow, 5*60*1000);
 <script id="supervisor-ia">
 /* ══ SUPERVISOR IA — Frontend ══════════════════════════ */
 (function(){
-  const SV_URL     = '/api/supervisor';
-  const SV_TOKEN   = '';
+  const SV_URL     = '/api/dashboard-proxy';
   let   svHistorico = [];
 
   function svAddMsg(texto, tipo){
@@ -9327,8 +9314,8 @@ setInterval(infraScanNow, 5*60*1000);
     try {
       const r = await fetch(SV_URL, {
         method:'POST',
-        headers:{ 'Content-Type':'application/json', 'X-Webhook-Token': SV_TOKEN },
-        body: JSON.stringify({ mensagem: texto, historico: svHistorico.slice(-8) }),
+        headers:{ 'Content-Type':'application/json' },
+        body: JSON.stringify({ action: 'supervisor-chat', payload: { mensagem: texto, historico: svHistorico.slice(-8) } }),
       });
       const data = await r.json();
       thinking?.remove();
@@ -9359,7 +9346,11 @@ setInterval(infraScanNow, 5*60*1000);
   // Carregar status ao iniciar
   async function svInit(){
     try {
-      const r = await fetch(SV_URL+'?t='+Date.now(), { headers:{ 'X-Webhook-Token': SV_TOKEN } });
+      const r = await fetch(SV_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'supervisor-status', payload: {} }),
+      });
       const data = await r.json();
       if(data.ok && data.saude) svSetHealthBar(data.saude);
       svSetStatus('● online', '#34d399');
@@ -9583,10 +9574,10 @@ moradia, comunicacao, alimentacao, transporte, saude, pessoais, educacao, lazer,
 Responda APENAS com o id da categoria em minúsculas, sem explicação. Exemplo: alimentacao`;
 
   try {
-    const res = await fetch('https://dashboard-pessoal-edson.vercel.app/api/assistente',{
+    const res = await fetch('/api/dashboard-proxy',{
       method:'POST',
-      headers:{'Content-Type':'application/json','X-Webhook-Token':''},
-      body: JSON.stringify({ q: prompt, origem:'fin-categorizar' })
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ action: 'assistente', payload: { q: prompt, origem:'fin-categorizar' } })
     });
     const d   = await res.json();
     const raw = (d.resposta||'').trim().toLowerCase().replace(/[^a-z]/g,'');
@@ -10302,8 +10293,7 @@ window.diagMeta = async function(tipo){
 
 // ══ SISTEMA IA WIDGETS ══════════════════════════════════════════════
 (function(){
-  const AI_URL   = 'https://dashboard-pessoal-edson.vercel.app/api/assistente';
-  const AI_TOKEN = '';
+  const AI_URL   = '/api/dashboard-proxy';
   let   _iaResultado = '';
 
   function g(id){ return (document.getElementById(id)||{}).textContent||'—'; }
@@ -10335,8 +10325,8 @@ window.diagMeta = async function(tipo){
     try {
       const res = await fetch(AI_URL, {
         method:'POST',
-        headers:{'Content-Type':'application/json','X-Webhook-Token':AI_TOKEN},
-        body: JSON.stringify({ q: prompt, origem:'dashboard-ia-widget' })
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ action: 'assistente', payload: { q: prompt, origem:'dashboard-ia-widget' } })
       });
       if(!res.ok) throw new Error(res.status);
       const d = await res.json();
@@ -11169,9 +11159,9 @@ window.iaAnalisarComClaude = function(){
   if(body) body.innerHTML='<div style="text-align:center;padding:24px;color:#64748b;font-size:.82rem">⏳ Consultando Claude...</div>';
   ov.classList.add('open');
   var prompt = 'Analise estas notícias recentes de inteligência artificial e faça um resumo executivo em português, destacando o que é mais relevante e impactante. Responda em bullets claros:\n\n'+titles.join('\n');
-  fetch('/api/assistente', {
-    method:'POST', headers:{'Content-Type':'application/json','X-Webhook-Token':''},
-    body: JSON.stringify({q: prompt, origem:'ia-news-widget'})
+  fetch('/api/dashboard-proxy', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ action: 'assistente', payload: {q: prompt, origem:'ia-news-widget'} })
   }).then(function(r){ return r.json(); }).then(function(d){
     var resp = d.resposta || d.response || 'Sem resposta.';
     if(body) body.innerHTML='<div style="font-size:.8rem;color:#e2e8f0;line-height:1.7;white-space:pre-wrap">'+resp.replace(/</g,'&lt;')+'</div>';
