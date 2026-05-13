@@ -1,5 +1,22 @@
 // POST /api/google/calendar — busca eventos dos próximos 7 dias (refresh automático server-side)
 
+const SUPABASE_URL = 'https://jaewjscbigfwjiaeavft.supabase.co';
+
+async function fetchRefreshToken() {
+  const anon = process.env.SUPABASE_ANON_KEY || '';
+  if (!anon) return null;
+  try {
+    const r = await fetch(
+      `${SUPABASE_URL}/rest/v1/oauth_tokens?servico=eq.google&select=refresh_token&limit=1`,
+      { headers: { apikey: anon, Authorization: `Bearer ${anon}` } }
+    );
+    const rows = await r.json().catch(() => []);
+    return Array.isArray(rows) ? (rows[0]?.refresh_token || null) : null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin',  '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -17,12 +34,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { refresh_token, calendarId = 'primary' } = req.body || {};
-
-    if (!refresh_token) {
-      console.error('[calendar] refresh_token ausente no body');
-      return res.status(400).json({ error: 'refresh_token is required' });
-    }
+    const { calendarId = 'primary' } = req.body || {};
 
     const clientId     = process.env.GOOGLE_CLIENT_ID     || '';
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
@@ -30,6 +42,13 @@ export default async function handler(req, res) {
     if (!clientId || !clientSecret) {
       console.error('[calendar] Credenciais Google ausentes nas env vars');
       return res.status(500).json({ error: 'Google credentials not configured' });
+    }
+
+    // Lê refresh_token do Supabase (server-side — nunca aceito do cliente)
+    const refresh_token = await fetchRefreshToken();
+    if (!refresh_token) {
+      console.error('[calendar] Token Google não encontrado no Supabase');
+      return res.status(401).json({ error: 'Google token not found. Reconnect Google Calendar in the dashboard.' });
     }
 
     // Passo 1: renovar access_token com refresh_token
@@ -88,9 +107,8 @@ export default async function handler(req, res) {
     console.log('[calendar] Eventos carregados:', (eventsData.items || []).length);
 
     return res.status(200).json({
-      success:        true,
-      events:         eventsData.items || [],
-      newAccessToken: accessToken,
+      success: true,
+      events:  eventsData.items || [],
     });
 
   } catch (err) {

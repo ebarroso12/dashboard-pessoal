@@ -5162,22 +5162,11 @@ async function loadCalendar() {
   const calStatus = document.getElementById('cal-status');
   const calBtn = document.getElementById('cal-btn');
   try {
-    // Obtém refresh_token — tenta memória, localStorage e depois Supabase
-    let refreshToken = googleTokens?.refresh_token;
-    if (!refreshToken) {
-      await sbLoadGoogleTokens();
-      refreshToken = googleTokens?.refresh_token;
-    }
-    if (!refreshToken) {
-      if(evlist) evlist.innerHTML='<div style="color:#888;padding:16px;text-align:center"><div style="font-size:13px;margin-bottom:8px">🔐 Token Google expirado</div><button onclick="connectGoogle()" style="background:rgba(66,133,244,.15);border:1px solid rgba(66,133,244,.4);color:#4285f4;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600">🔄 Reconectar Google</button></div>';
-      if(calBtn){calBtn.textContent='Reconectar';calBtn.style.cssText='background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171';}
-      return;
-    }
-    // Usa endpoint server-side que faz o refresh internamente (sem expor clientSecret)
+    // Token lido server-side pelo endpoint (nunca enviado pelo browser)
     const r = await fetch('/api/google/calendar', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: refreshToken })
+      body: '{}',
     });
     if (!r.ok) {
       const err = await r.json().catch(()=>({}));
@@ -5191,12 +5180,6 @@ async function loadCalendar() {
     }
     const data = await r.json();
     const events = data.events || [];
-    // Atualiza access_token em memória se o servidor renovou
-    if (data.newAccessToken && googleTokens) {
-      googleTokens.access_token = data.newAccessToken;
-      googleTokens.expires_at = Date.now() + 3600000;
-      LS.set('dash_google_tokens', googleTokens);
-    }
     if (calStatus) calStatus.innerHTML = 'live ●';
     if (calBtn) calBtn.textContent = 'Conectado';
     window._calendarLoaded = true;
