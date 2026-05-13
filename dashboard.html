@@ -3710,20 +3710,14 @@ async function sbSaveMetaToken(token, extras={}) {
   } catch(e){ console.warn('sbSaveMetaToken falhou:', e.message); }
 }
 
-// Carrega token Meta do Supabase
+// Verifica status Meta via endpoint server-side (nunca le oauth_tokens direto)
 async function sbLoadMetaToken() {
   try {
-    const r = await fetch(`${SB_URL}/rest/v1/oauth_tokens?servico=eq.meta&select=*&limit=1`, {
-      headers: { apikey: SB_ANON, Authorization: `Bearer ${SB_ANON}` },
-    });
+    const r = await fetch('/api/token/status');
     if(!r.ok) return null;
-    const rows = await r.json();
-    if(rows && rows[0] && rows[0].access_token){
-      const tok = rows[0].access_token;
-      metaToken = tok;
-      LS.set('dash_meta_token', tok);
-      console.log('🔑 Token Meta restaurado do Supabase');
-      return tok;
+    const status = await r.json();
+    if(status?.meta?.connected) {
+      console.log('🔑 Meta conectado (token no servidor — reconecte para usar no browser)');
     }
   } catch(e){}
   return null;
@@ -5122,25 +5116,14 @@ async function getGoogleToken(){
   return googleTokens?.access_token || null;
 }
 
-// Carrega tokens Google do Supabase (fallback quando localStorage está vazio)
+// Verifica status Google via endpoint server-side (nunca le oauth_tokens direto)
 async function sbLoadGoogleTokens(){
   try {
-    const r = await fetch(`${SB_URL}/rest/v1/oauth_tokens?servico=eq.google&select=*&limit=1`, {
-      headers: { apikey: SB_ANON, Authorization: `Bearer ${SB_ANON}` },
-    });
+    const r = await fetch('/api/token/status');
     if(!r.ok) return;
-    const rows = await r.json();
-    if(rows && rows[0] && rows[0].refresh_token){
-      const row = rows[0];
-      const restored = {
-        access_token:  row.access_token  || '',
-        refresh_token: row.refresh_token,
-        expires_at:    row.expires_at ? new Date(row.expires_at).getTime() : (Date.now() - 1),
-        scope:         row.scope || '',
-      };
-      googleTokens = restored;
-      LS.set('dash_google_tokens', restored);
-      console.log('🔑 Tokens Google restaurados do Supabase');
+    const status = await r.json();
+    if(status?.google?.connected) {
+      console.log('🔑 Google conectado (token no servidor — reconecte para usar no browser)');
     }
   } catch(e){}
 }
@@ -8603,7 +8586,7 @@ window._infraServices = [
   { id:'evolution', name:'Evolution API', url:'https://evolution.n8ndredson.com', icon:'📱', type:'vps' },
   { id:'n8n', name:'n8n', url:'https://n8n.n8ndredson.com', icon:'⚡', type:'vps' },
   { id:'dashboard', name:'Dashboard', url:'https://dashboard-pessoal-edson.vercel.app', icon:'📊', type:'self' },
-  { id:'supabase', name:'Supabase', url:'https://jaewjscbigfwjiaeavft.supabase.co/rest/v1/oauth_tokens?select=servico&limit=1', icon:'🗄️', type:'db_rest' },
+  { id:'supabase', name:'Supabase', url:'https://dashboard-pessoal-edson.vercel.app/api/token/status', icon:'🗄️', type:'db_rest' },
   { id:'calendar', name:'Google Calendar', url:'', icon:'📅', type:'google' }
 ];
 
