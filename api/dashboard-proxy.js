@@ -91,8 +91,8 @@ export default async function handler(req, res) {
     let data;
     try {
       data = await r.json();
-    } catch {
-      return res.status(502).json({ error: 'Resposta invalida do servico interno' });
+    } catch (e) {
+      return res.status(502).json({ error: 'Resposta invalida do servico interno', detail: e.message });
     }
     return res.status(r.status).json(data);
   } catch (e) {
