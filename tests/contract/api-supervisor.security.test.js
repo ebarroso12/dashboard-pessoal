@@ -12,7 +12,7 @@ import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import handler from '../../api/supervisor.js';
 
-const VALID_TOKEN = process.env.WEBHOOK_TOKEN ?? 'oc_edson_2026_secure';
+const VALID_TOKEN = 'test-token-supervisor-security';
 
 // ── Doubles ──────────────────────────────────────────────────────────────────
 
@@ -49,6 +49,11 @@ function removeMock() {
   if (_nativeFetch !== undefined) global.fetch = _nativeFetch;
   else delete global.fetch;
 }
+
+// Garante que WEBHOOK_TOKEN esta configurado para todos os testes deste arquivo.
+// Sem isso, o handler retorna 500 (fail-fast) em vez de 401/200.
+before(() => { process.env.WEBHOOK_TOKEN = VALID_TOKEN; });
+after(() => { delete process.env.WEBHOOK_TOKEN; });
 
 // ══ Suite: autenticação GET ═══════════════════════════════════════════════════
 

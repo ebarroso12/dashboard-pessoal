@@ -13,7 +13,6 @@
 
 const SUPABASE_URL  = 'https://jaewjscbigfwjiaeavft.supabase.co';
 const SUPABASE_ANON = process.env.SUPABASE_ANON_KEY || '';
-const WEBHOOK_TOKEN = process.env.WEBHOOK_TOKEN || 'oc_edson_2026_secure';
 
 function corsHeaders() {
   return {
@@ -67,10 +66,12 @@ export default async function handler(req, res) {
   // ── POST — recebe novo comando do OpenClaw
   if (req.method === 'POST') {
     const body          = req.body || {};
+    const webhookToken = process.env.WEBHOOK_TOKEN || '';
+    if (!webhookToken) { res.status(500).json({ error: 'WEBHOOK_TOKEN nao configurado' }); return; }
     const tokenRecebido = req.headers['x-webhook-token'] || body.token || '';
 
     // Valida token de segurança
-    if (tokenRecebido !== WEBHOOK_TOKEN) {
+    if (tokenRecebido !== webhookToken) {
       res.status(401).json({ error: 'Token inválido' });
       return;
     }

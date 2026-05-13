@@ -177,7 +177,8 @@ export default async function handler(req, res) {
     if (req.method === 'GET') return res.status(200).json({ ok: true, message: 'ask endpoint online', acoes: ['gmail','calendar','calendar_criar','drive','alerts','metas','financeiro','tarefas','dashboard'] });
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-  const WEBHOOK_TOKEN = process.env.WEBHOOK_TOKEN || 'oc_edson_2026_secure';
+  const WEBHOOK_TOKEN = process.env.WEBHOOK_TOKEN || '';
+    if (!WEBHOOK_TOKEN) return res.status(500).json({ error: 'WEBHOOK_TOKEN nao configurado' });
     const tokenRecebido = req.headers['x-webhook-token'] || req.body?.token || '';
     if (tokenRecebido !== WEBHOOK_TOKEN) return res.status(401).json({ error: 'Token invalido' });
 

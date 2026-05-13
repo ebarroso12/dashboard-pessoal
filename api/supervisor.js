@@ -17,7 +17,6 @@ const SUPABASE_URL   = 'https://jaewjscbigfwjiaeavft.supabase.co';
 const SUPABASE_ANON  = process.env.SUPABASE_ANON_KEY || '';
 const GOOGLE_ID      = process.env.GOOGLE_CLIENT_ID     || '';
 const GOOGLE_SECRET  = process.env.GOOGLE_CLIENT_SECRET || '';
-const WEBHOOK_TOKEN  = process.env.WEBHOOK_TOKEN || 'oc_edson_2026_secure';
 
 // ── Supabase helper ───────────────────────────────────────
 async function sb(path, opts = {}) {
@@ -169,7 +168,7 @@ async function tool_executar_comando_dashboard({ comando }) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-Webhook-Token': WEBHOOK_TOKEN,
+        'X-Webhook-Token': process.env.WEBHOOK_TOKEN || '',
       },
       body: JSON.stringify({ texto: comando }),
     });
@@ -203,7 +202,7 @@ async function tool_verificar_saude_servicos() {
     ANTHROPIC_API_KEY: !!ANTHROPIC_KEY,
     GOOGLE_CLIENT_ID:  !!GOOGLE_ID,
     GOOGLE_CLIENT_SECRET: !!GOOGLE_SECRET,
-    WEBHOOK_TOKEN:     !!WEBHOOK_TOKEN,
+    WEBHOOK_TOKEN:     !!process.env.WEBHOOK_TOKEN,
     SUPABASE_ANON_KEY: !!process.env.SUPABASE_ANON_KEY,
   };
 
@@ -388,8 +387,10 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
 
   // Autenticação — obrigatória para GET e POST
+  const webhookToken = process.env.WEBHOOK_TOKEN || '';
+  if (!webhookToken) return res.status(500).json({ error: 'WEBHOOK_TOKEN nao configurado' });
   const token = req.headers['x-webhook-token'] || req.body?.token;
-  if (token !== WEBHOOK_TOKEN) return res.status(401).json({ error: 'Token inválido' });
+  if (token !== webhookToken) return res.status(401).json({ error: 'Token inválido' });
 
   // GET /api/supervisor → status rápido
   if (req.method === 'GET') {

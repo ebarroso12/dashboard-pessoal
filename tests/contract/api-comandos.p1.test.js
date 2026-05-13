@@ -13,7 +13,7 @@ import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import handler from '../../api/comandos.js';
 
-const VALID_TOKEN = process.env.WEBHOOK_TOKEN ?? 'oc_edson_2026_secure';
+const VALID_TOKEN = 'test-token-p1-comandos';
 
 // ── Test doubles ──────────────────────────────────────────────────────────────
 
@@ -75,6 +75,9 @@ function removeMock() {
   if (_nativeFetch !== undefined) global.fetch = _nativeFetch;
   else delete global.fetch;
 }
+
+before(() => { process.env.WEBHOOK_TOKEN = VALID_TOKEN; });
+after(() => { delete process.env.WEBHOOK_TOKEN; });
 
 // ══ Suite P1: ajuda ═══════════════════════════════════════════════════════════
 

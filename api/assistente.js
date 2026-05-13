@@ -15,7 +15,6 @@
 
 const SUPA_URL  = 'https://jaewjscbigfwjiaeavft.supabase.co';
 const SUPA_ANON = process.env.SUPABASE_ANON_KEY || '';
-const TOKEN     = process.env.WEBHOOK_TOKEN || 'oc_edson_2026_secure';
 
 // ── Helpers Supabase ─────────────────────────────────────
 async function sb(path, opts = {}) {
@@ -366,9 +365,11 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'Método não permitido' }); return; }
 
   // Valida token
+  const webhookToken = process.env.WEBHOOK_TOKEN || '';
+  if (!webhookToken) { res.status(500).json({ error: 'WEBHOOK_TOKEN nao configurado' }); return; }
   const body   = req.body || {};
   const tk     = req.headers['x-webhook-token'] || body.token || '';
-  if (tk !== TOKEN) { res.status(401).json({ error: 'Token inválido' }); return; }
+  if (tk !== webhookToken) { res.status(401).json({ error: 'Token inválido' }); return; }
 
   const q      = (body.q || body.texto || body.text || '').trim();
   const origem = body.origem || 'whatsapp';
