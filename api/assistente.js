@@ -13,6 +13,8 @@
  *   Retorna últimas 20 conversas
  */
 
+import { adminFetch } from './_supabase-admin.js';
+
 const SUPA_URL  = 'https://jaewjscbigfwjiaeavft.supabase.co';
 const SUPA_ANON = process.env.SUPABASE_ANON_KEY || '';
 
@@ -166,8 +168,8 @@ async function addDespesa(q) {
 
 async function lerCalendario() {
   // Tenta usar Google Calendar com token salvo
-  const tk = await sb("/oauth_tokens?servico=eq.google&select=access_token,refresh_token");
-  if (!tk.ok || !tk.data?.length) {
+  const tkData = await adminFetch('/oauth_tokens?servico=eq.google&select=access_token,refresh_token');
+  if (!tkData?.length) {
     // Fallback: dados em cache
     const r = await sb('/dados_assistente?tipo=eq.calendario&select=dados,atualizado_em');
     if (!r.ok || !r.data?.length) return '📅 Conecte o Google Calendar no dashboard para eu poder consultar seus compromissos.';
@@ -185,7 +187,7 @@ async function lerCalendario() {
     const fim    = new Date(hoje.setHours(23,59,59,999)).toISOString();
     const calRes = await fetch(
       `https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=${inicio}&timeMax=${fim}&singleEvents=true&orderBy=startTime`,
-      { headers: { Authorization: `Bearer ${tk.data[0].access_token}` } }
+      { headers: { Authorization: `Bearer ${tkData[0].access_token}` } }
     );
     const cal = await calRes.json();
     if (!cal.items?.length) return '📅 Nenhum compromisso para hoje. Dia livre! 🎉';
@@ -204,12 +206,12 @@ async function lerCalendario() {
 
 async function addCompromisso(q) {
   // Extrai info básica do texto
-  const tk = await sb("/oauth_tokens?servico=eq.google&select=access_token");
+  const tkData = await adminFetch('/oauth_tokens?servico=eq.google&select=access_token');
   const titulo = q.replace(/criar|agendar|marcar|compromisso|reuniao|evento/gi, '').trim() || 'Novo compromisso';
   const horaM  = q.match(/(\d{1,2})[h:](\d{0,2})/i);
   const hora   = horaM ? `${horaM[1].padStart(2,'0')}:${(horaM[2]||'00').padStart(2,'0')}` : '09:00';
 
-  if (!tk.ok || !tk.data?.length) {
+  if (!tkData?.length) {
     // Salva no cache para o dashboard processar
     const cache = await sb('/dados_assistente?tipo=eq.acoes_pendentes&select=dados');
     const pendentes = cache.data?.[0]?.dados?.lista || [];
@@ -232,7 +234,7 @@ async function addCompromisso(q) {
     };
     const res = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
       method: 'POST',
-      headers: { Authorization: `Bearer ${tk.data[0].access_token}`, 'Content-Type': 'application/json' },
+      headers: { Authorization: `Bearer ${tkData[0].access_token}`, 'Content-Type': 'application/json' },
       body: JSON.stringify(event),
     });
     const created = await res.json();

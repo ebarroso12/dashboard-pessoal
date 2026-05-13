@@ -12,6 +12,8 @@
  *   Retorna última varredura e saúde geral
  */
 
+import { adminFetch } from './_supabase-admin.js';
+
 const ANTHROPIC_KEY  = process.env.ANTHROPIC_API_KEY || '';
 const SUPABASE_URL   = 'https://jaewjscbigfwjiaeavft.supabase.co';
 const SUPABASE_ANON  = process.env.SUPABASE_ANON_KEY || '';
@@ -34,7 +36,7 @@ async function sb(path, opts = {}) {
 
 // ── Google OAuth helpers ──────────────────────────────────
 async function getRefreshToken() {
-  const rows = await sb('/oauth_tokens?select=refresh_token&servico=eq.google&limit=1');
+  const rows = await adminFetch('/oauth_tokens?select=refresh_token&servico=eq.google&limit=1');
   return rows?.[0]?.refresh_token || null;
 }
 
@@ -184,11 +186,8 @@ async function tool_verificar_saude_servicos() {
 
   // Supabase
   try {
-    const r = await fetch(`${SUPABASE_URL}/rest/v1/oauth_tokens?select=id&limit=1`, {
-      headers: { apikey: SUPABASE_ANON, Authorization: `Bearer ${SUPABASE_ANON}` },
-      signal: AbortSignal.timeout(5000),
-    });
-    checks.supabase = { ok: r.ok, status: r.status };
+    const rows = await adminFetch('/oauth_tokens?select=id&limit=1');
+    checks.supabase = { ok: rows !== null, status: rows !== null ? 200 : 403 };
   } catch (e) {
     checks.supabase = { ok: false, erro: e.message };
   }

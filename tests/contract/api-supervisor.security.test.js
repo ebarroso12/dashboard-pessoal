@@ -50,10 +50,15 @@ function removeMock() {
   else delete global.fetch;
 }
 
-// Garante que WEBHOOK_TOKEN esta configurado para todos os testes deste arquivo.
-// Sem isso, o handler retorna 500 (fail-fast) em vez de 401/200.
-before(() => { process.env.WEBHOOK_TOKEN = VALID_TOKEN; });
-after(() => { delete process.env.WEBHOOK_TOKEN; });
+// Garante que WEBHOOK_TOKEN e SUPABASE_SERVICE_ROLE_KEY estao configurados.
+before(() => {
+  process.env.WEBHOOK_TOKEN             = VALID_TOKEN;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key';
+});
+after(() => {
+  delete process.env.WEBHOOK_TOKEN;
+  delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+});
 
 // ══ Suite: autenticação GET ═══════════════════════════════════════════════════
 

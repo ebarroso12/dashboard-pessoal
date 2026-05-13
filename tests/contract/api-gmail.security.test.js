@@ -72,15 +72,17 @@ function installNoTokenMock() {
 }
 
 before(() => {
-  process.env.GOOGLE_CLIENT_ID     = 'test-client-id';
-  process.env.GOOGLE_CLIENT_SECRET = 'test-client-secret';
-  process.env.SUPABASE_ANON_KEY    = 'test-anon-key';
+  process.env.GOOGLE_CLIENT_ID          = 'test-client-id';
+  process.env.GOOGLE_CLIENT_SECRET      = 'test-client-secret';
+  process.env.SUPABASE_ANON_KEY         = 'test-anon-key';
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key';
 });
 
 after(() => {
   delete process.env.GOOGLE_CLIENT_ID;
   delete process.env.GOOGLE_CLIENT_SECRET;
   delete process.env.SUPABASE_ANON_KEY;
+  delete process.env.SUPABASE_SERVICE_ROLE_KEY;
   global.fetch = _nativeFetch;
 });
 

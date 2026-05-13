@@ -76,8 +76,14 @@ function removeMock() {
   else delete global.fetch;
 }
 
-before(() => { process.env.WEBHOOK_TOKEN = VALID_TOKEN; });
-after(() => { delete process.env.WEBHOOK_TOKEN; });
+before(() => {
+  process.env.WEBHOOK_TOKEN             = VALID_TOKEN;
+  process.env.SUPABASE_SERVICE_ROLE_KEY = 'test-service-role-key';
+});
+after(() => {
+  delete process.env.WEBHOOK_TOKEN;
+  delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+});
 
 // ══ Suite P1: ajuda ═══════════════════════════════════════════════════════════
 

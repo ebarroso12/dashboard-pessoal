@@ -1,16 +1,10 @@
 // POST /api/google/calendar — busca eventos dos próximos 7 dias (refresh automático server-side)
 
-const SUPABASE_URL = 'https://jaewjscbigfwjiaeavft.supabase.co';
+import { adminFetch } from '../_supabase-admin.js';
 
 async function fetchRefreshToken() {
-  const anon = process.env.SUPABASE_ANON_KEY || '';
-  if (!anon) return null;
   try {
-    const r = await fetch(
-      `${SUPABASE_URL}/rest/v1/oauth_tokens?servico=eq.google&select=refresh_token&limit=1`,
-      { headers: { apikey: anon, Authorization: `Bearer ${anon}` } }
-    );
-    const rows = await r.json().catch(() => []);
+    const rows = await adminFetch('/oauth_tokens?servico=eq.google&select=refresh_token&limit=1');
     return Array.isArray(rows) ? (rows[0]?.refresh_token || null) : null;
   } catch {
     return null;

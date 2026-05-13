@@ -5,6 +5,8 @@
  * /api/cron?tipo=weekly   → Relatório semanal (segunda 7h)
  */
 
+import { adminFetch } from './_supabase-admin.js';
+
 const SUPA_URL  = 'https://jaewjscbigfwjiaeavft.supabase.co';
 const SUPA_ANON = process.env.SUPABASE_ANON_KEY || '';
 const WA_TOKEN  = process.env.WA_BUSINESS_TOKEN    || '';
@@ -101,7 +103,7 @@ async function runMorning() {
 }
 
 async function runReviews() {
-  const gTokenRows = await sb('/oauth_tokens?servico=eq.google&select=*&limit=1');
+  const gTokenRows = await adminFetch('/oauth_tokens?servico=eq.google&select=*&limit=1');
   const gToken = gTokenRows?.[0]?.access_token;
   if (!gToken) return { ok: false, msg: 'Token Google ausente' };
 

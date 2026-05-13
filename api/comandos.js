@@ -9,6 +9,8 @@
  *   ou Body: { texto: "resumo" }  ← formato OpenClaw
  */
 
+import { adminFetch } from './_supabase-admin.js';
+
 const SUPABASE_URL  = 'https://jaewjscbigfwjiaeavft.supabase.co';
 const SUPABASE_ANON = process.env.SUPABASE_ANON_KEY || '';
 const GOOGLE_CLIENT_ID     = process.env.GOOGLE_CLIENT_ID     || '';
@@ -51,7 +53,7 @@ async function getGoogleAccessToken(refreshToken) {
 }
 
 async function getGoogleRefreshToken() {
-  const rows = await sbFetch('/oauth_tokens?select=refresh_token&servico=eq.google&limit=1');
+  const rows = await adminFetch('/oauth_tokens?select=refresh_token&servico=eq.google&limit=1');
   return rows?.[0]?.refresh_token || null;
 }
 
