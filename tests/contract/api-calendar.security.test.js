@@ -12,7 +12,8 @@
 
 import { describe, it, before, after, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import handler from '../../api/google/calendar.js';
+import handler       from '../../api/google/calendar.js';
+import handlerCreate from '../../api/google/calendar-create.js';
 
 const _nativeFetch = global.fetch;
 
@@ -174,6 +175,115 @@ describe('/api/google/calendar — GET health check', () => {
     await handler(makeReq('GET'), res);
     assert.equal(res._status, 200);
     assert.equal(res._body?.ok, true);
+  });
+
+});
+
+// ══ calendar-create: mocks ════════════════════════════════════════════════════
+
+function installCreateSuccessMock() {
+  global.fetch = async (url, opts) => {
+    const u = String(url);
+    if (u.includes('supabase') && u.includes('oauth_tokens')) {
+      return { ok: true, status: 200, json: async () => [{ refresh_token: 'rt_sentinel_create' }], text: async () => '' };
+    }
+    if (u.includes('oauth2.googleapis.com/token')) {
+      return { ok: true, status: 200, json: async () => ({ access_token: 'at_sentinel_create', expires_in: 3600 }), text: async () => '' };
+    }
+    if (u.includes('googleapis.com/calendar') && opts?.method === 'POST') {
+      return { ok: true, status: 200, json: async () => ({ id: 'evt_abc', summary: 'Consulta', start: { dateTime: '2026-05-14T10:00:00-03:00' }, htmlLink: 'https://cal.google.com/ev' }), text: async () => '' };
+    }
+    return { ok: false, status: 500, json: async () => ({}), text: async () => '' };
+  };
+}
+
+// ══ Suite: calendar-create nao expoe tokens ═══════════════════════════════════
+
+describe('/api/google/calendar-create — resposta nao expoe tokens', () => {
+
+  afterEach(() => { global.fetch = _nativeFetch; });
+
+  it('resposta nao contem campo newAccessToken', async () => {
+    installCreateSuccessMock();
+    const res = makeRes();
+    await handlerCreate(makeReq('POST', { title: 'Consulta', date: '2026-05-14' }), res);
+    assert.equal(res._status, 200);
+    assert.ok(
+      !('newAccessToken' in (res._body || {})),
+      'newAccessToken nao deve existir na resposta'
+    );
+  });
+
+  it('access_token nao aparece em nenhum campo da resposta', async () => {
+    installCreateSuccessMock();
+    const res = makeRes();
+    await handlerCreate(makeReq('POST', { title: 'Cirurgia', date: '2026-05-14' }), res);
+    const bodyStr = JSON.stringify(res._body || {});
+    assert.ok(
+      !bodyStr.includes('at_sentinel_create'),
+      'access_token nao deve aparecer na resposta JSON'
+    );
+  });
+
+});
+
+// ══ Suite: calendar-create token server-side ══════════════════════════════════
+
+describe('/api/google/calendar-create — token lido do Supabase, nao do body', () => {
+
+  afterEach(() => { global.fetch = _nativeFetch; });
+
+  it('funciona sem access_token no body — title e date suficientes', async () => {
+    installCreateSuccessMock();
+    const res = makeRes();
+    await handlerCreate(makeReq('POST', { title: 'Consulta', date: '2026-05-14' }), res);
+    assert.equal(res._status, 200);
+    assert.equal(res._body?.ok, true);
+    assert.ok(res._body?.event_id, 'deve retornar event_id');
+  });
+
+  it('ignora access_token enviado no body — Supabase e a fonte', async () => {
+    installCreateSuccessMock();
+    const res = makeRes();
+    await handlerCreate(makeReq('POST', { title: 'Consulta', date: '2026-05-14', access_token: 'token_do_browser_ignorado' }), res);
+    assert.equal(res._status, 200);
+    assert.equal(res._body?.ok, true);
+  });
+
+  it('retorna event_id, title, start e link — sem campos de token', async () => {
+    installCreateSuccessMock();
+    const res = makeRes();
+    await handlerCreate(makeReq('POST', { title: 'Reuniao', date: '2026-05-14', time: '09:00' }), res);
+    assert.equal(res._status, 200);
+    assert.ok(res._body?.event_id, 'event_id presente');
+    assert.ok(res._body?.title,    'title presente');
+    assert.ok(res._body?.start,    'start presente');
+    assert.ok(!('newAccessToken' in res._body),    'newAccessToken ausente');
+    assert.ok(!('access_token'   in res._body),    'access_token ausente');
+    assert.ok(!('refresh_token'  in res._body),    'refresh_token ausente');
+  });
+
+});
+
+// ══ Suite: calendar-create 401 sem token Supabase ════════════════════════════
+
+describe('/api/google/calendar-create — 401 quando Supabase nao tem token', () => {
+
+  afterEach(() => { global.fetch = _nativeFetch; });
+
+  it('retorna 401 quando Supabase nao tem token google', async () => {
+    installNoTokenMock();
+    const res = makeRes();
+    await handlerCreate(makeReq('POST', { title: 'Evento', date: '2026-05-14' }), res);
+    assert.equal(res._status, 401);
+    assert.ok(res._body?.error, 'deve ter campo error');
+  });
+
+  it('retorna 400 quando title ou date ausente', async () => {
+    installCreateSuccessMock();
+    const res = makeRes();
+    await handlerCreate(makeReq('POST', { title: 'Sem data' }), res);
+    assert.equal(res._status, 400);
   });
 
 });

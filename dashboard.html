@@ -4364,44 +4364,28 @@ async function confirmCalEvent(){
   const desc  = document.getElementById('cal-ev-desc').value.trim();
   if(!title||!date){ showToast('📅 Preencha título e data','var(--gold)'); return; }
 
-  // Tenta usar a API do Google Calendar diretamente
-  const token = await getGoogleToken();
-  if(token){
-    try {
-      let event;
-      if(time){
-        const startISO = new Date(`${date}T${time}:00`).toISOString();
-        const endISO   = new Date(new Date(`${date}T${time}:00`).getTime() + 3600000).toISOString();
-        event = { summary: title, description: desc||'', start:{ dateTime: startISO }, end:{ dateTime: endISO } };
-      } else {
-        const nextDay = new Date(date); nextDay.setDate(nextDay.getDate()+1);
-        event = { summary: title, description: desc||'', start:{ date }, end:{ date: nextDay.toISOString().slice(0,10) } };
+  // Cria evento via endpoint server-side (token Google não sai do servidor)
+  try {
+    const r = await fetch('/api/google/calendar-create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, date, ...(time ? { time } : {}), ...(desc ? { description: desc } : {}) }),
+    });
+    if(r.ok){
+      const created = await r.json();
+      if(_calEventTaskId){
+        const tasks = loadTasks();
+        const t = tasks.find(x=>x.id===_calEventTaskId);
+        if(t){ t.gcalEventId = created.event_id; saveTasks(tasks); }
       }
+      closeCalEvent();
+      showToast('✅ Evento criado no Google Calendar!','var(--green)');
+      setTimeout(()=>loadCalendar(), 500);
+      return;
+    }
+  } catch(e){ console.warn('Calendar create:', e.message); }
 
-      const r = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(event),
-      });
-
-      if(r.ok){
-        const created = await r.json();
-        // Marca a tarefa com o ID do evento criado
-        if(_calEventTaskId){
-          const tasks = loadTasks();
-          const t = tasks.find(x=>x.id===_calEventTaskId);
-          if(t){ t.gcalEventId = created.id; saveTasks(tasks); }
-        }
-        closeCalEvent();
-        showToast('✅ Evento criado no Google Calendar!','var(--green)');
-        // Recarrega widget de agenda
-        setTimeout(()=>loadCalendar(), 500);
-        return;
-      }
-    } catch(e){ console.warn('Calendar API create event error:', e); }
-  }
-
-  // Fallback: abrir URL do Google Calendar (quando não tem token)
+  // Fallback: abrir URL do Google Calendar (quando token ausente no servidor)
   let startDt, endDt;
   if(time){
     const [h,m] = time.split(':');
