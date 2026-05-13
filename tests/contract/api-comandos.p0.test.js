@@ -8,7 +8,7 @@
  * Requires: Node >= 18 (node:test), no external deps.
  */
 
-import { describe, it } from 'node:test';
+import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import handler from '../../api/comandos.js';
 
@@ -31,13 +31,14 @@ function makeRes() {
   return res;
 }
 
-// Token hardcoded em api/comandos.js como fallback quando WEBHOOK_TOKEN não está
-// definido como env var — contrato: este valor sempre deve funcionar.
-const VALID_TOKEN = process.env.WEBHOOK_TOKEN ?? 'oc_edson_2026_secure';
+const VALID_TOKEN = 'test-token-p0-comandos';
 
 // ── Suite P0 ──────────────────────────────────────────────────────────────────
 
 describe('/api/comandos — P0 contract', () => {
+
+  before(() => { process.env.WEBHOOK_TOKEN = VALID_TOKEN; });
+  after(() => { delete process.env.WEBHOOK_TOKEN; });
 
   // ── Healthcheck ────────────────────────────────────────────────────────────
 

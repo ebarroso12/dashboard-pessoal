@@ -11,7 +11,6 @@
 
 const SUPABASE_URL  = 'https://jaewjscbigfwjiaeavft.supabase.co';
 const SUPABASE_ANON = process.env.SUPABASE_ANON_KEY || '';
-const WEBHOOK_TOKEN = process.env.WEBHOOK_TOKEN || 'oc_edson_2026_secure';
 const GOOGLE_CLIENT_ID     = process.env.GOOGLE_CLIENT_ID     || '';
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
 
@@ -260,8 +259,10 @@ export default async function handler(req, res) {
   if (req.method === 'GET')     return res.status(200).json({ ok: true, message: 'Comandos endpoint online' });
   if (req.method !== 'POST')    return res.status(405).json({ error: 'Method not allowed' });
 
+  const webhookToken = process.env.WEBHOOK_TOKEN || '';
+  if (!webhookToken) return res.status(500).json({ error: 'WEBHOOK_TOKEN nao configurado' });
   const token = req.headers['x-webhook-token'] || req.body?.token;
-  if (token !== WEBHOOK_TOKEN) return res.status(401).json({ error: 'Token inválido' });
+  if (token !== webhookToken) return res.status(401).json({ error: 'Token inválido' });
 
   const raw     = req.body?.comando || req.body?.texto || '';
   const comando = raw.toLowerCase().trim().replace(/[^a-záàâãéèêíïóôõöúüçñ\s]/gi, '').trim();
