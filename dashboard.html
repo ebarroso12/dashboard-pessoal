@@ -3671,37 +3671,42 @@ async function sbInsert(table, data) {
   } catch(e) {}
 }
 
-// Salva tokens Google no Supabase (persistência permanente — sobrevive a limpeza de localStorage)
+// Salva tokens Google via endpoint server-side (nunca acessa oauth_tokens direto do browser)
 async function sbSaveGoogleTokens(tokens) {
   if(!tokens || !tokens.refresh_token) return;
-  await sbUpsert('oauth_tokens', {
-    servico:       'google',
-    access_token:  tokens.access_token  || '',
-    refresh_token: tokens.refresh_token,
-    scope:         tokens.scope         || '',
-    expires_at:    tokens.expires_at ? new Date(tokens.expires_at).toISOString() : null,
-    atualizado_em: new Date().toISOString(),
-  });
+  try {
+    await fetch('/api/token/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        servico:       'google',
+        access_token:  tokens.access_token  || '',
+        refresh_token: tokens.refresh_token,
+        scope:         tokens.scope         || '',
+        expires_at:    tokens.expires_at ? new Date(tokens.expires_at).toISOString() : null,
+      }),
+    });
+  } catch(e){ console.warn('sbSaveGoogleTokens falhou:', e.message); }
 }
 
-// Salva token Meta no Supabase (persistência permanente)
+// Salva token Meta via endpoint server-side (nunca acessa oauth_tokens direto do browser)
 async function sbSaveMetaToken(token, extras={}) {
   if(!token) return;
   try {
-    // Token do OAuth implícito dura ~1-2h; salva com expires_at realista
     const expireMs = (extras.expiresIn || 3600) * 1000;
-    await sbUpsert('oauth_tokens', {
-      servico:               'meta',
-      access_token:          token,
-      refresh_token:         '',
-      scope:                 'pages_read_engagement,instagram_basic,instagram_manage_insights,pages_show_list,read_insights,business_management,pages_manage_metadata',
-      expires_at:            new Date(Date.now() + expireMs).toISOString(),
-      atualizado_em:         new Date().toISOString(),
-      token_type:            'short_lived',
-      meta_page_id:          extras.pageId           || localStorage.getItem('dash_fb_page_id') || '',
-      instagram_account_id:  extras.igAccountId      || '597818000075846',
+    await fetch('/api/token/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        servico:              'meta',
+        access_token:         token,
+        refresh_token:        '',
+        scope:                'pages_read_engagement,instagram_basic,instagram_manage_insights,pages_show_list,read_insights,business_management,pages_manage_metadata',
+        expires_at:           new Date(Date.now() + expireMs).toISOString(),
+        meta_page_id:         extras.pageId        || localStorage.getItem('dash_fb_page_id') || '',
+        instagram_account_id: extras.igAccountId   || '597818000075846',
+      }),
     });
-    console.log('💾 Token Meta salvo no Supabase com UPSERT correto');
   } catch(e){ console.warn('sbSaveMetaToken falhou:', e.message); }
 }
 
