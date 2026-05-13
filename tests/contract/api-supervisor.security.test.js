@@ -10,7 +10,7 @@
 
 import { describe, it, before, after } from 'node:test';
 import assert from 'node:assert/strict';
-import handler from '../../api/supervisor.js';
+import handler, { tool_verificar_supabase } from '../../api/supervisor.js';
 
 const VALID_TOKEN = 'test-token-supervisor-security';
 
@@ -205,4 +205,50 @@ describe('/api/supervisor — scrubbing de secrets nos logs', () => {
     }
   });
 
+});
+
+// ══ Suite: tool_verificar_supabase nao vaza dados raw ════════════════════════
+
+describe('tool_verificar_supabase — nao expoe dados brutos das tabelas', () => {
+  const _savedFetch = global.fetch;
+
+  const SENTINEL_VALOR = 87654321;
+  const SENTINEL_DESC  = 'dado_raw_nao_deve_vazar_test';
+  const dadoSensivel   = { valor: SENTINEL_VALOR, descricao: SENTINEL_DESC, token: 'abc_xyz_secreto' };
+
+  before(() => {
+    global.fetch = async () => ({
+      ok:     true,
+      status: 200,
+      json:   async () => [dadoSensivel, dadoSensivel],
+      text:   async () => JSON.stringify([dadoSensivel, dadoSensivel]),
+    });
+  });
+
+  after(() => { global.fetch = _savedFetch; });
+
+  it('resultado nao contem valores das rows quando tabela retorna dados', async () => {
+    const result = await tool_verificar_supabase({ tabela: 'financas' });
+
+    const resultStr = JSON.stringify(result);
+    assert.ok(
+      !resultStr.includes(String(SENTINEL_VALOR)),
+      'valor numerico da row nao deve aparecer no resultado'
+    );
+    assert.ok(
+      !resultStr.includes(SENTINEL_DESC),
+      'string da row nao deve aparecer no resultado'
+    );
+  });
+
+  it('resultado contem ok e contagem mas nao campo amostra', async () => {
+    const result = await tool_verificar_supabase({ tabela: 'financas' });
+
+    assert.equal(result.tabelas.financas.ok, true,       'campo ok deve ser true');
+    assert.equal(result.tabelas.financas.registros, 2,   'contagem deve refletir rows retornadas');
+    assert.ok(
+      !('amostra' in result.tabelas.financas),
+      'campo amostra nao deve existir no resultado'
+    );
+  });
 });

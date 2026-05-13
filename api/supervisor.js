@@ -151,7 +151,7 @@ async function tool_verificar_supabase({ tabela }) {
   for (const t of tabelas) {
     const rows = await sb(`/${t}?select=*&limit=3`);
     if (Array.isArray(rows)) {
-      resultados[t] = { ok: true, registros: rows.length, amostra: rows.slice(0, 2) };
+      resultados[t] = { ok: true, registros: rows.length };
     } else {
       resultados[t] = { ok: false, erro: rows?.message || rows?.code || 'tabela não existe ou sem acesso' };
     }
@@ -422,3 +422,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ ok: false, erro: e.message });
   }
 }
+
+export { tool_verificar_supabase };
