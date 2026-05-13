@@ -80,15 +80,20 @@ export default async function handler(req, res) {
   try {
     const fetchOpts = {
       method:  targetMethod,
-      headers: {
-        'Content-Type':    'application/json',
-        'X-Webhook-Token': token,
-      },
+      headers: { 'X-Webhook-Token': token },
     };
-    if (targetBody !== undefined) fetchOpts.body = JSON.stringify(targetBody);
+    if (targetBody !== undefined) {
+      fetchOpts.headers['Content-Type'] = 'application/json';
+      fetchOpts.body = JSON.stringify(targetBody);
+    }
 
-    const r    = await fetch(targetUrl, fetchOpts);
-    const data = await r.json();
+    const r = await fetch(targetUrl, fetchOpts);
+    let data;
+    try {
+      data = await r.json();
+    } catch {
+      return res.status(502).json({ error: 'Resposta invalida do servico interno' });
+    }
     return res.status(r.status).json(data);
   } catch (e) {
     return res.status(502).json({ error: 'Erro ao contatar servico interno', detail: e.message });

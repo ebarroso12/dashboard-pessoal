@@ -5,7 +5,7 @@
  * Run: node --test tests/contract/api-dashboard-proxy.test.js
  */
 
-import { describe, it, before, afterEach } from 'node:test';
+import { describe, it, before, afterEach, after } from 'node:test';
 import assert from 'node:assert/strict';
 import handler from '../../api/dashboard-proxy.js';
 
@@ -31,6 +31,8 @@ function makeRes() {
 
 describe('dashboard-proxy — CORS', () => {
 
+  after(() => { delete process.env.WEBHOOK_TOKEN; });
+
   it('define Access-Control-Allow-Origin para o dominio do dashboard', async () => {
     process.env.WEBHOOK_TOKEN = 'test-token';
     global.fetch = async () => ({ ok: true, status: 200, json: async () => ({}) });
@@ -41,7 +43,6 @@ describe('dashboard-proxy — CORS', () => {
       res._headers['Access-Control-Allow-Origin'],
       'https://dashboard-pessoal-edson.vercel.app'
     );
-    delete process.env.WEBHOOK_TOKEN;
   });
 
   it('OPTIONS retorna 204', async () => {
@@ -221,6 +222,7 @@ describe('dashboard-proxy — supervisor-status', () => {
 describe('dashboard-proxy — WEBHOOK_TOKEN no header interno', () => {
 
   before(() => { process.env.WEBHOOK_TOKEN = 'meu-token-real'; });
+  after(() => { delete process.env.WEBHOOK_TOKEN; });
   afterEach(() => { global.fetch = _nativeFetch; });
 
   it('repassa X-Webhook-Token no header da chamada interna', async () => {
@@ -232,7 +234,6 @@ describe('dashboard-proxy — WEBHOOK_TOKEN no header interno', () => {
     const res = makeRes();
     await handler(makeReq('POST', { action: 'assistente', payload: { q: 'teste' } }), res);
     assert.equal(capturedToken, 'meu-token-real');
-    delete process.env.WEBHOOK_TOKEN;
   });
 
 });
