@@ -1,5 +1,22 @@
 // POST /api/google/drive — lista 10 arquivos mais recentes do Google Drive
 
+const SUPABASE_URL = 'https://jaewjscbigfwjiaeavft.supabase.co';
+
+async function fetchRefreshToken() {
+  const anon = process.env.SUPABASE_ANON_KEY || '';
+  if (!anon) return null;
+  try {
+    const r = await fetch(
+      `${SUPABASE_URL}/rest/v1/oauth_tokens?servico=eq.google&select=refresh_token&limit=1`,
+      { headers: { apikey: anon, Authorization: `Bearer ${anon}` } }
+    );
+    const rows = await r.json().catch(() => []);
+    return Array.isArray(rows) ? (rows[0]?.refresh_token || null) : null;
+  } catch {
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin',  '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -10,14 +27,16 @@ export default async function handler(req, res) {
   if (req.method !== 'POST')   return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { refresh_token } = req.body || {};
-    if (!refresh_token) return res.status(400).json({ error: 'refresh_token is required' });
-
     const clientId     = process.env.GOOGLE_CLIENT_ID     || '';
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
     if (!clientId || !clientSecret) return res.status(500).json({ error: 'Google credentials not configured' });
 
-    // Passo 1 — renovar access token
+    const refresh_token = await fetchRefreshToken();
+    if (!refresh_token) {
+      console.error('[drive] Token Google nao encontrado no Supabase');
+      return res.status(401).json({ error: 'Google token not found. Reconnect Google in the dashboard.' });
+    }
+
     const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -31,7 +50,6 @@ export default async function handler(req, res) {
 
     const accessToken = tokenData.access_token;
 
-    // Passo 2 — buscar arquivos recentes
     const driveRes = await fetch(
       'https://www.googleapis.com/drive/v3/files?orderBy=modifiedTime desc&pageSize=10&fields=files(id,name,mimeType,modifiedTime,webViewLink,iconLink)',
       { headers: { Authorization: `Bearer ${accessToken}` } }
@@ -43,9 +61,8 @@ export default async function handler(req, res) {
     }
 
     return res.status(200).json({
-      ok:             true,
-      files:          driveData.files || [],
-      newAccessToken: accessToken,
+      ok:    true,
+      files: driveData.files || [],
     });
 
   } catch (err) {

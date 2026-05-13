@@ -5255,7 +5255,7 @@ async function loadGmail() {
     const r = await fetch('/api/google/gmail', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      body: JSON.stringify({}),
     });
     const data = await r.json();
 
@@ -5320,7 +5320,7 @@ async function loadDrive() {
     const r = await fetch('/api/google/drive', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      body: JSON.stringify({}),
     });
     const data = await r.json();
 

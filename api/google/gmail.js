@@ -1,4 +1,21 @@
-// POST /api/google/gmail — lista emails não lidos (máx 5), refresh automático server-side
+// POST /api/google/gmail — lista emails nao lidos (max 5), refresh automatico server-side
+
+const SUPABASE_URL = 'https://jaewjscbigfwjiaeavft.supabase.co';
+
+async function fetchRefreshToken() {
+  const anon = process.env.SUPABASE_ANON_KEY || '';
+  if (!anon) return null;
+  try {
+    const r = await fetch(
+      `${SUPABASE_URL}/rest/v1/oauth_tokens?servico=eq.google&select=refresh_token&limit=1`,
+      { headers: { apikey: anon, Authorization: `Bearer ${anon}` } }
+    );
+    const rows = await r.json().catch(() => []);
+    return Array.isArray(rows) ? (rows[0]?.refresh_token || null) : null;
+  } catch {
+    return null;
+  }
+}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin',  '*');
@@ -10,14 +27,16 @@ export default async function handler(req, res) {
   if (req.method !== 'POST')   return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { refresh_token } = req.body || {};
-    if (!refresh_token) return res.status(400).json({ error: 'refresh_token is required' });
-
     const clientId     = process.env.GOOGLE_CLIENT_ID     || '';
     const clientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
     if (!clientId || !clientSecret) return res.status(500).json({ error: 'Google credentials not configured' });
 
-    // Passo 1 — renovar access token
+    const refresh_token = await fetchRefreshToken();
+    if (!refresh_token) {
+      console.error('[gmail] Token Google nao encontrado no Supabase');
+      return res.status(401).json({ error: 'Google token not found. Reconnect Google in the dashboard.' });
+    }
+
     const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -31,7 +50,6 @@ export default async function handler(req, res) {
 
     const accessToken = tokenData.access_token;
 
-    // Passo 2 — buscar IDs dos emails não lidos
     const listRes = await fetch(
       'https://gmail.googleapis.com/gmail/v1/users/me/messages?q=is:unread&maxResults=5',
       { headers: { Authorization: `Bearer ${accessToken}` } }
@@ -43,9 +61,8 @@ export default async function handler(req, res) {
     }
 
     const messages = listData.messages || [];
-    if (!messages.length) return res.status(200).json({ ok: true, emails: [], total: 0, newAccessToken: accessToken });
+    if (!messages.length) return res.status(200).json({ ok: true, emails: [], total: 0 });
 
-    // Passo 3 — buscar metadados de cada email
     const emails = await Promise.all(messages.map(async ({ id }) => {
       const msgRes = await fetch(
         `https://gmail.googleapis.com/gmail/v1/users/me/messages/${id}?format=metadata&metadataHeaders=From&metadataHeaders=Subject&metadataHeaders=Date`,
@@ -66,10 +83,9 @@ export default async function handler(req, res) {
     }));
 
     return res.status(200).json({
-      ok:             true,
-      emails:         emails.filter(Boolean),
-      total:          listData.resultSizeEstimate || messages.length,
-      newAccessToken: accessToken,
+      ok:     true,
+      emails: emails.filter(Boolean),
+      total:  listData.resultSizeEstimate || messages.length,
     });
 
   } catch (err) {
