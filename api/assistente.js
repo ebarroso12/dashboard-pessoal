@@ -377,21 +377,21 @@ export default async function handler(req, res) {
   const origem = body.origem || 'whatsapp';
   if (!q) { res.status(400).json({ error: 'Campo "q" obrigatório' }); return; }
 
-  // Prompts longos (>300 chars) sao analises de widgets — bypass intent detection, vai direto pro Claude
+  // Prompts longos (>300 chars) sao analises de widgets — bypass intent detection, vai direto pro GPT
   if (q.length > 300) {
-    const apiKey = process.env.ANTHROPIC_API_KEY || '';
+    const apiKey = process.env.OPENAI_API_KEY || '';
     if (!apiKey) {
-      res.status(200).json({ ok: true, resposta: '⚠️ ANTHROPIC_API_KEY nao configurada no Vercel.', intencao: 'analise_ia' });
+      res.status(200).json({ ok: true, resposta: '⚠️ OPENAI_API_KEY nao configurada no Vercel.', intencao: 'analise_ia' });
       return;
     }
     try {
-      const cr = await fetch('https://api.anthropic.com/v1/messages', {
+      const cr = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
-        headers: { 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
-        body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 1500, messages: [{ role: 'user', content: q }] }),
+        headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 1500, messages: [{ role: 'user', content: q }] }),
       });
       const cd = await cr.json();
-      const resposta = cd.content?.[0]?.text || 'Sem resposta da IA.';
+      const resposta = cd.choices?.[0]?.message?.content || cd.error?.message || 'Sem resposta da IA.';
       salvarHistorico(origem, q.substring(0, 120) + '...', resposta, 'analise_ia').catch(() => {});
       res.status(200).json({ ok: true, resposta, intencao: 'analise_ia' });
     } catch(e) {
