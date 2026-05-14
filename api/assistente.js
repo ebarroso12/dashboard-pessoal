@@ -388,7 +388,7 @@ export default async function handler(req, res) {
       const cr = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: 'gpt-4o-mini', max_tokens: 1500, messages: [{ role: 'user', content: q }] }),
+        body: JSON.stringify({ model: 'gpt-4.1-mini', max_tokens: 1500, messages: [{ role: 'user', content: q }] }),
       });
       const cd = await cr.json();
       const resposta = cd.choices?.[0]?.message?.content || cd.error?.message || 'Sem resposta da IA.';
