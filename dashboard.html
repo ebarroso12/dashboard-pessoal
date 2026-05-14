@@ -4967,7 +4967,6 @@ window.addEventListener('message', function(ev){
     if(state && ss && state!==ss) return;
     const sc=hp.get('granted_scopes')||hp.get('scope')||'';
     if(sc.includes('googleapis')||sc.includes('calendar')) return;
-    if(sessionStorage.getItem('oauth_state')) return;
     try{if(typeof LS!=='undefined'&&LS.set){LS.set('dash_meta_token',tok);}else{localStorage.setItem('dash_meta_token',tok);}}catch(e){localStorage.setItem('dash_meta_token',tok);}
     // Salva no Supabase para persistência permanente
     try{if(typeof sbSaveMetaToken==='function') sbSaveMetaToken(tok);}catch(e){}
@@ -5067,6 +5066,8 @@ window.addEventListener('message', async (e) => {
       tokens.expires_at = Date.now() + (tokens.expires_in * 1000);
       googleTokens = tokens;
       LS.set('dash_google_tokens', tokens);
+      sessionStorage.removeItem('oauth_state');
+      sessionStorage.removeItem('pkce_v');
       sbSaveGoogleTokens(tokens); // 🔄 sync para Supabase (assistente de voz)
       setConnStatus('cal', true); setConnStatus('gmb', true);
       setConnStatus('yt', true);  setConnStatus('ga', true);
