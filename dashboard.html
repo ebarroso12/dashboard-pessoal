@@ -5445,7 +5445,7 @@ async function loadInstagram(token){
 
     // ── Passo 3: Perfil completo ─────────────────────────────────────────
     const profile = await fetch(
-      `https://graph.facebook.com/v19.0/${chosen.igId}?fields=followers_count,follows_count,media_count,username,name&access_token=${chosen.pageToken}`
+      `https://graph.facebook.com/v19.0/${chosen.igId}?fields=followers_count,media_count,username,name&access_token=${chosen.pageToken}`
     ).then(r=>r.json());
 
     if(profile.error){
