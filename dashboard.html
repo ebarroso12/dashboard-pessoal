@@ -210,10 +210,12 @@ body::before{display:none!important}
   #maingrid.grid{grid-template-columns:repeat(2,1fr);}
 }
 @media(max-width:800px){
+  html,body{overflow-x:hidden!important;max-width:100vw;}
   #maingrid.grid{grid-template-columns:1fr!important;}
   .grid{grid-template-columns:1fr!important;}
-  .main-content{margin-left:0!important;padding-bottom:72px;}
+  .main-content{margin-left:0!important;width:100%!important;max-width:100vw!important;padding-bottom:72px;}
   .sidebar{display:none!important;}
+  .card,.widget-card{min-width:0!important;max-width:100%!important;}
   #mobile-nav{display:flex!important;}
   #mobile-drawer{display:flex!important;}
 }
