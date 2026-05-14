@@ -211,9 +211,59 @@ body::before{display:none!important}
 }
 @media(max-width:800px){
   #maingrid.grid{grid-template-columns:1fr;}
-  .main-content{margin-left:0;}
+  .main-content{margin-left:0;padding-bottom:84px;}
   .sidebar{display:none;}
 }
+
+/* ── MOBILE FAB ─────────────────────────────────────── */
+.mob-fab{display:none;position:fixed;bottom:20px;right:20px;z-index:150;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:1.4rem;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s;}
+.mob-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(0,0,0,.6);}
+@media(max-width:800px){.mob-fab{display:flex;}}
+
+/* ── MOBILE OVERLAY ─────────────────────────────────── */
+.mob-overlay{position:fixed;inset:0;z-index:160;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:none;opacity:0;transition:opacity .25s;}
+.mob-overlay.open{display:block;opacity:1;}
+
+/* ── MOBILE DRAWER ──────────────────────────────────── */
+.mob-drawer{position:fixed;top:0;left:0;bottom:0;width:280px;max-width:85vw;z-index:161;background:var(--sidebar-bg);border-right:1px solid var(--border);transform:translateX(-100%);transition:transform .25s ease;display:flex;flex-direction:column;overflow-y:auto;}
+.mob-drawer.open{transform:translateX(0);}
+.mob-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.mob-drawer-title{font-size:.95rem;font-weight:800;color:var(--text);}
+.mob-drawer-close{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.06);border:none;color:var(--muted2);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
+.mob-nav{flex:1;padding:8px;overflow-y:auto;}
+.mob-nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;font-size:.85rem;font-weight:600;color:var(--muted2);border:none;background:none;width:100%;text-align:left;cursor:pointer;transition:background .15s,color .15s;font-family:inherit;}
+.mob-nav-item:hover,.mob-nav-item:active{background:rgba(59,130,246,.12);color:var(--text);}
+.mob-nav-section{font-size:.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:10px 12px 4px;}
+.mob-theme-bar{display:flex;gap:5px;padding:10px 12px 16px;border-top:1px solid var(--border);flex-shrink:0;}
+.mob-theme-btn{flex:1;padding:7px 4px;border-radius:8px;font-size:.62rem;font-weight:700;cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted2);transition:all .2s;font-family:inherit;}
+.mob-theme-btn.on{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
+
+/* ── TEMA CLARO ──────────────────────────────────────── */
+html[data-theme="claro"]{
+  --bg:#f1f5f9;--bg2:#e2e8f0;--bg3:#ffffff;
+  --sidebar-bg:#ffffff;--card-bg:#ffffff;
+  --text:#0f172a;--muted:#64748b;--muted2:#475569;
+  --border:rgba(0,0,0,.08);--border-h:rgba(0,0,0,.16);
+  --glass:rgba(0,0,0,.02);
+  --accent:#2563eb;--accent-dim:rgba(37,99,235,.1);
+  --teal:#059669;--coral:#ef4444;--blue:#2563eb;--gold:#d97706;--purple:#7c3aed;--green:#059669;
+  --shadow:0 2px 12px rgba(0,0,0,.08);
+  --glow-t:0 0 14px rgba(5,150,105,.2);--glow-b:0 0 14px rgba(37,99,235,.2);--glow-c:0 0 14px rgba(239,68,68,.2);
+}
+html[data-theme="claro"] body{background:var(--bg)}
+html[data-theme="claro"] .sidebar{background:var(--sidebar-bg);border-right-color:rgba(0,0,0,.08)}
+html[data-theme="claro"] .main-content{background:var(--bg)}
+html[data-theme="claro"] .card{background:#ffffff!important;border-color:rgba(0,0,0,.08)!important;box-shadow:0 1px 4px rgba(0,0,0,.06)!important}
+html[data-theme="claro"] .card:hover{border-color:rgba(0,0,0,.15)!important}
+html[data-theme="claro"] .kpi{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.07)!important}
+html[data-theme="claro"] .card-head{border-bottom-color:rgba(0,0,0,.07)}
+html[data-theme="claro"] .card-foot{border-top-color:rgba(0,0,0,.07)}
+html[data-theme="claro"] ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15)}
+html[data-theme="claro"] .mob-drawer{background:#ffffff;border-right-color:rgba(0,0,0,.08)}
+html[data-theme="claro"] .mob-drawer-close{background:rgba(0,0,0,.05)}
+html[data-theme="claro"] .mob-nav-item:hover{background:rgba(37,99,235,.08)}
+html[data-theme="claro"] .sb-link:hover{background:rgba(37,99,235,.08)!important;color:var(--accent)!important}
+html[data-theme="claro"] .sb-link.active{background:rgba(37,99,235,.1)!important;color:var(--accent)!important}
 
 /* card bg override using our new var */
 .card{background:var(--card-bg,#131c27)!important}
@@ -1986,8 +2036,9 @@ body::before {
       Pré-Consulta Admin
     </a>
     <div class="theme-bar">
-      <button class="t-btn on" data-t="classico" onclick="_setTheme('classico')">⚫ Clássico</button>
-      <button class="t-btn" data-t="legendarios" onclick="_setTheme('legendarios')">🔥 Legendários</button>
+      <button class="t-btn on" data-t="classico" onclick="_setTheme('classico')">⚫ Escuro</button>
+      <button class="t-btn" data-t="claro" onclick="_setTheme('claro')">☀️ Claro</button>
+      <button class="t-btn" data-t="legendarios" onclick="_setTheme('legendarios')">🔥 Fire</button>
     </div>
   </nav>
 
@@ -11337,6 +11388,59 @@ window.checkLegLocation = function(){
 // Inicializacao
 setTimeout(function(){if(window.loadIANews)loadIANews();},2000);
 setTimeout(function(){if(window.loadLegendarios)loadLegendarios();},800);
+
+// ── MOBILE DRAWER ─────────────────────────────────────
+function openMobDrawer(){
+  document.getElementById('mobOverlay').classList.add('open');
+  document.getElementById('mobDrawer').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeMobDrawer(){
+  document.getElementById('mobOverlay').classList.remove('open');
+  document.getElementById('mobDrawer').classList.remove('open');
+  document.body.style.overflow='';
+}
+function updateMobTheme(){
+  const t=document.documentElement.dataset.theme||'classico';
+  document.querySelectorAll('.mob-theme-btn').forEach(function(b){b.classList.toggle('on',b.dataset.mt===t);});
+}
+// Sync mob theme buttons when theme changes via sidebar
+const _origSetTheme=window._setTheme||(typeof _setTheme!=='undefined'?_setTheme:null);
+if(typeof _setTheme==='function'){
+  const __st=_setTheme;
+  window._setTheme=function(t){__st(t);updateMobTheme();};
+}
+updateMobTheme();
 </script>
+
+<!-- Mobile FAB -->
+<button class="mob-fab" id="mobFab" onclick="openMobDrawer()" aria-label="Menu">☰</button>
+
+<!-- Mobile Overlay -->
+<div class="mob-overlay" id="mobOverlay" onclick="closeMobDrawer()"></div>
+
+<!-- Mobile Drawer -->
+<div class="mob-drawer" id="mobDrawer">
+  <div class="mob-drawer-head">
+    <span class="mob-drawer-title">Menu</span>
+    <button class="mob-drawer-close" onclick="closeMobDrawer()">✕</button>
+  </div>
+  <nav class="mob-nav">
+    <div class="mob-nav-section">Navegação</div>
+    <button class="mob-nav-item" onclick="showSection('clinica');showPage('home');closeMobDrawer()">🏥 Visão Geral</button>
+    <button class="mob-nav-item" onclick="showSection('clinica');showPage('home');closeMobDrawer()">🩺 Clínica</button>
+    <button class="mob-nav-item" onclick="showSection('marketing');showPage('home');closeMobDrawer()">📣 Marketing</button>
+    <button class="mob-nav-item" onclick="showSection('infra');showPage('home');closeMobDrawer()">⚙️ Infraestrutura</button>
+    <div class="mob-nav-section">Ferramentas</div>
+    <button class="mob-nav-item" onclick="document.getElementById('widget-supervisor-ia')?.scrollIntoView({behavior:'smooth'});closeMobDrawer()">🤖 Supervisor IA</button>
+    <button class="mob-nav-item" onclick="openSettings&&openSettings();closeMobDrawer()">⚙️ Configurações</button>
+  </nav>
+  <div class="mob-theme-bar">
+    <button class="mob-theme-btn on" data-mt="classico" onclick="_setTheme('classico')">⚫ Escuro</button>
+    <button class="mob-theme-btn" data-mt="claro" onclick="_setTheme('claro')">☀️ Claro</button>
+    <button class="mob-theme-btn" data-mt="legendarios" onclick="_setTheme('legendarios')">🔥 Fire</button>
+  </div>
+</div>
+
 </body></html>
 
