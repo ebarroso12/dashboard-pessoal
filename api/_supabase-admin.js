@@ -4,7 +4,7 @@
 const SUPABASE_URL = 'https://jaewjscbigfwjiaeavft.supabase.co';
 
 export async function adminFetch(path, opts = {}) {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
   if (!key) throw new Error('SUPABASE_SERVICE_ROLE_KEY not configured');
 
   const res = await fetch(`${SUPABASE_URL}/rest/v1${path}`, {

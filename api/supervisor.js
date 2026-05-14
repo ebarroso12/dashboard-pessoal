@@ -14,7 +14,7 @@
 
 import { adminFetch } from './_supabase-admin.js';
 
-const ANTHROPIC_KEY  = process.env.ANTHROPIC_API_KEY || '';
+const OPENAI_KEY     = process.env.OPENAI_API_KEY || '';
 const SUPABASE_URL   = 'https://jaewjscbigfwjiaeavft.supabase.co';
 const SUPABASE_ANON  = process.env.SUPABASE_ANON_KEY || '';
 const GOOGLE_ID      = process.env.GOOGLE_CLIENT_ID     || '';
@@ -56,59 +56,77 @@ async function refreshGoogleToken(rt) {
 
 const TOOLS = [
   {
-    name: 'verificar_google_oauth',
-    description: 'Verifica se o token OAuth do Google está válido e tenta renová-lo automaticamente se expirado. Retorna status e escopos disponíveis.',
-    input_schema: { type: 'object', properties: {}, required: [] },
-  },
-  {
-    name: 'verificar_supabase',
-    description: 'Verifica o estado do banco Supabase: tabelas existentes, tokens OAuth salvos, tarefas, finanças e metas.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        tabela: { type: 'string', description: 'Tabela específica para inspecionar (opcional). Ex: oauth_tokens, tarefas, financas, metas' },
-      },
-      required: [],
+    type: 'function',
+    function: {
+      name: 'verificar_google_oauth',
+      description: 'Verifica se o token OAuth do Google está válido e tenta renová-lo automaticamente se expirado. Retorna status e escopos disponíveis.',
+      parameters: { type: 'object', properties: {}, required: [] },
     },
   },
   {
-    name: 'executar_comando_dashboard',
-    description: 'Executa um comando do dashboard e retorna o resultado. Comandos: agenda, emails, drive, tarefas, financas, metas, resumo.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        comando: { type: 'string', description: 'Comando a executar: agenda | emails | drive | tarefas | financas | metas | resumo' },
+    type: 'function',
+    function: {
+      name: 'verificar_supabase',
+      description: 'Verifica o estado do banco Supabase: tabelas existentes, tokens OAuth salvos, tarefas, finanças e metas.',
+      parameters: {
+        type: 'object',
+        properties: {
+          tabela: { type: 'string', description: 'Tabela específica para inspecionar (opcional). Ex: oauth_tokens, tarefas, financas, metas' },
+        },
+        required: [],
       },
-      required: ['comando'],
     },
   },
   {
-    name: 'verificar_saude_servicos',
-    description: 'Faz ping nos serviços do dashboard: Supabase, Google OAuth, OpenClaw webhook, e verifica variáveis de ambiente críticas.',
-    input_schema: { type: 'object', properties: {}, required: [] },
-  },
-  {
-    name: 'registrar_incidente',
-    description: 'Registra um incidente, alerta ou ação de reparo no log do Supabase para auditoria.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        severidade: { type: 'string', enum: ['info', 'aviso', 'erro', 'corrigido'] },
-        mensagem:   { type: 'string', description: 'Descrição do incidente ou ação' },
-        componente: { type: 'string', description: 'Componente afetado: google, supabase, openclaw, dashboard, etc.' },
+    type: 'function',
+    function: {
+      name: 'executar_comando_dashboard',
+      description: 'Executa um comando do dashboard e retorna o resultado. Comandos: agenda, emails, drive, tarefas, financas, metas, resumo.',
+      parameters: {
+        type: 'object',
+        properties: {
+          comando: { type: 'string', description: 'Comando a executar: agenda | emails | drive | tarefas | financas | metas | resumo' },
+        },
+        required: ['comando'],
       },
-      required: ['severidade', 'mensagem', 'componente'],
     },
   },
   {
-    name: 'listar_logs',
-    description: 'Lista os últimos incidentes e ações registrados pelo Supervisor.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        limite: { type: 'number', description: 'Quantos registros retornar (padrão 10)' },
+    type: 'function',
+    function: {
+      name: 'verificar_saude_servicos',
+      description: 'Faz ping nos serviços do dashboard: Supabase, Google OAuth, OpenClaw webhook, e verifica variáveis de ambiente críticas.',
+      parameters: { type: 'object', properties: {}, required: [] },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'registrar_incidente',
+      description: 'Registra um incidente, alerta ou ação de reparo no log do Supabase para auditoria.',
+      parameters: {
+        type: 'object',
+        properties: {
+          severidade: { type: 'string', enum: ['info', 'aviso', 'erro', 'corrigido'] },
+          mensagem:   { type: 'string', description: 'Descrição do incidente ou ação' },
+          componente: { type: 'string', description: 'Componente afetado: google, supabase, openclaw, dashboard, etc.' },
+        },
+        required: ['severidade', 'mensagem', 'componente'],
       },
-      required: [],
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'listar_logs',
+      description: 'Lista os últimos incidentes e ações registrados pelo Supervisor.',
+      parameters: {
+        type: 'object',
+        properties: {
+          limite: { type: 'number', description: 'Quantos registros retornar (padrão 10)' },
+        },
+        required: [],
+      },
     },
   },
 ];
@@ -198,7 +216,7 @@ async function tool_verificar_saude_servicos() {
 
   // Variáveis de ambiente
   checks.env = {
-    ANTHROPIC_API_KEY: !!ANTHROPIC_KEY,
+    OPENAI_API_KEY: !!OPENAI_KEY,
     GOOGLE_CLIENT_ID:  !!GOOGLE_ID,
     GOOGLE_CLIENT_SECRET: !!GOOGLE_SECRET,
     WEBHOOK_TOKEN:     !!process.env.WEBHOOK_TOKEN,
@@ -296,28 +314,26 @@ Seu comportamento:
 Você tem acesso ao Claude Code (meu criador) via integração — se um problema for complexo demais, indique que pode ser escalado para análise de código.`;
 
 async function rodarAgente(mensagens) {
-  if (!ANTHROPIC_KEY) {
-    return '⚠️ ANTHROPIC_API_KEY não configurada. Adicione nas variáveis de ambiente do Vercel.';
+  if (!OPENAI_KEY) {
+    return '⚠️ OPENAI_API_KEY não configurada. Adicione nas variáveis de ambiente do Vercel.';
   }
 
-  let msgs = [...mensagens];
+  let msgs = [{ role: 'system', content: SYSTEM }, ...mensagens];
   let iteracoes = 0;
   const MAX_ITER = 8;
 
   while (iteracoes < MAX_ITER) {
     iteracoes++;
 
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'x-api-key': ANTHROPIC_KEY,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
+        'Authorization': `Bearer ${OPENAI_KEY}`,
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: 'gpt-4.1-mini',
         max_tokens: 4096,
-        system: SYSTEM,
         tools: TOOLS,
         messages: msgs,
       }),
@@ -325,45 +341,42 @@ async function rodarAgente(mensagens) {
 
     if (!resp.ok) {
       const err = await resp.text();
-      throw new Error(`Anthropic API error ${resp.status}: ${err}`);
+      throw new Error(`OpenAI API error ${resp.status}: ${err}`);
     }
 
     const data = await resp.json();
+    const choice = data.choices?.[0];
+    const msg = choice?.message;
 
-    // Adiciona resposta do assistente ao histórico
-    msgs.push({ role: 'assistant', content: data.content });
+    if (!msg) break;
+
+    // Adiciona resposta ao histórico
+    msgs.push(msg);
 
     // Terminou
-    if (data.stop_reason === 'end_turn') {
-      const texto = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
-      return texto;
+    if (choice.finish_reason === 'stop') {
+      return msg.content || '';
     }
 
-    // Processa tool_use
-    if (data.stop_reason === 'tool_use') {
-      const toolUses = data.content.filter(b => b.type === 'tool_use');
-      const toolResults = [];
-
-      for (const tu of toolUses) {
+    // Processa tool_calls
+    if (choice.finish_reason === 'tool_calls' && msg.tool_calls?.length) {
+      for (const tc of msg.tool_calls) {
         let resultado;
         try {
-          resultado = await executarFerramenta(tu.name, tu.input || {});
+          const input = tc.function.arguments ? JSON.parse(tc.function.arguments) : {};
+          resultado = await executarFerramenta(tc.function.name, input);
         } catch (e) {
           resultado = { erro: e.message };
         }
-
-        toolResults.push({
-          type: 'tool_result',
-          tool_use_id: tu.id,
+        msgs.push({
+          role: 'tool',
+          tool_call_id: tc.id,
           content: JSON.stringify(resultado),
         });
       }
-
-      msgs.push({ role: 'user', content: toolResults });
       continue;
     }
 
-    // Qualquer outro stop_reason
     break;
   }
 

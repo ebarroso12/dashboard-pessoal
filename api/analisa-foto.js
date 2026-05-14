@@ -43,19 +43,15 @@ Formato obrigatório:
 
 async function callClaude(apiKey, base64Image, mimeType) {
   const payload = {
-    model: 'claude-haiku-4-5-20251001',
+    model: 'gpt-4.1-mini',
     max_tokens: 1024,
     messages: [
       {
         role: 'user',
         content: [
           {
-            type: 'image',
-            source: {
-              type: 'base64',
-              media_type: mimeType || 'image/jpeg',
-              data: base64Image,
-            },
+            type: 'image_url',
+            image_url: { url: `data:${mimeType || 'image/jpeg'};base64,${base64Image}` },
           },
           {
             type: 'text',
@@ -66,12 +62,11 @@ async function callClaude(apiKey, base64Image, mimeType) {
     ],
   };
 
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
+  const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
     headers: {
-      'Content-Type':      'application/json',
-      'x-api-key':         apiKey,
-      'anthropic-version': '2023-06-01',
+      'Content-Type':  'application/json',
+      'Authorization': `Bearer ${apiKey}`,
     },
     body: JSON.stringify(payload),
   });
@@ -80,8 +75,8 @@ async function callClaude(apiKey, base64Image, mimeType) {
 }
 
 function parseClaudeResponse(claudeRes) {
-  const text = claudeRes?.content?.[0]?.text || '';
-  if (!text) throw new Error('Resposta vazia do Claude');
+  const text = claudeRes?.choices?.[0]?.message?.content || '';
+  if (!text) throw new Error('Resposta vazia da IA');
 
   const cleaned = text
     .replace(/```json\s*/gi, '')
@@ -114,13 +109,13 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') { res.status(204).end(); return; }
   if (req.method !== 'POST')    { res.status(405).json({ error: 'Método não permitido' }); return; }
 
-  const apiKey = process.env.ANTHROPIC_API_KEY || '';
+  const apiKey = process.env.OPENAI_API_KEY || '';
 
   if (!apiKey) {
     res.status(200).json({
       itens:    [],
       fallback: true,
-      motivo:   'ANTHROPIC_API_KEY não configurada. Configure a variável de ambiente no Vercel e tente novamente.',
+      motivo:   'OPENAI_API_KEY não configurada. Configure a variável de ambiente no Vercel e tente novamente.',
     });
     return;
   }

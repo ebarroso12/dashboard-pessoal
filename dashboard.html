@@ -210,10 +210,119 @@ body::before{display:none!important}
   #maingrid.grid{grid-template-columns:repeat(2,1fr);}
 }
 @media(max-width:800px){
-  #maingrid.grid{grid-template-columns:1fr;}
-  .main-content{margin-left:0;}
-  .sidebar{display:none;}
+  #maingrid.grid{grid-template-columns:1fr!important;}
+  .grid{grid-template-columns:1fr!important;}
+  .main-content{margin-left:0!important;padding-bottom:72px;}
+  .sidebar{display:none!important;}
+  #mobile-nav{display:flex!important;}
+  #mobile-drawer{display:flex!important;}
 }
+
+/* ── TEMA CLARO ──────────────────────────────────────── */
+html[data-theme="claro"]{
+  --bg:#f0f4f8;--bg2:#e8edf3;--bg3:#ffffff;
+  --sidebar-bg:#ffffff;--card-bg:#ffffff;
+  --border:rgba(0,0,0,.1);--border-h:rgba(0,0,0,.18);
+  --text:#1a202c;--muted:#64748b;--muted2:#475569;
+  --accent:#2563eb;--accent-dim:rgba(37,99,235,.1);
+  --teal:#059669;--coral:#dc2626;--blue:#2563eb;--gold:#d97706;--purple:#7c3aed;
+  --glass:rgba(0,0,0,.02);
+  --glow-t:none;--glow-c:none;--glow-b:none;
+  --shadow:0 2px 12px rgba(0,0,0,.12);
+}
+html[data-theme="claro"] body{background:var(--bg)}
+html[data-theme="claro"] .card{background:#fff!important;border-color:rgba(0,0,0,.1)!important;color:#1a202c}
+html[data-theme="claro"] .card *{color:inherit}
+html[data-theme="claro"] .card-body{background:transparent!important}
+html[data-theme="claro"] .sidebar{background:#fff;border-right-color:rgba(0,0,0,.1)}
+html[data-theme="claro"] .main-content{background:#f0f4f8}
+html[data-theme="claro"] .sb-link{color:#475569}
+html[data-theme="claro"] .sb-link:hover{background:rgba(37,99,235,.08);color:#1a202c}
+html[data-theme="claro"] .sb-link.active{background:rgba(37,99,235,.12);color:#2563eb;border-left-color:#2563eb}
+html[data-theme="claro"] .sb-clock-time{color:#1a202c}
+html[data-theme="claro"] .sb-clock-date{color:#64748b}
+html[data-theme="claro"] .sb-logo-name{color:#1a202c}
+html[data-theme="claro"] .sb-logo-role{color:#64748b}
+html[data-theme="claro"] .sb-bottom-btn{color:#475569}
+html[data-theme="claro"] .sb-bottom-btn:hover{background:rgba(0,0,0,.05);color:#1a202c}
+html[data-theme="claro"] .section-tabs{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.1)}
+html[data-theme="claro"] .section-tab{color:#475569}
+html[data-theme="claro"] .section-tab:hover{background:rgba(0,0,0,.05)}
+html[data-theme="claro"] .kpi{background:rgba(0,0,0,.03)!important;color:#1a202c}
+html[data-theme="claro"] .t-btn{border-color:rgba(0,0,0,.12);background:rgba(0,0,0,.03);color:#475569}
+html[data-theme="claro"] .t-btn.on{border-color:#2563eb;color:#2563eb;background:rgba(37,99,235,.1)}
+html[data-theme="claro"] #mobile-nav{background:#fff;border-top-color:rgba(0,0,0,.1)}
+html[data-theme="claro"] #mobile-drawer{background:#fff}
+html[data-theme="claro"] .mn-btn{color:#475569}
+html[data-theme="claro"] .mn-btn.active,.mn-btn:hover{color:#2563eb}
+html[data-theme="claro"] .drawer-close{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12)}
+
+/* ── MOBILE BOTTOM NAV ───────────────────────────────── */
+#mobile-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  height:60px;
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  z-index:500;
+  justify-content:space-around;
+  align-items:center;
+}
+.mn-btn{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;
+  padding:6px 8px;min-width:52px;min-height:48px;
+  color:var(--muted2);background:none;border:none;
+  font-family:inherit;font-size:.58rem;font-weight:600;
+  cursor:pointer;border-radius:8px;
+  transition:color .15s,background .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.mn-btn:hover,.mn-btn.active{color:var(--accent)}
+.mn-btn svg{flex-shrink:0}
+
+/* ── MOBILE DRAWER ───────────────────────────────────── */
+#mobile-drawer{
+  display:none;
+  position:fixed;top:0;left:0;height:100%;
+  width:280px;
+  background:var(--sidebar-bg);
+  border-right:1px solid var(--border);
+  z-index:600;
+  flex-direction:column;
+  transform:translateX(-100%);
+  transition:transform .25s ease;
+  overflow-y:auto;
+}
+#mobile-drawer.open{transform:translateX(0)}
+#mobile-overlay{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.5);
+  z-index:599;
+}
+#mobile-overlay.open{display:block}
+.drawer-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 12px 12px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.drawer-title{font-size:.85rem;font-weight:700;color:var(--text)}
+.drawer-close{
+  width:36px;height:36px;min-height:36px;
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--muted2);background:rgba(255,255,255,.05);
+  border:1px solid var(--border);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.drawer-theme{
+  display:flex;gap:4px;padding:10px 10px 8px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.drawer-theme .t-btn{flex:1;font-size:.62rem;padding:7px 4px;min-height:36px}
+.drawer-nav{flex:1;padding:8px;overflow-y:auto}
 
 /* card bg override using our new var */
 .card{background:var(--card-bg,#131c27)!important}
@@ -1986,8 +2095,9 @@ body::before {
       Pré-Consulta Admin
     </a>
     <div class="theme-bar">
-      <button class="t-btn on" data-t="classico" onclick="_setTheme('classico')">⚫ Clássico</button>
-      <button class="t-btn" data-t="legendarios" onclick="_setTheme('legendarios')">🔥 Legendários</button>
+      <button class="t-btn" data-t="classico" onclick="_setTheme('classico')">🌙 Escuro</button>
+      <button class="t-btn" data-t="claro" onclick="_setTheme('claro')">☀️ Claro</button>
+      <button class="t-btn" data-t="legendarios" onclick="_setTheme('legendarios')">🎨 Clás.</button>
     </div>
   </nav>
 
@@ -2541,7 +2651,7 @@ body::before {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="5"></circle><circle cx="17.5" cy="6.5" r="1.3" fill="#fff" stroke="none"></circle></svg>
         </div>
         <div><div class="c-title">Instagram</div><div class="c-sub">Métricas · 30 dias</div></div>
-        <div class="c-spacer"></div><span class="c-tag tag-live" id="ig-status">live ●</span>
+        <div class="c-spacer"></div><span class="c-tag tag-demo" id="ig-status">demo</span>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
@@ -2550,10 +2660,10 @@ body::before {
     </svg></button></div></div>
       <div class="card-body">
         <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Seguidores</div><div class="kpi-val" id="ig-followers" style="color:#e1306c;text-shadow:0 0 16px rgba(225,48,108,.45)">15.5K</div><div class="kpi-delta delta-up" id="ig-followers-d">▲ +258 esta semana</div></div>
-          <div class="kpi"><div class="kpi-label">Alcance Orgânico</div><div class="kpi-val glow-b" id="ig-reach"></div><div class="kpi-delta" id="ig-reach-d" style="font-size:.62rem;color:var(--muted2)">28 dias · orgânico</div></div>
-          <div class="kpi"><div class="kpi-label">Impressões</div><div class="kpi-val glow-t" id="ig-likes"></div><div class="kpi-delta" id="ig-imp-d" style="font-size:.62rem;color:var(--muted2)">28 dias</div></div>
-          <div class="kpi"><div class="kpi-label">Engajamento</div><div class="kpi-val glow-g" id="ig-engage">9.2%</div><div class="kpi-delta delta-up">▲ +1.2pp</div></div>
+          <div class="kpi"><div class="kpi-label">Seguidores</div><div class="kpi-val" id="ig-followers" style="color:#e1306c;text-shadow:0 0 16px rgba(225,48,108,.45)">--</div><div class="kpi-delta" id="ig-followers-d"></div></div>
+          <div class="kpi"><div class="kpi-label">Alcance Orgânico</div><div class="kpi-val glow-b" id="ig-reach">--</div><div class="kpi-delta" id="ig-reach-d" style="font-size:.62rem;color:var(--muted2)">28 dias · orgânico</div></div>
+          <div class="kpi"><div class="kpi-label">Impressões</div><div class="kpi-val glow-t" id="ig-likes">--</div><div class="kpi-delta" id="ig-imp-d" style="font-size:.62rem;color:var(--muted2)">28 dias</div></div>
+          <div class="kpi"><div class="kpi-label">Engajamento</div><div class="kpi-val glow-g" id="ig-engage">--</div><div class="kpi-delta"></div></div>
         </div>
         <div class="chart-box"><canvas id="igChart" width="338" height="175" style="display: block; box-sizing: border-box; height: 140px; width: 270px;"></canvas></div>
       </div>
@@ -2575,7 +2685,7 @@ body::before {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
         </div>
         <div><div class="c-title">Facebook</div><div class="c-sub">Página · 30 dias</div></div>
-        <div class="c-spacer"></div><span class="c-tag tag-live" id="fb-status">live ●</span>
+        <div class="c-spacer"></div><span class="c-tag tag-demo" id="fb-status">demo</span>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
@@ -2584,10 +2694,10 @@ body::before {
     </svg></button></div></div>
       <div class="card-body">
         <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Curtidas Página</div><div class="kpi-val glow-b" id="fb-likes">5.4K</div><div class="kpi-delta delta-up">▲ +56</div></div>
-          <div class="kpi"><div class="kpi-label">Alcance 28d</div><div class="kpi-val glow-p" id="fb-reach"></div><div class="kpi-delta" id="fb-reach-d"></div></div>
-          <div class="kpi"><div class="kpi-label">Posts mês</div><div class="kpi-val glow-t" id="fb-posts">24</div><div class="kpi-delta delta-up">▲ +3</div></div>
-          <div class="kpi"><div class="kpi-label">Engajamento</div><div class="kpi-val glow-g" id="fb-engage">4.8%</div><div class="kpi-delta delta-up">▲ +0.5pp</div></div>
+          <div class="kpi"><div class="kpi-label">Curtidas Página</div><div class="kpi-val glow-b" id="fb-likes">--</div><div class="kpi-delta"></div></div>
+          <div class="kpi"><div class="kpi-label">Alcance 28d</div><div class="kpi-val glow-p" id="fb-reach">--</div><div class="kpi-delta" id="fb-reach-d"></div></div>
+          <div class="kpi"><div class="kpi-label">Posts mês</div><div class="kpi-val glow-t" id="fb-posts">--</div><div class="kpi-delta"></div></div>
+          <div class="kpi"><div class="kpi-label">Engajamento</div><div class="kpi-val glow-g" id="fb-engage">--</div><div class="kpi-delta"></div></div>
         </div>
         <div class="chart-box"><canvas id="fbChart" width="371" height="175" style="display: block; box-sizing: border-box; height: 140px; width: 297px;"></canvas></div>
       </div>
@@ -2611,7 +2721,7 @@ body::before {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path><circle cx="12" cy="9" r="2.5"></circle></svg>
         </div>
         <div><div class="c-title">Google Meu Negócio</div><div class="c-sub">30 dias</div></div>
-        <div class="c-spacer"></div><span class="c-tag tag-live" id="gmb-status">live ●</span>
+        <div class="c-spacer"></div><span class="c-tag tag-demo" id="gmb-status">demo</span>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
@@ -2620,20 +2730,20 @@ body::before {
     </svg></button></div></div>
       <div class="card-body">
         <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Visualizações</div><div class="kpi-val glow-b" id="gmb-views">1.2K</div><div class="kpi-delta delta-up">▲ +12%</div></div>
-          <div class="kpi"><div class="kpi-label">Cliques direção</div><div class="kpi-val glow-t" id="gmb-clicks">471</div><div class="kpi-delta delta-up">▲ +8%</div></div>
-          <div class="kpi"><div class="kpi-label">Buscas</div><div class="kpi-val" id="gmb-searches" style="color:var(--gold);text-shadow:0 0 14px rgba(255,182,73,.45)">2.3K</div><div class="kpi-delta delta-up">▲ +22%</div></div>
-          <div class="kpi"><div class="kpi-label">Avaliação</div><div class="kpi-val glow-g" id="gmb-rating">4.5 ★</div><div class="kpi-delta delta-neu" id="gmb-reviews">126 avaliações</div></div>
+          <div class="kpi"><div class="kpi-label">Visualizações</div><div class="kpi-val glow-b" id="gmb-views">--</div><div class="kpi-delta"></div></div>
+          <div class="kpi"><div class="kpi-label">Cliques direção</div><div class="kpi-val glow-t" id="gmb-clicks">--</div><div class="kpi-delta"></div></div>
+          <div class="kpi"><div class="kpi-label">Buscas</div><div class="kpi-val" id="gmb-searches" style="color:var(--gold);text-shadow:0 0 14px rgba(255,182,73,.45)">--</div><div class="kpi-delta"></div></div>
+          <div class="kpi"><div class="kpi-label">Avaliação</div><div class="kpi-val glow-g" id="gmb-rating">--</div><div class="kpi-delta delta-neu" id="gmb-reviews">--</div></div>
         </div>
         <div class="divider" style="margin-top:4px">Origem</div>
         <div class="src-list">
-          <div class="src-row"><div class="src-name">Pesquisa direta</div><div class="src-track"><div class="src-fill" style="width:65%;background:linear-gradient(90deg,#4285f4,var(--teal))"></div></div><div class="src-pct" style="color:var(--blue)">65%</div></div>
-          <div class="src-row"><div class="src-name">Por categoria</div><div class="src-track"><div class="src-fill" style="width:25%;background:linear-gradient(90deg,var(--teal),#00b0ff)"></div></div><div class="src-pct" style="color:var(--teal)">25%</div></div>
-          <div class="src-row"><div class="src-name">Google Maps</div><div class="src-track"><div class="src-fill" style="width:10%;background:linear-gradient(90deg,var(--gold),var(--coral))"></div></div><div class="src-pct" style="color:var(--gold)">10%</div></div>
+          <div class="src-row"><div class="src-name">Pesquisa direta</div><div class="src-track"><div class="src-fill" style="width:0%;background:linear-gradient(90deg,#4285f4,var(--teal))"></div></div><div class="src-pct" style="color:var(--blue)">--</div></div>
+          <div class="src-row"><div class="src-name">Por categoria</div><div class="src-track"><div class="src-fill" style="width:0%;background:linear-gradient(90deg,var(--teal),#00b0ff)"></div></div><div class="src-pct" style="color:var(--teal)">--</div></div>
+          <div class="src-row"><div class="src-name">Google Maps</div><div class="src-track"><div class="src-fill" style="width:0%;background:linear-gradient(90deg,var(--gold),var(--coral))"></div></div><div class="src-pct" style="color:var(--gold)">--</div></div>
         </div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
-        <button class="connect" id="gmb-btn" onclick="connectGoogle()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
+        <button class="connect" id="gmb-btn" onclick="connectGoogle()"> Conectar Google</button>
         <button class="wa-btn" onclick="sendMetricWA('gmb')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
         </button>
@@ -2652,7 +2762,7 @@ body::before {
           <svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M23 7s-.3-2-1.2-2.7c-1.2-1.2-2.4-1.2-3-1.3C16.4 2.9 12 2.9 12 2.9s-4.4 0-6.8.1c-.6.1-1.8.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.2v2c0 2 .3 4.1.3 4.1s.3 2 1.2 2.7c1.2 1.2 2.7 1.1 3.4 1.2C7.5 21.3 12 21.3 12 21.3s4.4 0 6.8-.1c.6-.1 1.8-.1 3-1.3.9-.7 1.2-2.7 1.2-2.7s.3-2.1.3-4.1v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.4l6.6 3.6-6.6 3.5z"></path></svg>
         </div>
         <div><div class="c-title">YouTube</div><div class="c-sub">Canal · 30 dias</div></div>
-        <div class="c-spacer"></div><span class="c-tag tag-live" id="yt-status">live ●</span>
+        <div class="c-spacer"></div><span class="c-tag tag-demo" id="yt-status">demo</span>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
@@ -2661,15 +2771,15 @@ body::before {
     </svg></button></div></div>
       <div class="card-body">
         <div class="kpi-row">
-          <div class="kpi"><div class="kpi-label">Inscritos</div><div class="kpi-val" id="yt-subs" style="color:#ff0000;text-shadow:0 0 16px rgba(255,0,0,.5)">390</div><div class="kpi-delta delta-up" id="yt-subs-d">▲ +13 este mês</div></div>
-          <div class="kpi"><div class="kpi-label">Views 30d</div><div class="kpi-val glow-b" id="yt-views">165</div><div class="kpi-delta delta-up">▲ +12%</div></div>
-          <div class="kpi"><div class="kpi-label">Watchtime (h)</div><div class="kpi-val glow-t" id="yt-watch">4</div><div class="kpi-delta delta-up">▲ +8%</div></div>
-          <div class="kpi"><div class="kpi-label">Likes</div><div class="kpi-val glow-g" id="yt-likes">5</div><div class="kpi-delta delta-up">▲ +5%</div></div>
+          <div class="kpi"><div class="kpi-label">Inscritos</div><div class="kpi-val" id="yt-subs" style="color:#ff0000;text-shadow:0 0 16px rgba(255,0,0,.5)">--</div><div class="kpi-delta" id="yt-subs-d"></div></div>
+          <div class="kpi"><div class="kpi-label">Views 30d</div><div class="kpi-val glow-b" id="yt-views">--</div><div class="kpi-delta"></div></div>
+          <div class="kpi"><div class="kpi-label">Watchtime (h)</div><div class="kpi-val glow-t" id="yt-watch">--</div><div class="kpi-delta"></div></div>
+          <div class="kpi"><div class="kpi-label">Likes</div><div class="kpi-val glow-g" id="yt-likes">--</div><div class="kpi-delta"></div></div>
         </div>
         <div class="chart-box"><canvas id="ytChart" style="box-sizing: border-box; display: block; height: 140px; width: 270px;" width="338" height="175"></canvas></div>
       </div>
       <div class="card-foot"><div class="card-foot-row">
-        <button class="connect" id="yt-btn" onclick="connectGoogle()" style="background: rgba(0, 229, 181, 0.12); border-color: rgba(0, 229, 181, 0.3); color: var(--teal);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg> Conectado</button>
+        <button class="connect" id="yt-btn" onclick="connectGoogle()"> Conectar Google</button>
         <button class="wa-btn" onclick="sendMetricWA('youtube')">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12 12 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.013 22l4.944-1.415A9.96 9.96 0 0012 22c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18a7.96 7.96 0 01-4.073-1.114l-.291-.174-3.02.863.877-3.204-.19-.31A7.96 7.96 0 014 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8z"></path></svg>Enviar Relatório
         </button>
@@ -2688,7 +2798,7 @@ body::before {
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
         </div>
         <div><div class="c-title">Google Analytics</div><div class="c-sub" id="ga-prop-name">I.A Para profissionais de Saúde · 30 dias</div></div>
-        <div class="c-spacer"></div><span class="c-tag tag-live" id="ga-status">live ●</span>
+        <div class="c-spacer"></div><span class="c-tag tag-demo" id="ga-status">demo</span>
       <div class="card-ctrl-grp"><button class="card-resize-btn" title="Expandir / Reduzir widget"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
       <polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline>
       <line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line>
@@ -3821,6 +3931,16 @@ function _setTheme(t){
 _initTheme();
 tick(); setInterval(tick,1000);
 
+function toggleMobileMenu(open){
+  const drawer=document.getElementById('mobile-drawer');
+  const overlay=document.getElementById('mobile-overlay');
+  if(!drawer||!overlay) return;
+  const isOpen=open===undefined?!drawer.classList.contains('open'):!!open;
+  drawer.classList.toggle('open',isOpen);
+  overlay.classList.toggle('open',isOpen);
+  document.body.style.overflow=isOpen?'hidden':'';
+}
+
 /* ─── WIDGET STATE UTILITY ──────────────────────────── */
 function setWidgetState(elementId, state, message) {
   const el = document.getElementById(elementId);
@@ -4851,7 +4971,7 @@ function openWidgetModal(){ renderWGrid(); openModal('widgetBackdrop'); }
 /* ─── MODAL MANAGER ──────────────────────────────────── */
 function openModal(id){ $(id).classList.add('open'); }
 function closeModal(id){ $(id).classList.remove('open'); }
-function closeOut(id){ /* handled by onclick on backdrop itself */ }
+function closeOut(id){ closeModal(id); }
 document.querySelectorAll('.backdrop').forEach(b=>{
   b.addEventListener('click',e=>{ if(e.target===b) b.classList.remove('open'); });
 });
@@ -4931,6 +5051,9 @@ async function genChallenge(verifier){
     const state = hashParams.get('state');
     const scope = hashParams.get('scope') || '';
     if(!accessToken) return;
+    // Tokens Meta/Facebook comecam com 'EAA'; tokens Google comecam com 'ya29.'
+    // Se nao parece token Google, deixar o Meta handler tratar
+    if(!accessToken.startsWith('ya29.') && !scope.includes('googleapis')) return;
     const savedState = sessionStorage.getItem('oauth_state');
     if(state && savedState && state !== savedState){ console.warn('OAuth state mismatch'); return; }
     const tokenData = { access_token: accessToken, expires_at: Date.now() + (expiresIn * 1000), scope: scope };
@@ -4967,7 +5090,6 @@ window.addEventListener('message', function(ev){
     if(state && ss && state!==ss) return;
     const sc=hp.get('granted_scopes')||hp.get('scope')||'';
     if(sc.includes('googleapis')||sc.includes('calendar')) return;
-    if(sessionStorage.getItem('oauth_state')) return;
     try{if(typeof LS!=='undefined'&&LS.set){LS.set('dash_meta_token',tok);}else{localStorage.setItem('dash_meta_token',tok);}}catch(e){localStorage.setItem('dash_meta_token',tok);}
     // Salva no Supabase para persistência permanente
     try{if(typeof sbSaveMetaToken==='function') sbSaveMetaToken(tok);}catch(e){}
@@ -5067,6 +5189,8 @@ window.addEventListener('message', async (e) => {
       tokens.expires_at = Date.now() + (tokens.expires_in * 1000);
       googleTokens = tokens;
       LS.set('dash_google_tokens', tokens);
+      sessionStorage.removeItem('oauth_state');
+      sessionStorage.removeItem('pkce_v');
       sbSaveGoogleTokens(tokens); // 🔄 sync para Supabase (assistente de voz)
       setConnStatus('cal', true); setConnStatus('gmb', true);
       setConnStatus('yt', true);  setConnStatus('ga', true);
@@ -5224,33 +5348,29 @@ async function loadGmail() {
   const sub    = document.getElementById('gmail-sub');
   if (!list) return;
 
-  // Obtém refresh_token — mesma lógica do loadCalendar
-  let refreshToken = googleTokens?.refresh_token;
-  if (!refreshToken) {
-    await sbLoadGoogleTokens();
-    refreshToken = googleTokens?.refresh_token;
-  }
-  if (!refreshToken) {
-    setWidgetState('gmail-list', 'disconnected');
-    if (status) { status.textContent = 'demo'; status.className = 'c-tag tag-demo'; }
-    return;
-  }
-
   setWidgetState('gmail-list', 'loading');
-  if (status) { status.textContent = 'live ●'; status.className = 'c-tag tag-live'; }
 
   try {
     const r = await fetch('/api/google/gmail', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({}),
+      signal: AbortSignal.timeout(8000),
     });
     const data = await r.json();
+
+    if (r.status === 401) {
+      setWidgetState('gmail-list', 'disconnected');
+      if (status) { status.textContent = 'desconectado'; status.className = 'c-tag tag-demo'; }
+      return;
+    }
 
     if (!r.ok || !data.ok) {
       _googleApiError('gmail-list', status, data.error_code);
       return;
     }
+
+    if (status) { status.textContent = 'live ●'; status.className = 'c-tag tag-live'; }
 
     if (!data.emails || data.emails.length === 0) {
       _insightsData.gmailUnread = 0;
@@ -5290,32 +5410,29 @@ async function loadDrive() {
   const sub    = document.getElementById('drive-sub');
   if (!list) return;
 
-  let refreshToken = googleTokens?.refresh_token;
-  if (!refreshToken) {
-    await sbLoadGoogleTokens();
-    refreshToken = googleTokens?.refresh_token;
-  }
-  if (!refreshToken) {
-    setWidgetState('drive-list', 'disconnected');
-    if (status) { status.textContent = 'demo'; status.className = 'c-tag tag-demo'; }
-    return;
-  }
-
   setWidgetState('drive-list', 'loading');
-  if (status) { status.textContent = 'live ●'; status.className = 'c-tag tag-live'; }
 
   try {
     const r = await fetch('/api/google/drive', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({}),
+      signal: AbortSignal.timeout(8000),
     });
     const data = await r.json();
+
+    if (r.status === 401) {
+      setWidgetState('drive-list', 'disconnected');
+      if (status) { status.textContent = 'desconectado'; status.className = 'c-tag tag-demo'; }
+      return;
+    }
 
     if (!r.ok || !data.ok) {
       _googleApiError('drive-list', status, data.error_code);
       return;
     }
+
+    if (status) { status.textContent = 'live ●'; status.className = 'c-tag tag-live'; }
 
     if (!data.files || data.files.length === 0) {
       _insightsData.driveFiles = [];
@@ -5359,7 +5476,7 @@ async function loadDrive() {
 
 /* ─── INSTAGRAM GRAPH API ─────────────────────────────── */
 async function loadInstagram(token){
-  const CREATOR_IG_ID = '597818000075846'; // @dredsonbarroso
+  const CREATOR_IG_ID = '17841447769632524'; // @dredsonbarroso — Instagram Business Account ID
   const setIgFollowers = (val) => {
     const el = $('ig-followers');
     if(!el) return;
@@ -5448,7 +5565,7 @@ async function loadInstagram(token){
 
     // ── Passo 3: Perfil completo ─────────────────────────────────────────
     const profile = await fetch(
-      `https://graph.facebook.com/v19.0/${chosen.igId}?fields=followers_count,follows_count,media_count,username,name&access_token=${chosen.pageToken}`
+      `https://graph.facebook.com/v19.0/${chosen.igId}?fields=followers_count,media_count,username,name&access_token=${chosen.pageToken}`
     ).then(r=>r.json());
 
     if(profile.error){
@@ -6961,7 +7078,7 @@ function loadLayout(){
 }
 
 /* ── Adiciona controles em cada card ────────────────── */
-function initLayoutControls(){document.querySelectorAll('#maingrid > .card[data-widget-id]').forEach(card=>{const head=card.querySelector('.card-head');if(!head)return;const id=card.dataset.widgetId;if(!head.querySelector('.drag-handle')){const dh=document.createElement('button');dh.className='drag-handle';dh.title='Arrastar para mover';dh.innerHTML=`<svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor"><circle cx="3" cy="2" r="1.4"/><circle cx="7" cy="2" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="7" cy="8" r="1.4"/><circle cx="3" cy="14" r="1.4"/><circle cx="7" cy="14" r="1.4"/></svg>`;head.insertBefore(dh,head.firstChild);}if(head.querySelector('.card-ctrl-grp'))return;const grp=document.createElement('div');grp.className='card-ctrl-grp';const rb=document.createElement('button');rb.className='card-resize-btn';rb.title='Expandir / Reduzir widget';rb.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>`;rb.onclick=e=>{e.stopPropagation();cycleWidgetSize(id);};const xb=document.createElement('button');xb.className='card-remove-btn';xb.title='Remover widget do painel';xb.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>`;xb.onclick=e=>{e.stopPropagation();removeWidget(id);};grp.appendChild(rb);grp.appendChild(xb);head.appendChild(grp);});}
+function initLayoutControls(){document.querySelectorAll('#maingrid > .card[data-widget-id]').forEach(card=>{const head=card.querySelector('.card-head');if(!head)return;const id=card.dataset.widgetId;if(!head.querySelector('.drag-handle')){const dh=document.createElement('button');dh.className='drag-handle';dh.title='Arrastar para mover';dh.innerHTML=`<svg width="10" height="14" viewBox="0 0 10 16" fill="currentColor"><circle cx="3" cy="2" r="1.4"/><circle cx="7" cy="2" r="1.4"/><circle cx="3" cy="8" r="1.4"/><circle cx="7" cy="8" r="1.4"/><circle cx="3" cy="14" r="1.4"/><circle cx="7" cy="14" r="1.4"/></svg>`;head.insertBefore(dh,head.firstChild);}if(head.querySelector('.card-ctrl-grp')){const rb=head.querySelector('.card-resize-btn');const xb=head.querySelector('.card-remove-btn');if(rb&&!rb.dataset.bound){rb.onclick=e=>{e.stopPropagation();cycleWidgetSize(id);};rb.dataset.bound='1';}if(xb&&!xb.dataset.bound){xb.onclick=e=>{e.stopPropagation();removeWidget(id);};xb.dataset.bound='1';}return;}const grp=document.createElement('div');grp.className='card-ctrl-grp';const rb=document.createElement('button');rb.className='card-resize-btn';rb.title='Expandir / Reduzir widget';rb.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>`;rb.onclick=e=>{e.stopPropagation();cycleWidgetSize(id);};const xb=document.createElement('button');xb.className='card-remove-btn';xb.title='Remover widget do painel';xb.innerHTML=`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>`;xb.onclick=e=>{e.stopPropagation();removeWidget(id);};grp.appendChild(rb);grp.appendChild(xb);head.appendChild(grp);});}
 
 /* ── SortableJS ─────────────────────────────────────── */
 function initSortable(){
@@ -8874,7 +8991,7 @@ setTimeout(infraScanNow, 3000);
 setInterval(infraScanNow, 5*60*1000);
 
 
-</script><div id="finBackdrop" class="backdrop"><div class="fin-modal"><div class="fin-modal-head"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#4ade80,#22c55e);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px rgba(74,222,128,.3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><span style="font-size:.95rem;font-weight:800;letter-spacing:-.02em">Finanças Pessoais</span><div class="fin-tabs"><button class="fin-tab active" data-tab="orcamento" onclick="switchFinTab('orcamento')">📋 Orçamento</button><button class="fin-tab" data-tab="lancamentos" onclick="switchFinTab('lancamentos')">💸 Lançamentos</button><button class="fin-tab" data-tab="patrimonio" onclick="switchFinTab('patrimonio')">🏦 Patrimônio</button><button class="fin-tab" data-tab="comparativo" onclick="switchFinTab('comparativo')">📊 Comparativo</button><button class="fin-tab" data-tab="insights" onclick="switchFinTab('insights')">🤖 Insights IA</button></div><select class="fin-month-sel" id="fin-month-sel" onchange="finChangeMonth()"></select><button class="fin-save-btn" onclick="saveFinData()">💾 Salvar</button><button class="modal-x" onclick="closeFinModal()">✕</button></div><div class="fin-body" id="fin-tab-orc"></div><div class="fin-body" id="fin-tab-lancamentos" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-pat" style="display:none"></div><div class="fin-body" id="fin-tab-comparativo" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-insights" style="display:none;padding:16px 22px 20px"></div></div></div><div id="txModal" class="user-modal-overlay">
+</script><div id="finBackdrop-static" class="backdrop"><div class="fin-modal"><div class="fin-modal-head"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#4ade80,#22c55e);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px rgba(74,222,128,.3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><span style="font-size:.95rem;font-weight:800;letter-spacing:-.02em">Finanças Pessoais</span><div class="fin-tabs"><button class="fin-tab active" data-tab="orcamento" onclick="switchFinTab('orcamento')">📋 Orçamento</button><button class="fin-tab" data-tab="lancamentos" onclick="switchFinTab('lancamentos')">💸 Lançamentos</button><button class="fin-tab" data-tab="patrimonio" onclick="switchFinTab('patrimonio')">🏦 Patrimônio</button><button class="fin-tab" data-tab="comparativo" onclick="switchFinTab('comparativo')">📊 Comparativo</button><button class="fin-tab" data-tab="insights" onclick="switchFinTab('insights')">🤖 Insights IA</button></div><select class="fin-month-sel" id="fin-month-sel" onchange="finChangeMonth()"></select><button class="fin-save-btn" onclick="saveFinData()">💾 Salvar</button><button class="modal-x" onclick="closeFinModal()">✕</button></div><div class="fin-body" id="fin-tab-orc"></div><div class="fin-body" id="fin-tab-lancamentos" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-pat" style="display:none"></div><div class="fin-body" id="fin-tab-comparativo" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-insights" style="display:none;padding:16px 22px 20px"></div></div></div><div id="txModal" class="user-modal-overlay">
   <div class="fin-tx-modal">
     <button class="um-close" onclick="closeTxModal()">✕</button>
     <div class="um-head">
@@ -8965,7 +9082,7 @@ setInterval(infraScanNow, 5*60*1000);
       <button class="um-btn um-btn-outline" onclick="closePhotoModal()">Cancelar</button>
       <button id="photo-save-btn" class="um-btn" style="background:linear-gradient(135deg,#4ade80,#22c55e);color:#000;font-weight:800;display:none" onclick="savePhotoTx()">💾 Registrar Gastos</button>
     </div>
-  </div></div><div id="finBackdrop" class="backdrop"><div class="fin-modal"><div class="fin-modal-head"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#4ade80,#22c55e);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px rgba(74,222,128,.3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><span style="font-size:.95rem;font-weight:800;letter-spacing:-.02em">Finanças Pessoais</span><div class="fin-tabs"><button class="fin-tab active" data-tab="orcamento" onclick="switchFinTab('orcamento')">📋 Orçamento</button><button class="fin-tab" data-tab="lancamentos" onclick="switchFinTab('lancamentos')">💸 Lançamentos</button><button class="fin-tab" data-tab="patrimonio" onclick="switchFinTab('patrimonio')">🏦 Patrimônio</button><button class="fin-tab" data-tab="comparativo" onclick="switchFinTab('comparativo')">📊 Comparativo</button><button class="fin-tab" data-tab="insights" onclick="switchFinTab('insights')">🤖 Insights IA</button></div><select class="fin-month-sel" id="fin-month-sel" onchange="finChangeMonth()"></select><button class="fin-save-btn" onclick="saveFinData()">💾 Salvar</button><button class="modal-x" onclick="closeFinModal()">✕</button></div><div class="fin-body" id="fin-tab-orc"></div><div class="fin-body" id="fin-tab-lancamentos" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-pat" style="display:none"></div><div class="fin-body" id="fin-tab-comparativo" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-insights" style="display:none;padding:16px 22px 20px"></div></div></div><div id="txModal" class="user-modal-overlay">
+  </div></div><div id="finBackdrop-static" class="backdrop"><div class="fin-modal"><div class="fin-modal-head"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#4ade80,#22c55e);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px rgba(74,222,128,.3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><span style="font-size:.95rem;font-weight:800;letter-spacing:-.02em">Finanças Pessoais</span><div class="fin-tabs"><button class="fin-tab active" data-tab="orcamento" onclick="switchFinTab('orcamento')">📋 Orçamento</button><button class="fin-tab" data-tab="lancamentos" onclick="switchFinTab('lancamentos')">💸 Lançamentos</button><button class="fin-tab" data-tab="patrimonio" onclick="switchFinTab('patrimonio')">🏦 Patrimônio</button><button class="fin-tab" data-tab="comparativo" onclick="switchFinTab('comparativo')">📊 Comparativo</button><button class="fin-tab" data-tab="insights" onclick="switchFinTab('insights')">🤖 Insights IA</button></div><select class="fin-month-sel" id="fin-month-sel" onchange="finChangeMonth()"></select><button class="fin-save-btn" onclick="saveFinData()">💾 Salvar</button><button class="modal-x" onclick="closeFinModal()">✕</button></div><div class="fin-body" id="fin-tab-orc"></div><div class="fin-body" id="fin-tab-lancamentos" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-pat" style="display:none"></div><div class="fin-body" id="fin-tab-comparativo" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-insights" style="display:none;padding:16px 22px 20px"></div></div></div><div id="txModal" class="user-modal-overlay">
   <div class="fin-tx-modal">
     <button class="um-close" onclick="closeTxModal()">✕</button>
     <div class="um-head">
@@ -9056,7 +9173,7 @@ setInterval(infraScanNow, 5*60*1000);
       <button class="um-btn um-btn-outline" onclick="closePhotoModal()">Cancelar</button>
       <button id="photo-save-btn" class="um-btn" style="background:linear-gradient(135deg,#4ade80,#22c55e);color:#000;font-weight:800;display:none" onclick="savePhotoTx()">💾 Registrar Gastos</button>
     </div>
-  </div></div><div id="finBackdrop" class="backdrop"><div class="fin-modal"><div class="fin-modal-head"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#4ade80,#22c55e);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px rgba(74,222,128,.3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><span style="font-size:.95rem;font-weight:800;letter-spacing:-.02em">Finanças Pessoais</span><div class="fin-tabs"><button class="fin-tab active" data-tab="orcamento" onclick="switchFinTab('orcamento')">📋 Orçamento</button><button class="fin-tab" data-tab="lancamentos" onclick="switchFinTab('lancamentos')">💸 Lançamentos</button><button class="fin-tab" data-tab="patrimonio" onclick="switchFinTab('patrimonio')">🏦 Patrimônio</button><button class="fin-tab" data-tab="comparativo" onclick="switchFinTab('comparativo')">📊 Comparativo</button><button class="fin-tab" data-tab="insights" onclick="switchFinTab('insights')">🤖 Insights IA</button></div><select class="fin-month-sel" id="fin-month-sel" onchange="finChangeMonth()"></select><button class="fin-save-btn" onclick="saveFinData()">💾 Salvar</button><button class="modal-x" onclick="closeFinModal()">✕</button></div><div class="fin-body" id="fin-tab-orc"></div><div class="fin-body" id="fin-tab-lancamentos" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-pat" style="display:none"></div><div class="fin-body" id="fin-tab-comparativo" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-insights" style="display:none;padding:16px 22px 20px"></div></div></div><div id="txModal" class="user-modal-overlay">
+  </div></div><div id="finBackdrop-static" class="backdrop"><div class="fin-modal"><div class="fin-modal-head"><div style="width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#4ade80,#22c55e);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px rgba(74,222,128,.3)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div><span style="font-size:.95rem;font-weight:800;letter-spacing:-.02em">Finanças Pessoais</span><div class="fin-tabs"><button class="fin-tab active" data-tab="orcamento" onclick="switchFinTab('orcamento')">📋 Orçamento</button><button class="fin-tab" data-tab="lancamentos" onclick="switchFinTab('lancamentos')">💸 Lançamentos</button><button class="fin-tab" data-tab="patrimonio" onclick="switchFinTab('patrimonio')">🏦 Patrimônio</button><button class="fin-tab" data-tab="comparativo" onclick="switchFinTab('comparativo')">📊 Comparativo</button><button class="fin-tab" data-tab="insights" onclick="switchFinTab('insights')">🤖 Insights IA</button></div><select class="fin-month-sel" id="fin-month-sel" onchange="finChangeMonth()"></select><button class="fin-save-btn" onclick="saveFinData()">💾 Salvar</button><button class="modal-x" onclick="closeFinModal()">✕</button></div><div class="fin-body" id="fin-tab-orc"></div><div class="fin-body" id="fin-tab-lancamentos" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-pat" style="display:none"></div><div class="fin-body" id="fin-tab-comparativo" style="display:none;padding:16px 22px 20px"></div><div class="fin-body" id="fin-tab-insights" style="display:none;padding:16px 22px 20px"></div></div></div><div id="txModal" class="user-modal-overlay">
   <div class="fin-tx-modal">
     <button class="um-close" onclick="closeTxModal()">✕</button>
     <div class="um-head">
@@ -9158,7 +9275,7 @@ setInterval(infraScanNow, 5*60*1000);
   const _applyPatch = function() {
     if (window._infraServices) {
       const sb = window._infraServices.find(function(s){return s.id==='supabase';});
-      if (sb) { sb.url = _SB_URL+'/rest/v1/widget_scripts?select=id&limit=1'; sb.type='db_rest'; }
+      if (sb) { sb.url = '/api/token/status'; sb.type='http'; }
     }
     window.infraScanNow = async function() {
       const scanBtn = document.getElementById('infraScanBtn');
@@ -9171,7 +9288,7 @@ setInterval(infraScanNow, 5*60*1000);
         let online=false, ms=0;
         try {
           if (svc.id==='supabase') {
-            const r = await fetch(_SB_URL+'/rest/v1/widget_scripts?select=id&limit=1',{headers:{'apikey':_SB_KEY,'Authorization':'Bearer '+_SB_KEY},signal:AbortSignal.timeout(5000)});
+            const r = await fetch('/api/token/status',{signal:AbortSignal.timeout(5000)});
             ms=Date.now()-start; online=r.status===200;
           } else if (svc.id==='calendar') {
             ms=Date.now()-start; online=document.querySelectorAll('[class*="event"]').length>0||!!window._calendarLoaded;
@@ -9327,7 +9444,7 @@ setInterval(infraScanNow, 5*60*1000);
   const VPS_ONLY=['easypanel','chatwoot','evolution','n8n'];
 
   const KNOWLEDGE={
-    supabase:{repair:'REST API autenticada',endpoint:SB_URL+'/rest/v1/widget_scripts?select=id&limit=1',headers:{apikey:SB_KEY,'Authorization':'Bearer '+SB_KEY}},
+    supabase:{repair:'REST API autenticada',endpoint:'/api/token/status'},
     vps:{repair:'Verificar Hostinger hPanel'},
     openclaw:{repair:'Verificar SSL/DNS no EasyPanel'},
     dashboard:{repair:'Self-hosted Vercel — sempre Online'},
@@ -9354,7 +9471,7 @@ setInterval(infraScanNow, 5*60*1000);
     // Fix _infraServices supabase URL
     if(window._infraServices){
       const sb=window._infraServices.find(s=>s.id==='supabase');
-      if(sb){sb.url=SB_URL+'/rest/v1/widget_scripts?select=id&limit=1';sb.type='db_rest';}
+      if(sb){sb.url='/api/token/status';sb.type='http';}
     }
 
     // Scan function with proper Supabase check
@@ -9367,7 +9484,7 @@ setInterval(infraScanNow, 5*60*1000);
         const start=Date.now();let online=false,ms=0;
         try{
           if(svc.id==='supabase'){
-            const r=await fetch(SB_URL+'/rest/v1/widget_scripts?select=id&limit=1',{headers:{apikey:SB_KEY,'Authorization':'Bearer '+SB_KEY},signal:AbortSignal.timeout(5000)});
+            const r=await fetch('/api/token/status',{signal:AbortSignal.timeout(5000)});
             ms=Date.now()-start;online=r.status===200;
           }else if(svc.id==='calendar'){
             ms=Date.now()-start;online=document.querySelectorAll('[class*="event"]').length>0||!!window._calendarLoaded;
@@ -10281,7 +10398,8 @@ window.diagMeta = async function(tipo){
       const res = await fetch(AI_URL, {
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({ action: 'assistente', payload: { q: prompt, origem:'dashboard-ia-widget' } })
+        body: JSON.stringify({ action: 'assistente', payload: { q: prompt, origem:'dashboard-ia-widget' } }),
+        signal: AbortSignal.timeout(30000)
       });
       if(!res.ok) throw new Error(res.status);
       const d = await res.json();
@@ -11340,5 +11458,83 @@ window.checkLegLocation = function(){
 setTimeout(function(){if(window.loadIANews)loadIANews();},2000);
 setTimeout(function(){if(window.loadLegendarios)loadLegendarios();},800);
 </script>
+<!-- ── MOBILE OVERLAY ──────────────────────────────────── -->
+<div id="mobile-overlay" onclick="toggleMobileMenu(false)"></div>
+
+<!-- ── MOBILE DRAWER ──────────────────────────────────── -->
+<div id="mobile-drawer">
+  <div class="drawer-header">
+    <span class="drawer-title">Menu</span>
+    <button class="drawer-close" onclick="toggleMobileMenu(false)" aria-label="Fechar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="drawer-theme">
+    <button class="t-btn" data-t="classico" onclick="_setTheme('classico')">🌙 Escuro</button>
+    <button class="t-btn" data-t="claro" onclick="_setTheme('claro')">☀️ Claro</button>
+    <button class="t-btn" data-t="legendarios" onclick="_setTheme('legendarios')">🎨 Clás.</button>
+  </div>
+  <nav class="drawer-nav">
+    <div class="sb-section-title">Clínica</div>
+    <a class="sb-link" onclick="showSection('clinica');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Agenda
+    </a>
+    <a class="sb-link" onclick="showSection('clinica');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Finanças
+    </a>
+    <a class="sb-link" onclick="showSection('clinica');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Contatos
+    </a>
+    <a class="sb-link" onclick="showSection('clinica');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Tarefas
+    </a>
+    <div class="sb-section-title">Marketing</div>
+    <a class="sb-link" onclick="showSection('marketing');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      Instagram
+    </a>
+    <a class="sb-link" onclick="showSection('marketing');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      Facebook
+    </a>
+    <a class="sb-link" onclick="showSection('marketing');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Analytics
+    </a>
+    <div class="sb-section-title">Infra</div>
+    <a class="sb-link" onclick="showSection('infra');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Infra IA
+    </a>
+  </nav>
+</div>
+
+<!-- ── MOBILE BOTTOM NAV ────────────────────────────────── -->
+<nav id="mobile-nav" role="navigation" aria-label="Navegação mobile">
+  <button class="mn-btn" onclick="showSection('clinica');showPage('home');window.scrollTo({top:0,behavior:'smooth'})" aria-label="Home">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </button>
+  <button class="mn-btn" onclick="showSection('clinica');showPage('home')" aria-label="Clínica">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+    Clínica
+  </button>
+  <button class="mn-btn" onclick="showSection('marketing');showPage('home')" aria-label="Marketing">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    Mkt
+  </button>
+  <button class="mn-btn" onclick="showSection('infra');showPage('home')" aria-label="Infra">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    Infra
+  </button>
+  <button class="mn-btn" onclick="toggleMobileMenu(true)" aria-label="Menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    Menu
+  </button>
+</nav>
 </body></html>
 
