@@ -210,60 +210,119 @@ body::before{display:none!important}
   #maingrid.grid{grid-template-columns:repeat(2,1fr);}
 }
 @media(max-width:800px){
-  #maingrid.grid{grid-template-columns:1fr;}
-  .main-content{margin-left:0;padding-bottom:84px;}
-  .sidebar{display:none;}
+  #maingrid.grid{grid-template-columns:1fr!important;}
+  .grid{grid-template-columns:1fr!important;}
+  .main-content{margin-left:0!important;padding-bottom:72px;}
+  .sidebar{display:none!important;}
+  #mobile-nav{display:flex!important;}
+  #mobile-drawer{display:flex!important;}
 }
-
-/* ── MOBILE FAB ─────────────────────────────────────── */
-.mob-fab{display:none;position:fixed;bottom:20px;right:20px;z-index:150;width:52px;height:52px;border-radius:50%;background:var(--accent);color:#fff;border:none;font-size:1.4rem;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.5);align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s;}
-.mob-fab:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(0,0,0,.6);}
-@media(max-width:800px){.mob-fab{display:flex;}}
-
-/* ── MOBILE OVERLAY ─────────────────────────────────── */
-.mob-overlay{position:fixed;inset:0;z-index:160;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:none;opacity:0;transition:opacity .25s;}
-.mob-overlay.open{display:block;opacity:1;}
-
-/* ── MOBILE DRAWER ──────────────────────────────────── */
-.mob-drawer{position:fixed;top:0;left:0;bottom:0;width:280px;max-width:85vw;z-index:161;background:var(--sidebar-bg);border-right:1px solid var(--border);transform:translateX(-100%);transition:transform .25s ease;display:flex;flex-direction:column;overflow-y:auto;}
-.mob-drawer.open{transform:translateX(0);}
-.mob-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 14px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.mob-drawer-title{font-size:.95rem;font-weight:800;color:var(--text);}
-.mob-drawer-close{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.06);border:none;color:var(--muted2);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;}
-.mob-nav{flex:1;padding:8px;overflow-y:auto;}
-.mob-nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:9px;font-size:.85rem;font-weight:600;color:var(--muted2);border:none;background:none;width:100%;text-align:left;cursor:pointer;transition:background .15s,color .15s;font-family:inherit;}
-.mob-nav-item:hover,.mob-nav-item:active{background:rgba(59,130,246,.12);color:var(--text);}
-.mob-nav-section{font-size:.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;padding:10px 12px 4px;}
-.mob-theme-bar{display:flex;gap:5px;padding:10px 12px 16px;border-top:1px solid var(--border);flex-shrink:0;}
-.mob-theme-btn{flex:1;padding:7px 4px;border-radius:8px;font-size:.62rem;font-weight:700;cursor:pointer;border:1px solid var(--border);background:rgba(255,255,255,.03);color:var(--muted2);transition:all .2s;font-family:inherit;}
-.mob-theme-btn.on{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
 
 /* ── TEMA CLARO ──────────────────────────────────────── */
 html[data-theme="claro"]{
-  --bg:#f1f5f9;--bg2:#e2e8f0;--bg3:#ffffff;
+  --bg:#f0f4f8;--bg2:#e8edf3;--bg3:#ffffff;
   --sidebar-bg:#ffffff;--card-bg:#ffffff;
-  --text:#0f172a;--muted:#64748b;--muted2:#475569;
-  --border:rgba(0,0,0,.08);--border-h:rgba(0,0,0,.16);
-  --glass:rgba(0,0,0,.02);
+  --border:rgba(0,0,0,.1);--border-h:rgba(0,0,0,.18);
+  --text:#1a202c;--muted:#64748b;--muted2:#475569;
   --accent:#2563eb;--accent-dim:rgba(37,99,235,.1);
-  --teal:#059669;--coral:#ef4444;--blue:#2563eb;--gold:#d97706;--purple:#7c3aed;--green:#059669;
-  --shadow:0 2px 12px rgba(0,0,0,.08);
-  --glow-t:0 0 14px rgba(5,150,105,.2);--glow-b:0 0 14px rgba(37,99,235,.2);--glow-c:0 0 14px rgba(239,68,68,.2);
+  --teal:#059669;--coral:#dc2626;--blue:#2563eb;--gold:#d97706;--purple:#7c3aed;
+  --glass:rgba(0,0,0,.02);
+  --glow-t:none;--glow-c:none;--glow-b:none;
+  --shadow:0 2px 12px rgba(0,0,0,.12);
 }
 html[data-theme="claro"] body{background:var(--bg)}
-html[data-theme="claro"] .sidebar{background:var(--sidebar-bg);border-right-color:rgba(0,0,0,.08)}
-html[data-theme="claro"] .main-content{background:var(--bg)}
-html[data-theme="claro"] .card{background:#ffffff!important;border-color:rgba(0,0,0,.08)!important;box-shadow:0 1px 4px rgba(0,0,0,.06)!important}
-html[data-theme="claro"] .card:hover{border-color:rgba(0,0,0,.15)!important}
-html[data-theme="claro"] .kpi{background:rgba(0,0,0,.02)!important;border-color:rgba(0,0,0,.07)!important}
-html[data-theme="claro"] .card-head{border-bottom-color:rgba(0,0,0,.07)}
-html[data-theme="claro"] .card-foot{border-top-color:rgba(0,0,0,.07)}
-html[data-theme="claro"] ::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15)}
-html[data-theme="claro"] .mob-drawer{background:#ffffff;border-right-color:rgba(0,0,0,.08)}
-html[data-theme="claro"] .mob-drawer-close{background:rgba(0,0,0,.05)}
-html[data-theme="claro"] .mob-nav-item:hover{background:rgba(37,99,235,.08)}
-html[data-theme="claro"] .sb-link:hover{background:rgba(37,99,235,.08)!important;color:var(--accent)!important}
-html[data-theme="claro"] .sb-link.active{background:rgba(37,99,235,.1)!important;color:var(--accent)!important}
+html[data-theme="claro"] .card{background:#fff!important;border-color:rgba(0,0,0,.1)!important;color:#1a202c}
+html[data-theme="claro"] .card *{color:inherit}
+html[data-theme="claro"] .card-body{background:transparent!important}
+html[data-theme="claro"] .sidebar{background:#fff;border-right-color:rgba(0,0,0,.1)}
+html[data-theme="claro"] .main-content{background:#f0f4f8}
+html[data-theme="claro"] .sb-link{color:#475569}
+html[data-theme="claro"] .sb-link:hover{background:rgba(37,99,235,.08);color:#1a202c}
+html[data-theme="claro"] .sb-link.active{background:rgba(37,99,235,.12);color:#2563eb;border-left-color:#2563eb}
+html[data-theme="claro"] .sb-clock-time{color:#1a202c}
+html[data-theme="claro"] .sb-clock-date{color:#64748b}
+html[data-theme="claro"] .sb-logo-name{color:#1a202c}
+html[data-theme="claro"] .sb-logo-role{color:#64748b}
+html[data-theme="claro"] .sb-bottom-btn{color:#475569}
+html[data-theme="claro"] .sb-bottom-btn:hover{background:rgba(0,0,0,.05);color:#1a202c}
+html[data-theme="claro"] .section-tabs{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.1)}
+html[data-theme="claro"] .section-tab{color:#475569}
+html[data-theme="claro"] .section-tab:hover{background:rgba(0,0,0,.05)}
+html[data-theme="claro"] .kpi{background:rgba(0,0,0,.03)!important;color:#1a202c}
+html[data-theme="claro"] .t-btn{border-color:rgba(0,0,0,.12);background:rgba(0,0,0,.03);color:#475569}
+html[data-theme="claro"] .t-btn.on{border-color:#2563eb;color:#2563eb;background:rgba(37,99,235,.1)}
+html[data-theme="claro"] #mobile-nav{background:#fff;border-top-color:rgba(0,0,0,.1)}
+html[data-theme="claro"] #mobile-drawer{background:#fff}
+html[data-theme="claro"] .mn-btn{color:#475569}
+html[data-theme="claro"] .mn-btn.active,.mn-btn:hover{color:#2563eb}
+html[data-theme="claro"] .drawer-close{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.12)}
+
+/* ── MOBILE BOTTOM NAV ───────────────────────────────── */
+#mobile-nav{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;
+  height:60px;
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  z-index:500;
+  justify-content:space-around;
+  align-items:center;
+}
+.mn-btn{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;
+  padding:6px 8px;min-width:52px;min-height:48px;
+  color:var(--muted2);background:none;border:none;
+  font-family:inherit;font-size:.58rem;font-weight:600;
+  cursor:pointer;border-radius:8px;
+  transition:color .15s,background .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.mn-btn:hover,.mn-btn.active{color:var(--accent)}
+.mn-btn svg{flex-shrink:0}
+
+/* ── MOBILE DRAWER ───────────────────────────────────── */
+#mobile-drawer{
+  display:none;
+  position:fixed;top:0;left:0;height:100%;
+  width:280px;
+  background:var(--sidebar-bg);
+  border-right:1px solid var(--border);
+  z-index:600;
+  flex-direction:column;
+  transform:translateX(-100%);
+  transition:transform .25s ease;
+  overflow-y:auto;
+}
+#mobile-drawer.open{transform:translateX(0)}
+#mobile-overlay{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.5);
+  z-index:599;
+}
+#mobile-overlay.open{display:block}
+.drawer-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 12px 12px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.drawer-title{font-size:.85rem;font-weight:700;color:var(--text)}
+.drawer-close{
+  width:36px;height:36px;min-height:36px;
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--muted2);background:rgba(255,255,255,.05);
+  border:1px solid var(--border);cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.drawer-theme{
+  display:flex;gap:4px;padding:10px 10px 8px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.drawer-theme .t-btn{flex:1;font-size:.62rem;padding:7px 4px;min-height:36px}
+.drawer-nav{flex:1;padding:8px;overflow-y:auto}
 
 /* card bg override using our new var */
 .card{background:var(--card-bg,#131c27)!important}
@@ -2036,9 +2095,9 @@ body::before {
       Pré-Consulta Admin
     </a>
     <div class="theme-bar">
-      <button class="t-btn on" data-t="classico" onclick="_setTheme('classico')">⚫ Escuro</button>
+      <button class="t-btn" data-t="classico" onclick="_setTheme('classico')">🌙 Escuro</button>
       <button class="t-btn" data-t="claro" onclick="_setTheme('claro')">☀️ Claro</button>
-      <button class="t-btn" data-t="legendarios" onclick="_setTheme('legendarios')">🔥 Fire</button>
+      <button class="t-btn" data-t="legendarios" onclick="_setTheme('legendarios')">🎨 Clás.</button>
     </div>
   </nav>
 
@@ -3871,6 +3930,16 @@ function _setTheme(t){
 }
 _initTheme();
 tick(); setInterval(tick,1000);
+
+function toggleMobileMenu(open){
+  const drawer=document.getElementById('mobile-drawer');
+  const overlay=document.getElementById('mobile-overlay');
+  if(!drawer||!overlay) return;
+  const isOpen=open===undefined?!drawer.classList.contains('open'):!!open;
+  drawer.classList.toggle('open',isOpen);
+  overlay.classList.toggle('open',isOpen);
+  document.body.style.overflow=isOpen?'hidden':'';
+}
 
 /* ─── WIDGET STATE UTILITY ──────────────────────────── */
 function setWidgetState(elementId, state, message) {
@@ -11412,35 +11481,83 @@ if(typeof _setTheme==='function'){
 }
 updateMobTheme();
 </script>
+<!-- ── MOBILE OVERLAY ──────────────────────────────────── -->
+<div id="mobile-overlay" onclick="toggleMobileMenu(false)"></div>
 
-<!-- Mobile FAB -->
-<button class="mob-fab" id="mobFab" onclick="openMobDrawer()" aria-label="Menu">☰</button>
-
-<!-- Mobile Overlay -->
-<div class="mob-overlay" id="mobOverlay" onclick="closeMobDrawer()"></div>
-
-<!-- Mobile Drawer -->
-<div class="mob-drawer" id="mobDrawer">
-  <div class="mob-drawer-head">
-    <span class="mob-drawer-title">Menu</span>
-    <button class="mob-drawer-close" onclick="closeMobDrawer()">✕</button>
+<!-- ── MOBILE DRAWER ──────────────────────────────────── -->
+<div id="mobile-drawer">
+  <div class="drawer-header">
+    <span class="drawer-title">Menu</span>
+    <button class="drawer-close" onclick="toggleMobileMenu(false)" aria-label="Fechar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
   </div>
-  <nav class="mob-nav">
-    <div class="mob-nav-section">Navegação</div>
-    <button class="mob-nav-item" onclick="showSection('clinica');showPage('home');closeMobDrawer()">🏥 Visão Geral</button>
-    <button class="mob-nav-item" onclick="showSection('clinica');showPage('home');closeMobDrawer()">🩺 Clínica</button>
-    <button class="mob-nav-item" onclick="showSection('marketing');showPage('home');closeMobDrawer()">📣 Marketing</button>
-    <button class="mob-nav-item" onclick="showSection('infra');showPage('home');closeMobDrawer()">⚙️ Infraestrutura</button>
-    <div class="mob-nav-section">Ferramentas</div>
-    <button class="mob-nav-item" onclick="document.getElementById('widget-supervisor-ia')?.scrollIntoView({behavior:'smooth'});closeMobDrawer()">🤖 Supervisor IA</button>
-    <button class="mob-nav-item" onclick="openSettings&&openSettings();closeMobDrawer()">⚙️ Configurações</button>
+  <div class="drawer-theme">
+    <button class="t-btn" data-t="classico" onclick="_setTheme('classico')">🌙 Escuro</button>
+    <button class="t-btn" data-t="claro" onclick="_setTheme('claro')">☀️ Claro</button>
+    <button class="t-btn" data-t="legendarios" onclick="_setTheme('legendarios')">🎨 Clás.</button>
+  </div>
+  <nav class="drawer-nav">
+    <div class="sb-section-title">Clínica</div>
+    <a class="sb-link" onclick="showSection('clinica');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Agenda
+    </a>
+    <a class="sb-link" onclick="showSection('clinica');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Finanças
+    </a>
+    <a class="sb-link" onclick="showSection('clinica');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Contatos
+    </a>
+    <a class="sb-link" onclick="showSection('clinica');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      Tarefas
+    </a>
+    <div class="sb-section-title">Marketing</div>
+    <a class="sb-link" onclick="showSection('marketing');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      Instagram
+    </a>
+    <a class="sb-link" onclick="showSection('marketing');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+      Facebook
+    </a>
+    <a class="sb-link" onclick="showSection('marketing');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Analytics
+    </a>
+    <div class="sb-section-title">Infra</div>
+    <a class="sb-link" onclick="showSection('infra');showPage('home');toggleMobileMenu(false)">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      Infra IA
+    </a>
   </nav>
-  <div class="mob-theme-bar">
-    <button class="mob-theme-btn on" data-mt="classico" onclick="_setTheme('classico')">⚫ Escuro</button>
-    <button class="mob-theme-btn" data-mt="claro" onclick="_setTheme('claro')">☀️ Claro</button>
-    <button class="mob-theme-btn" data-mt="legendarios" onclick="_setTheme('legendarios')">🔥 Fire</button>
-  </div>
 </div>
 
+<!-- ── MOBILE BOTTOM NAV ────────────────────────────────── -->
+<nav id="mobile-nav" role="navigation" aria-label="Navegação mobile">
+  <button class="mn-btn" onclick="showSection('clinica');showPage('home');window.scrollTo({top:0,behavior:'smooth'})" aria-label="Home">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </button>
+  <button class="mn-btn" onclick="showSection('clinica');showPage('home')" aria-label="Clínica">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+    Clínica
+  </button>
+  <button class="mn-btn" onclick="showSection('marketing');showPage('home')" aria-label="Marketing">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2 11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+    Mkt
+  </button>
+  <button class="mn-btn" onclick="showSection('infra');showPage('home')" aria-label="Infra">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    Infra
+  </button>
+  <button class="mn-btn" onclick="toggleMobileMenu(true)" aria-label="Menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    Menu
+  </button>
+</nav>
 </body></html>
 
