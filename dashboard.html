@@ -4931,8 +4931,9 @@ async function genChallenge(verifier){
     const state = hashParams.get('state');
     const scope = hashParams.get('scope') || '';
     if(!accessToken) return;
-    // 'granted_scopes' e exclusivo do Facebook/Meta — ignorar para nao interceptar callback Meta
-    if(hashParams.get('granted_scopes')) return;
+    // Tokens Meta/Facebook comecam com 'EAA'; tokens Google comecam com 'ya29.'
+    // Se nao parece token Google, deixar o Meta handler tratar
+    if(!accessToken.startsWith('ya29.') && !scope.includes('googleapis')) return;
     const savedState = sessionStorage.getItem('oauth_state');
     if(state && savedState && state !== savedState){ console.warn('OAuth state mismatch'); return; }
     const tokenData = { access_token: accessToken, expires_at: Date.now() + (expiresIn * 1000), scope: scope };
