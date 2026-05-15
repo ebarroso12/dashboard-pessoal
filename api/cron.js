@@ -43,15 +43,16 @@ async function runMorning() {
   const mes  = now.getMonth() + 1, ano = now.getFullYear();
   const fBRL = v => 'R$ ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  const [tarefas, metas, lancamentos, metricas] = await Promise.all([
+  const [tarefas, metas, finRows, metricas] = await Promise.all([
     sb('/tarefas?concluida=eq.false&order=criado_em.desc&limit=10'),
     sb('/metas?ativa=eq.true&order=criado_em.desc&limit=10'),
-    sb(`/lancamentos_financeiros?data=gte.${ano}-${String(mes).padStart(2,'0')}-01&order=data.desc&limit=50`),
+    adminFetch('/dados_assistente?tipo=eq.financeiro&select=dados&limit=1&order=atualizado_em.desc'),
     sb('/dados_assistente?select=*&limit=1'),
   ]);
 
-  const receitas = (lancamentos || []).filter(l => l.tipo === 'receita').reduce((s, l) => s + parseFloat(l.valor || 0), 0);
-  const despesas = (lancamentos || []).filter(l => l.tipo === 'despesa').reduce((s, l) => s + parseFloat(l.valor || 0), 0);
+  const fin = finRows?.[0]?.dados || {};
+  const receitas = parseFloat(fin.renda || 0);
+  const despesas = parseFloat(fin.despesas || 0);
   const m = metricas?.[0] || {};
 
   const metasStr = (metas || []).length
@@ -194,6 +195,12 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
 
   const tipo = req.query?.tipo || req.body?.tipo || 'morning';
+
+  // TTL: apagar supervisor_logs com mais de 30 dias (cleanup passivo)
+  try {
+    const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    await adminFetch(`/supervisor_logs?criado_em=lt.${cutoff}`, { method: 'DELETE' });
+  } catch(_) {}
 
   try {
     let result;
