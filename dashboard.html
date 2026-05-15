@@ -10268,15 +10268,15 @@ window.enviarBriefingWA = function() {
   window.open(`https://wa.me/${num}?text=${encodeURIComponent(texto)}`, '_blank');
 };
 
-// Carrega briefing automaticamente na abertura se for entre 6h-10h
+// Pre-carrega briefing silenciosamente nas primeiras horas (6h-10h)
 (function() {
   const h = new Date().getHours();
   if (h >= 6 && h < 10) {
-    setTimeout(() => {
-      fetch('/api/morning-briefing')
-        .then(r => r.json())
-        .then(d => { if(d.briefing) window._briefingTexto = d.briefing; })
-        .catch(() => {});
+    setTimeout(function() {
+      fetch('/api/briefing', { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' })
+        .then(function(r){ return r.json(); })
+        .then(function(d){ if(d.briefing) window._briefingTexto = d.briefing; })
+        .catch(function(){});
     }, 3000);
   }
 })();
