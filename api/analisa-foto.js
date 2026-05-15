@@ -10,25 +10,38 @@
  * Fallback:  { itens: [], fallback: true, motivo: "..." }
  */
 
+// Categorias identicas ao FIN_CATS do dashboard para mapeamento direto
 const CATEGORIAS_VALIDAS = [
-  'alimentacao', 'moradia', 'transporte', 'saude',
-  'educacao', 'lazer', 'vestuario', 'servicos',
-  'mercado', 'farmacia', 'outros', 'receita',
+  'moradia', 'comunicacao', 'alimentacao', 'transporte', 'saude',
+  'pessoais', 'educacao', 'lazer', 'financeiros', 'empresa', 'dependentes', 'diversos',
 ];
 
 const PROMPT_SISTEMA = `Você é um assistente especializado em análise de notas fiscais, cupons e extratos financeiros.
 Sua tarefa é extrair todas as despesas/itens com seus valores e classificar em categorias.
 
-Categorias disponíveis: alimentacao, moradia, transporte, saude, educacao, lazer, vestuario, servicos, mercado, farmacia, outros, receita
+Categorias disponíveis (use EXATAMENTE estes ids):
+- moradia: aluguel, energia, água, gás, IPTU, internet residencial, TV a cabo
+- comunicacao: plano de celular, internet, streaming, assinatura digital
+- alimentacao: supermercado, mercado, restaurante, lanchonete, delivery, ifood, farmácia de alimentos
+- transporte: combustível, uber, 99, metrô, ônibus, estacionamento, IPVA, seguro auto
+- saude: farmácia, drogaria, médico, exame, plano de saúde, dentista, psicólogo
+- pessoais: roupa, calçado, vestuário, salão, barbearia, higiene pessoal, academia
+- educacao: escola, faculdade, curso, livro, material escolar, inglês
+- lazer: cinema, teatro, bar, restaurante (lazer), viagem, clube, entretenimento
+- financeiros: cartão de crédito, empréstimo, parcela, banco, tarifa
+- empresa: material de escritório, serviço profissional para negócio
+- dependentes: filho, dependente, animal de estimação
+- diversos: qualquer coisa que não se encaixe acima
 
 Regras:
-- Extraia TODOS os itens individuais que aparecem na imagem
-- Para cada item: descrição curta (máx 40 chars), valor numérico em reais, categoria
-- Se for uma nota de supermercado/mercado, use categoria "mercado"
-- Se for farmácia/drogaria, use "farmacia"
-- Se for restaurante/lanchonete/delivery, use "alimentacao"
-- Se for posto/combustível, use "transporte"
-- Se não conseguir identificar, use "outros"
+- Extraia TODOS os itens que aparecem na imagem
+- Para cada item: descrição curta (máx 40 chars), valor numérico em reais, categoria do id acima
+- Supermercado/mercado → alimentacao
+- Farmácia/drogaria → saude
+- Posto/combustível → transporte
+- Roupa/vestuário → pessoais
+- Internet/celular → comunicacao
+- Se não conseguir identificar → diversos
 - Devolva APENAS JSON válido, sem explicações, sem markdown, sem bloco de código
 
 Formato obrigatório:
@@ -37,7 +50,7 @@ Formato obrigatório:
   "data": "DD/MM/AAAA ou null",
   "total": 0.00,
   "itens": [
-    { "descricao": "Nome do item", "valor": 0.00, "categoria": "categoria" }
+    { "descricao": "Nome do item", "valor": 0.00, "categoria": "id_da_categoria" }
   ]
 }`;
 

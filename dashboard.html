@@ -3852,20 +3852,26 @@ async function sbSyncFinanceiro() {
   try {
     const d   = _finStore();
     const mes = MONS[_finMonth] + '/' + _finYear;
-    await sbUpsert('dados_assistente', {
-      tipo: 'financeiro',
-      dados: {
-        mes,
-        renda:    parseFloat(d.renda_total) || parseFloat(d.salario_liq) || 0,
-        despesas: parseFloat(d.desp_total)  || 0,
-        patrimonio: (parseFloat(d.ativos_total)||0) - (parseFloat(d.passivos_total)||0),
-        lancamentos:  d.lancamentos || [],
-        pagamentos:   _getPagamentos(),
-        recebimentos: _getRecebimentos(),
-      },
-      atualizado_em: new Date().toISOString(),
+    const r = await fetch('/api/finance/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tipo: 'financeiro',
+        dados: {
+          mes,
+          renda:    parseFloat(d.renda_total) || parseFloat(d.salario_liq) || 0,
+          despesas: parseFloat(d.desp_total)  || 0,
+          patrimonio: (parseFloat(d.ativos_total)||0) - (parseFloat(d.passivos_total)||0),
+          lancamentos:  _getTxMonth(_finYear,_finMonth),
+          pagamentos:   _getPagamentos(),
+          recebimentos: _getRecebimentos(),
+        },
+      }),
     });
-  } catch(e) {}
+    if (!r.ok) showToast('⚠️ Sync financeiro falhou','var(--gold)');
+  } catch(e) {
+    showToast('⚠️ Sem conexão — dados salvos localmente','var(--gold)');
+  }
 }
 
 // Salva tarefas no Supabase
@@ -7581,11 +7587,14 @@ function _delTx(id, year, month){
 
 async function _txSyncSupabase(tx){
   try {
-    await sbInsert('dados_assistente', {
-      tipo: 'tx_'+tx.year+'_'+String(tx.month+1).padStart(2,'0'),
-      dados: { id:tx.id, tipo:tx.type, categoria:tx.cat_label, item:tx.item,
-               valor:tx.amount, data:tx.date, fonte:tx.source },
-      atualizado_em: new Date().toISOString(),
+    await fetch('/api/finance/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tipo: 'tx_'+tx.year+'_'+String(tx.month+1).padStart(2,'0'),
+        dados: { id:tx.id, tipo:tx.type, categoria:tx.cat_label, item:tx.item,
+                 valor:tx.amount, data:tx.date, fonte:tx.source },
+      }),
     });
   } catch(e){}
 }

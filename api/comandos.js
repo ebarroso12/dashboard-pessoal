@@ -171,27 +171,29 @@ async function handleTarefas() {
 }
 
 async function handleFinancas() {
-  const [saldo, txs] = await Promise.all([
-    sbFetch('/financas?select=saldo&limit=1&order=updated_at.desc'),
-    sbFetch('/transacoes?select=descricao,valor,tipo,data&order=data.desc&limit=5'),
-  ]);
+  // Le de dados_assistente (escrito pelo dashboard via /api/finance/sync)
+  const rows = await adminFetch('/dados_assistente?tipo=eq.financeiro&select=dados&limit=1&order=atualizado_em.desc');
+  const fin = rows?.[0]?.dados;
 
   let txt = '💰 *Finanças*\n';
 
-  if (saldo?.[0]?.saldo !== undefined) {
-    const s = Number(saldo[0].saldo).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    txt += `Saldo: ${s}\n`;
+  if (fin?.renda !== undefined) {
+    const fBRL = (v) => Number(v||0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    txt += `Mês: ${fin.mes || 'atual'}\n`;
+    txt += `Renda: ${fBRL(fin.renda)}\n`;
+    txt += `Despesas: ${fBRL(fin.despesas)}\n`;
+    const saldo = (fin.renda||0) - (fin.despesas||0);
+    txt += `Saldo: ${fBRL(saldo)}\n`;
+    if (fin.lancamentos?.length) {
+      txt += `\nÚltimos lançamentos:\n`;
+      fin.lancamentos.slice(-5).reverse().forEach(t => {
+        const icon = t.type === 'receita' ? '🟢' : '🔴';
+        const v = Number(t.amount||0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        txt += `${icon} ${t.item}: ${v}\n`;
+      });
+    }
   } else {
-    txt += 'Saldo: dados não disponíveis\n';
-  }
-
-  if (txs?.length) {
-    txt += '\nÚltimas transações:\n';
-    txs.forEach(t => {
-      const v = Number(t.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-      const icon = t.tipo === 'receita' ? '🟢' : '🔴';
-      txt += `${icon} ${t.descricao}: ${v}\n`;
-    });
+    txt += 'Nenhum dado financeiro sincronizado ainda.\nAbra o módulo Finanças no dashboard e salve para sincronizar.';
   }
 
   return txt.trim();
