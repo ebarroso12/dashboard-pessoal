@@ -2163,7 +2163,7 @@ body::before {
       <span style="font-size:1rem;line-height:1">🦞</span>
       OpenClaw
     </button>
-    <button class="sb-bottom-btn" onclick="abrirBriefingMatinal()" style="background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:#f59e0b">
+    <button class="sb-bottom-btn" onclick="gerarBriefing()" style="background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:#f59e0b">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="#f59e0b"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
       ☀️ Briefing do Dia
     </button>
@@ -10223,28 +10223,41 @@ setTimeout(loadDrive, 2500);
 setInterval(loadDrive, 5 * 60 * 1000);
 
 // ══ BRIEFING MATINAL ════════════════════════════════════════════════
-window.abrirBriefingMatinal = async function() {
+window.gerarBriefing = async function() {
   const widget = document.getElementById('widget-morning');
   const txt    = document.getElementById('morning-text');
   const sub    = document.getElementById('morning-sub');
   if (!widget) return;
   widget.style.display = 'flex';
   widget.scrollIntoView({ behavior: 'smooth' });
-  if (txt) txt.textContent = '⏳ Carregando briefing...';
+  if (txt) { txt.textContent = '⏳ Gerando briefing executivo...'; txt.style.whiteSpace = 'pre-wrap'; }
   try {
-    const res  = await fetch('/api/morning-briefing', { headers: { 'X-Webhook-Token': '' } });
+    const res  = await fetch('/api/briefing', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+      signal: AbortSignal.timeout(30000),
+    });
     const data = await res.json();
     if (data.briefing && txt) {
       txt.textContent = data.briefing;
+      window._briefingTexto = data.briefing;
       if (sub) {
         const d = data.gerado_em ? new Date(data.gerado_em) : new Date();
-        sub.textContent = `Gerado às ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')} · ${d.getDate()}/${d.getMonth()+1}`;
+        const fontes = (data.fontes || []).join(', ') || 'básico';
+        sub.textContent = `Gerado às ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')} · Fontes: ${fontes}`;
       }
-      window._briefingTexto = data.briefing;
+      showToast('✅ Briefing gerado!','var(--teal)');
+    } else {
+      if (txt) txt.textContent = '❌ Briefing vazio — verifique as integrações.';
     }
   } catch(e) {
-    if (txt) txt.textContent = '❌ Erro ao carregar briefing. Tente novamente.';
+    if (txt) txt.textContent = '❌ Timeout ao gerar briefing. Verifique a conexão.';
   }
+};
+
+window.abrirBriefingMatinal = async function() {
+  return window.gerarBriefing();
 };
 
 window.enviarBriefingWA = function() {
