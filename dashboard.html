@@ -2173,6 +2173,16 @@ body::before {
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
       Resetar Layout
     </button>
+    <div style="height:1px;background:rgba(255,255,255,.06);margin:4px 6px"></div>
+    <button class="sb-bottom-btn" onclick="exportarDados()" title="Baixar JSON com todos os dados">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Exportar Dados
+    </button>
+    <label class="sb-bottom-btn" for="backup-import-input" style="cursor:pointer" title="Restaurar de JSON exportado anteriormente">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Importar Backup
+    </label>
+    <input type="file" id="backup-import-input" accept=".json" style="display:none" onchange="importarDados(this)">
     <div style="height:1px;background:rgba(239,68,68,.15);margin:4px 6px"></div>
     <button class="sb-bottom-btn danger" onclick="logoutUser()">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -11481,6 +11491,101 @@ window.checkLegLocation = function(){
 // Inicializacao
 setTimeout(function(){if(window.loadIANews)loadIANews();},2000);
 setTimeout(function(){if(window.loadLegendarios)loadLegendarios();},800);
+
+// ── BACKUP & RESTORE ──────────────────────────────────────────────────────────
+function exportarDados(){
+  var now=new Date();
+  var getLS=function(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return localStorage.getItem(k);}};
+  var finMeses={},finTx={};
+  for(var i=0;i<6;i++){
+    var d=new Date(now.getFullYear(),now.getMonth()-i,1);
+    var mk='fin_'+d.getFullYear()+'_'+String(d.getMonth()+1).padStart(2,'0');
+    var tk='fin_tx_'+d.getFullYear()+'_'+String(d.getMonth()+1).padStart(2,'0');
+    var mv=getLS(mk),tv=getLS(tk);
+    if(mv)finMeses[mk]=mv;
+    if(tv)finTx[tk]=tv;
+  }
+  var backup={
+    version:'1.0',
+    app:'dashboard-pessoal',
+    exported_at:now.toISOString(),
+    data:{
+      tarefas:getLS('dash_tasks')||[],
+      notas:getLS('dash_notes')||'',
+      metas:getLS('dash_goals')||[],
+      contatos:getLS('dash_contacts')||[],
+      configuracoes:getLS('dash_settings')||{},
+      tema:getLS('dash_theme')||'classico',
+      layout:getLS('dash_layout_v2')||[],
+      linkedin:getLS('li_data')||{},
+      financeiro:{
+        pagamentos:getLS('fin_pagamentos')||[],
+        recebimentos:getLS('fin_recebimentos')||[],
+        meses:finMeses,
+        transacoes:finTx,
+      },
+    },
+  };
+  var blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='dashboard-backup-'+now.toISOString().split('T')[0]+'.json';
+  a.click();URL.revokeObjectURL(url);
+  showToast('✅ Backup exportado!','var(--teal)');
+}
+
+function importarDados(input){
+  var file=input.files[0];if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var backup=JSON.parse(e.target.result);
+      if(!backup.version||!backup.data){showToast('❌ Arquivo inválido — não é um backup do dashboard','var(--coral)');return;}
+      if(!confirm('Isso vai substituir TODOS os dados atuais pelo backup. Confirmar?')){input.value='';return;}
+      var d=backup.data;
+      var setLS=function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(ex){}};
+      if(d.tarefas!==undefined)setLS('dash_tasks',d.tarefas);
+      if(d.notas!==undefined)setLS('dash_notes',d.notas);
+      if(d.metas!==undefined)setLS('dash_goals',d.metas);
+      if(d.contatos!==undefined)setLS('dash_contacts',d.contatos);
+      if(d.configuracoes!==undefined)setLS('dash_settings',d.configuracoes);
+      if(d.tema)setLS('dash_theme',d.tema);
+      if(d.layout!==undefined)setLS('dash_layout_v2',d.layout);
+      if(d.linkedin!==undefined)setLS('li_data',d.linkedin);
+      if(d.financeiro){
+        if(d.financeiro.pagamentos!==undefined)setLS('fin_pagamentos',d.financeiro.pagamentos);
+        if(d.financeiro.recebimentos!==undefined)setLS('fin_recebimentos',d.financeiro.recebimentos);
+        Object.entries(d.financeiro.meses||{}).forEach(function(kv){setLS(kv[0],kv[1]);});
+        Object.entries(d.financeiro.transacoes||{}).forEach(function(kv){setLS(kv[0],kv[1]);});
+      }
+      showToast('✅ Backup restaurado! Recarregando...','var(--teal)');
+      setTimeout(function(){location.reload();},1500);
+    }catch(err){showToast('❌ Erro ao ler backup: '+err.message,'var(--coral)');}
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+
+function autoBackup(){
+  try{
+    var today=new Date().toISOString().split('T')[0];
+    var backupKey='dash_backup_'+today;
+    if(localStorage.getItem(backupKey))return;
+    var backup={
+      version:'1.0',app:'dashboard-pessoal',exported_at:new Date().toISOString(),
+      data:{
+        tarefas:JSON.parse(localStorage.getItem('dash_tasks')||'[]'),
+        notas:localStorage.getItem('dash_notes')||'',
+        metas:JSON.parse(localStorage.getItem('dash_goals')||'[]'),
+        contatos:JSON.parse(localStorage.getItem('dash_contacts')||'[]'),
+      },
+    };
+    localStorage.setItem(backupKey,JSON.stringify(backup));
+    var allKeys=Object.keys(localStorage).filter(function(k){return k.startsWith('dash_backup_');}).sort();
+    allKeys.slice(0,Math.max(0,allKeys.length-7)).forEach(function(k){localStorage.removeItem(k);});
+  }catch(e){}
+}
+setTimeout(autoBackup,3000);
 
 // Service Worker (PWA)
 if('serviceWorker' in navigator){
