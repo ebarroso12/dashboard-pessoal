@@ -147,6 +147,16 @@ input,textarea{font-family:inherit}
 /* ── SUPERVISOR IA ───────────────────────────────────── */
 .sv-quick{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:20px;padding:5px 13px;font-size:.73rem;color:#a5b4fc;cursor:pointer;transition:.2s;font-family:inherit}
 .sv-quick:hover{background:rgba(99,102,241,.18);color:#c7d2fe}
+.sv-badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:.62rem;font-weight:700;letter-spacing:.04em;margin-right:4px}
+.sv-badge-critico{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5}
+.sv-badge-medio{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:#fcd34d}
+.sv-badge-aviso{background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);color:#93c5fd}
+.sv-badge-info{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.2);color:#6ee7b7}
+.sv-severity{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;flex-shrink:0}
+.sv-severity.critico{background:#ef4444;box-shadow:0 0 6px #ef4444}
+.sv-severity.medio{background:#f59e0b;box-shadow:0 0 6px #f59e0b}
+.sv-severity.aviso{background:#3b82f6}
+.sv-severity.info{background:#10b981}
 .sv-msg-user{align-self:flex-end;background:rgba(59,130,246,.12);border:1px solid rgba(59,130,246,.2);border-radius:10px;padding:9px 13px;font-size:.8rem;color:#bfdbfe;max-width:85%;line-height:1.6}
 .sv-msg-bot{align-self:flex-start;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.15);border-radius:10px;padding:10px 13px;font-size:.8rem;color:#c7d2fe;max-width:90%;line-height:1.6}
 .sv-thinking{align-self:flex-start;color:#6366f1;font-size:.78rem;padding:6px 0;animation:svPulse 1.2s ease-in-out infinite}
@@ -3272,6 +3282,7 @@ body::before {
           <button onclick="svAtalho('Verifique o banco Supabase e liste o que está nas tabelas principais')" class="sv-quick">🗄️ Supabase</button>
           <button onclick="svAtalho('Liste os últimos incidentes registrados')" class="sv-quick">📜 Ver Logs</button>
           <button onclick="svAtalho('Faça uma varredura completa do dashboard, identifique qualquer problema e tente corrigir automaticamente o que puder')" class="sv-quick" style="background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.2);color:#f87171">⚡ Auto-Reparo</button>
+          <button onclick="exportarRelatorio()" class="sv-quick" style="background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.2);color:#6ee7b7">📋 Exportar Relatório</button>
         </div>
       </div>
     </div>
@@ -9447,6 +9458,23 @@ setInterval(infraScanNow, 5*60*1000);
     const input = document.getElementById('sv-input');
     if(input){ input.value = texto; }
     svEnviar();
+  };
+
+  window.exportarRelatorio = function(){
+    const chat = document.getElementById('sv-chat');
+    if(!chat){ showToast('Nenhum relatório disponível','var(--gold)'); return; }
+    const msgs = [...chat.querySelectorAll('.sv-msg-bot,.sv-msg-user')].map(el=>{
+      const role = el.classList.contains('sv-msg-user') ? 'USER' : 'SUPERVISOR';
+      return `[${role}]\n${el.textContent.trim()}`;
+    }).join('\n\n---\n\n');
+    if(!msgs.trim()){ showToast('Chat vazio — rode uma verificação primeiro','var(--gold)'); return; }
+    const report = `RELATÓRIO SUPERVISOR IA — ${new Date().toLocaleString('pt-BR')}\n${'='.repeat(60)}\n\n${msgs}`;
+    const blob = new Blob([report],{type:'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href=url; a.download=`supervisor-relatorio-${new Date().toISOString().split('T')[0]}.txt`;
+    a.click(); URL.revokeObjectURL(url);
+    showToast('📋 Relatório exportado!','var(--teal)');
   };
 
   // Carregar status ao iniciar
