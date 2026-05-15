@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#0d1117"/>
+  <circle cx="256" cy="256" r="200" fill="#3b82f6" opacity=".15"/>
+  <text x="256" y="310" font-family="system-ui,sans-serif" font-size="200" font-weight="800" text-anchor="middle" fill="#3b82f6">E</text>
+  <text x="256" y="420" font-family="system-ui,sans-serif" font-size="60" font-weight="600" text-anchor="middle" fill="#64748b">Dashboard</text>
+</svg>

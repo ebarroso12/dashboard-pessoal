@@ -18,7 +18,7 @@ const html = readFileSync(path.join(__dirname, '../../dashboard.html'), 'utf8');
 
 function getMobileBlock() {
   const idx = html.indexOf('@media(max-width:800px)');
-  return idx >= 0 ? html.slice(idx, idx + 600) : '';
+  return idx >= 0 ? html.slice(idx, idx + 1200) : '';
 }
 
 const mob = getMobileBlock();
