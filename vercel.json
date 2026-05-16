@@ -1,10 +1,6 @@
 {
   "version": 2,
   "name": "dashboard-pessoal-edson",
-  "buildCommand": "",
-  "functions": {
-    "api/**/*.js": { "memory": 1024, "maxDuration": 30 }
-  },
   "rewrites": [
     { "source": "/oauth/google",          "destination": "/api/oauth/google" },
     { "source": "/oauth/tiktok",          "destination": "/api/oauth/tiktok" },
