@@ -2516,12 +2516,78 @@ body::before {
 <button class="infra-tab" id="itab-logs" onclick="infraSwitchTab('logs')" style="background:none;border:none;border-bottom:2px solid transparent;color:#888;cursor:pointer;padding:6px 10px;font-size:12px;font-weight:600">📋 Logs</button>
 <button class="infra-tab" id="itab-seg" onclick="infraSwitchTab('seg')" style="background: none; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: initial; color: rgb(136, 136, 136); cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600;">🔐 Segurança</button>
 <button class="infra-tab" id="itab-updates" onclick="infraSwitchTab('updates')" style="background: none; border-width: medium medium 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: initial; color: rgb(136, 136, 136); cursor: pointer; padding: 6px 10px; font-size: 12px; font-weight: 600;">🔄 Atualizações</button>
+<button class="infra-tab" id="itab-openclaw" onclick="infraSwitchTab('openclaw')" style="background:none;border:none;border-bottom:2px solid transparent;color:#888;cursor:pointer;padding:6px 10px;font-size:12px;font-weight:600">🦞 OpenClaw</button>
 </div>
 <div id="infra-tab-status" class="infra-tab-body" style="display: block;"><div id="infra-services-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px"><div id="icard-vps" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">🖥️</div><div style="font-size:12px;color:#fff;font-weight:600">VPS Hostinger</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">62ms</div></div><div id="icard-easypanel" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">🎛️</div><div style="font-size:12px;color:#fff;font-weight:600">EasyPanel</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-openclaw" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">🦞</div><div style="font-size:12px;color:#fff;font-weight:600">OpenClaw</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">166ms</div></div><div id="icard-chatwoot" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">💬</div><div style="font-size:12px;color:#fff;font-weight:600">Chatwoot</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-evolution" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">📱</div><div style="font-size:12px;color:#fff;font-weight:600">Evolution API</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-n8n" style="background: rgb(28, 21, 5); border-radius: 8px; padding: 10px; border: 1px solid rgb(133, 77, 14);"><div style="font-size:18px;margin-bottom:4px">⚡</div><div style="font-size:12px;color:#fff;font-weight:600">n8n</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div></div><div id="icard-dashboard" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">📊</div><div style="font-size:12px;color:#fff;font-weight:600">Dashboard</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">0ms</div></div><div id="icard-supabase" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">🗄️</div><div style="font-size:12px;color:#fff;font-weight:600">Supabase</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">37ms</div></div><div id="icard-calendar" style="background: rgb(30, 41, 59); border-radius: 8px; padding: 10px; border: 1px solid rgb(22, 101, 52);"><div style="font-size:18px;margin-bottom:4px">📅</div><div style="font-size:12px;color:#fff;font-weight:600">Google Calendar</div><div style="font-size:11px;color:#22c55e;margin-top:4px;font-weight:600">🟢 Online</div><div style="font-size:10px;color:#64748b;margin-top:2px">453ms</div></div></div><div id="infra-summary" style="margin-top:12px;padding:10px;background:#1a1a1a;border-radius:8px;font-size:12px;color:#888"><div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap"><span>🟢 <b style="color:#22c55e">5</b> Online</span><span>⚡ <b style="color:#fbbf24">4</b> VPS-privado</span><span>⏰ 21:59:15</span><span style="color:#22c55e">✅ Sistemas operacionais</span></div></div></div>
 <div id="infra-tab-ia" class="infra-tab-body" style="display: none;"><div style="background:#0f1629;border:1px solid #1e3a8a;border-radius:10px;padding:12px;margin-bottom:10px"><div style="color:#60a5fa;font-size:12px;font-weight:600;margin-bottom:8px">🤖 IA de Reparo — Alimentada por cada atualização do sistema</div><div id="ia-status-summary" style="color:#94a3b8;font-size:12px;line-height:1.6;min-height:60px">⚠️ <b style="color:#fbbf24">1 serviço(s) com problema.</b><br>🔴 <b>Supabase</b>: Banco inacessível<br>&nbsp;&nbsp;→ Verifique supabase.com<br>📅 Google Calendar ✅ — agenda carregada corretamente.<br>📊 Charts: auto-destroy ativo — canvas conflicts evitados.</div></div><div style="display:flex;gap:8px;margin-bottom:10px"><button onclick="iaRepairAll()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px;flex:1">🔧 Auto-Reparar Tudo</button><button onclick="iaAnalyzeNow()" style="background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px;flex:1">🧠 Analisar Sistema</button></div><div id="ia-repair-log" style="background:#0a0a0a;border-radius:8px;padding:10px;font-size:11px;color:#22c55e;font-family:monospace;max-height:180px;overflow-y:auto;min-height:60px"><div style="color:#555">&gt; Sistema pronto para análise...</div><div style="color:#fbbf24">[21:28:49] 🧠 Análise concluída — 1 problema(s)</div><div style="color:#fbbf24">[21:29:59] 🧠 Análise concluída — 1 problema(s)</div><div style="color:#fbbf24">[21:34:59] 🧠 Análise concluída — 1 problema(s)</div><div style="color:#fbbf24">[21:40:47] 🧠 Análise concluída — 1 problema(s)</div><div style="color:#fbbf24">[21:43:01] 🔧 Iniciando reparo de 1 serviço(s)...</div><div style="color:#94a3b8">[21:43:01] 🔍 Supabase...</div><div style="color:#ef4444">[21:43:01] ❌ Supabase offline.</div><div style="color:#a78bfa">[21:43:01] 🏁 Reparo concluído. Executando novo scan...</div><div style="color:#fbbf24">[21:43:04] 🧠 Análise concluída — 1 problema(s)</div></div><div style="margin-top:10px;display:flex;gap:8px"><input id="ia-cmd-input" type="text" placeholder="Peça algo: ex: verifica calendar, repara youtube, scan..." style="flex:1;background:#1e293b;border:1px solid #334155;border-radius:8px;color:#fff;padding:8px 12px;font-size:12px;outline:none" onkeydown="if(event.key==='Enter')iaCommand()"><button onclick="iaCommand()" style="background:#6366f1;color:#fff;border:none;border-radius:8px;padding:8px 14px;cursor:pointer;font-size:12px">Enviar</button></div></div>
 <div id="infra-tab-logs" class="infra-tab-body" style="display:none"><div id="infra-logs-list" style="font-size:11px;font-family:monospace;background:#0a0a0a;border-radius:8px;padding:10px;max-height:300px;overflow-y:auto"><div style="color:#555">Carregando logs...</div></div></div>
 <div id="infra-tab-seg" class="infra-tab-body" style="display: none;"><div style="background:#1e293b;border-radius:10px;padding:14px;margin-bottom:10px"><div style="color:#f59e0b;font-size:12px;font-weight:700;margin-bottom:8px">🔐 Visitante Atual</div><div id="seg-ip" style="color:#94a3b8;font-size:12px">🌐 IP: 2804:1e68:800c:e32f:a126:aa0e:41fe:bf5c  ⚠️ Visitante</div><div id="seg-loc" style="color:#94a3b8;font-size:12px;margin-top:4px">📍 Franca, São Paulo — Brazil</div><div id="seg-isp" style="color:#94a3b8;font-size:12px;margin-top:4px">🏢 ISP: ALGAR TELECOM SA</div><div id="seg-time" style="color:#94a3b8;font-size:12px;margin-top:4px">🕐 Acesso: 19/04/2026, 21:44:08</div><div id="seg-ua" style="color:#94a3b8;font-size:11px;margin-top:4px;word-break:break-all">🖥️ Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Sa...</div></div><div style="background:#0a0a0a;border-radius:8px;padding:10px;font-size:11px;color:#888"><div style="color:#f59e0b;font-weight:600;margin-bottom:6px">📜 Histórico de Acessos</div><div id="seg-history-list"><div style="border-bottom:1px solid #1e293b;padding:4px 0"><span style="color:#60a5fa">19/04/2026, 21:40:43</span> — <span style="color:#fff">2804:1e68:800c:e32f:a126:aa0e:41fe:bf5c</span> — <span style="color:#94a3b8">Franca, Brazil</span></div><div style="border-bottom:1px solid #1e293b;padding:4px 0"><span style="color:#60a5fa">19/04/2026, 19:49:58</span> — <span style="color:#fff">2804:1e68:800c:e32f:a126:aa0e:41fe:bf5c</span> — <span style="color:#94a3b8">Franca, Brazil</span></div><div style="border-bottom:1px solid #1e293b;padding:4px 0"><span style="color:#60a5fa">19/04/2026, 19:33:41</span> — <span style="color:#fff">2804:1e68:800c:e32f:a126:aa0e:41fe:bf5c</span> — <span style="color:#94a3b8">Franca, Brazil</span></div><div style="border-bottom:1px solid #1e293b;padding:4px 0"><span style="color:#60a5fa">19/04/2026, 19:31:30</span> — <span style="color:#fff">2804:1e68:800c:e32f:a126:aa0e:41fe:bf5c</span> — <span style="color:#94a3b8">Franca, Brazil</span></div></div></div></div>
 <div id="infra-tab-updates" class="infra-tab-body" style="display: none;"><div id="updates-list" style="display:flex;flex-direction:column;gap:8px"><div style="background:#0f1a0f;border:1px solid #166534;border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex:1"><span style="font-size:20px">🔑</span><div><div style="color:#22c55e;font-size:12px;font-weight:700">Token Google</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">Válido por 31 min.</div></div></div></div><div style="background:#0f1a0f;border:1px solid #166534;border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex:1"><span style="font-size:20px">💾</span><div><div style="color:#22c55e;font-size:12px;font-weight:700">localStorage</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">4KB — OK</div></div></div></div><div style="background:#0f1a0f;border:1px solid #166534;border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex:1"><span style="font-size:20px">📊</span><div><div style="color:#22c55e;font-size:12px;font-weight:700">Chart.js v4.4.0</div><div style="color:#94a3b8;font-size:11px;margin-top:2px">Auto-destroy patch ativo — stable.</div></div></div></div><div style="background:#0f1a0f;border:1px solid #166534;border-radius:8px;padding:10px;display:flex;align-items:center;gap:10px;justify-content:space-between"><div style="display:flex;align-items:center;gap:8px;flex:1"><span style="font-size:20px">❤️</span><div><div style="color:#22c55e;font-size:12px;font-weight:700">Health Score 89%</div><div style="color:#94a3b8;font-size:11px;margin-top:2px"></div><div style="height:6px;background:#1e293b;border-radius:3px;margin-top:4px"><div style="height:100%;width:89%;background:#fbbf24;border-radius:3px"></div></div></div></div></div></div></div>
+<div id="infra-tab-openclaw" class="infra-tab-body" style="display:none">
+  <div style="background:rgba(255,107,53,.06);border:1px solid rgba(255,107,53,.2);border-radius:8px;padding:10px 13px;margin-bottom:10px;font-size:11px;color:#94a3b8">
+    <strong style="color:#ff6b35">Runbook assistido</strong> — este painel nao executa comandos no servidor. Use os comandos abaixo no terminal do VPS.
+  </div>
+  <div style="background:#0f1629;border:1px solid #1e3a8a;border-radius:10px;padding:12px;margin-bottom:10px">
+    <div style="color:#ff6b35;font-size:12px;font-weight:700;margin-bottom:10px">Status OpenClaw</div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:11px">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+        <span style="color:#94a3b8">URL Publica (HTTP)</span>
+        <span id="oc-maint-url-status" style="color:#555">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06)">
+        <span style="color:#94a3b8">API Vercel</span>
+        <span id="oc-maint-ws-status" style="color:#555">—</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0">
+        <span style="color:#94a3b8">WhatsApp real</span>
+        <span style="color:#f59e0b;font-size:11px">Requer teste manual</span>
+      </div>
+    </div>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="ocTestUrl()" style="background:#ff6b35;color:#fff;border:none;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:12px;font-weight:600;flex:1;min-width:120px">Testar agora</button>
+      <a href="https://openclaw.n8ndredson.com" target="_blank" rel="noopener noreferrer" style="background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:8px;padding:7px 14px;text-decoration:none;font-size:12px;font-weight:600;text-align:center;flex:1;min-width:120px">Abrir painel</a>
+    </div>
+  </div>
+  <div style="background:#1a1a1a;border-radius:10px;padding:12px;margin-bottom:10px">
+    <div style="color:#f59e0b;font-size:12px;font-weight:700;margin-bottom:10px">Checklist de Recuperacao</div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:12px;color:#94a3b8">
+      <div>[ ] Container online — copie o comando abaixo e verifique</div>
+      <div>[ ] Logs sem erro critico — copie o comando de logs</div>
+      <div>[ ] URL responde — clique em "Testar agora" acima</div>
+      <div>[ ] Dashboard mostra OpenClaw online (widget na aba Clinica)</div>
+      <div>[ ] WhatsApp responde a mensagem de teste — verificacao manual</div>
+    </div>
+  </div>
+  <div style="background:#0a0a0a;border-radius:10px;padding:12px;margin-bottom:10px">
+    <div style="color:#60a5fa;font-size:12px;font-weight:700;margin-bottom:10px">Comandos para o VPS (execute no terminal)</div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px;background:#1e293b;border-radius:8px;padding:8px 10px">
+        <code style="font-size:11px;color:#22c55e;flex:1;word-break:break-all">docker ps -a | grep -i openclaw</code>
+        <button onclick="navigator.clipboard.writeText('docker ps -a | grep -i openclaw')" style="background:#334155;color:#94a3b8;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;flex-shrink:0">Copiar</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:#1e293b;border-radius:8px;padding:8px 10px">
+        <code style="font-size:11px;color:#22c55e;flex:1;word-break:break-all">docker logs openclaw --tail=100</code>
+        <button onclick="navigator.clipboard.writeText('docker logs openclaw --tail=100')" style="background:#334155;color:#94a3b8;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;flex-shrink:0">Copiar</button>
+      </div>
+      <div style="background:#1e293b;border-radius:8px;padding:8px 10px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <code style="font-size:11px;color:#fbbf24;flex:1;word-break:break-all">docker restart openclaw</code>
+          <button onclick="navigator.clipboard.writeText('docker restart openclaw')" style="background:#334155;color:#94a3b8;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;flex-shrink:0">Copiar</button>
+        </div>
+        <div style="font-size:10px;color:#f59e0b">Acao manual de risco moderado — confirme o nome do container em "docker ps -a" antes de executar.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:#1e293b;border-radius:8px;padding:8px 10px">
+        <code style="font-size:11px;color:#22c55e;flex:1;word-break:break-all">curl -I https://openclaw.n8ndredson.com</code>
+        <button onclick="navigator.clipboard.writeText('curl -I https://openclaw.n8ndredson.com')" style="background:#334155;color:#94a3b8;border:none;border-radius:6px;padding:4px 10px;cursor:pointer;font-size:11px;flex-shrink:0">Copiar</button>
+      </div>
+    </div>
+    <button onclick="ocCopiarTodos(event)" style="margin-top:10px;width:100%;background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.25);border-radius:8px;color:#ff6b35;padding:8px;cursor:pointer;font-size:12px;font-weight:600">Copiar todos os comandos</button>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button onclick="ocGerarRelatorio()" style="flex:1;background:#1e293b;color:#94a3b8;border:1px solid #334155;border-radius:8px;padding:8px;cursor:pointer;font-size:12px">Gerar relatorio de erro</button>
+  </div>
+  <div id="oc-maint-report" style="display:none;margin-top:10px;background:#0a0a0a;border-radius:8px;padding:12px;font-size:11px;font-family:monospace;color:#22c55e;white-space:pre-wrap;word-break:break-all"></div>
+</div>
 </div>
 
 <div class="card" id="widget-openclaw" data-widget-id="openclaw" data-section="clinica" style="grid-column:span 2">
@@ -8709,6 +8775,79 @@ checkStoredAuth();
     ocSetStatus(false);
   };
 
+  window.ocTestUrl = async function() {
+    const urlEl = document.getElementById('oc-maint-url-status');
+    const wsEl  = document.getElementById('oc-maint-ws-status');
+    if (urlEl) urlEl.textContent = 'Testando...';
+    if (wsEl)  wsEl.textContent  = 'Testando...';
+    const start = Date.now();
+    try {
+      await fetch('https://openclaw.n8ndredson.com', {
+        method: 'HEAD',
+        mode:   'no-cors',
+        signal: AbortSignal.timeout(8000),
+      });
+      const ms = Date.now() - start;
+      if (urlEl) urlEl.innerHTML = '<span style="color:#22c55e">Responde (' + ms + 'ms)</span>';
+    } catch(e) {
+      if (urlEl) urlEl.innerHTML = '<span style="color:#ef4444">Sem resposta</span>';
+    }
+    try {
+      const r2 = await fetch('/api/webhook', { method: 'GET', signal: AbortSignal.timeout(6000) });
+      if (wsEl) wsEl.innerHTML = r2.status === 405
+        ? '<span style="color:#22c55e">API Vercel online (405)</span>'
+        : '<span style="color:#f59e0b">API: ' + r2.status + '</span>';
+    } catch(e) {
+      if (wsEl) wsEl.innerHTML = '<span style="color:#ef4444">API inacessivel</span>';
+    }
+  };
+
+  window.ocGerarRelatorio = function() {
+    const panel  = document.getElementById('oc-maint-report');
+    if (!panel) return;
+    const urlSt  = document.getElementById('oc-maint-url-status')?.textContent || 'nao testado';
+    const wsSt   = document.getElementById('oc-maint-ws-status')?.textContent  || 'nao testado';
+    const icTxt  = document.getElementById('icard-openclaw')?.innerText?.replace(/\s+/g, ' ') || 'n/d';
+    const ts     = new Date().toLocaleString('pt-BR');
+    const report = [
+      '=== Relatorio OpenClaw ===',
+      'Gerado em: ' + ts,
+      '',
+      'URL Publica:  ' + urlSt,
+      'API Vercel:   ' + wsSt,
+      'Monitor infra: ' + icTxt,
+      '',
+      '[Informacoes sensiveis (tokens, headers, env vars) nao incluidas]',
+      '',
+      'Comandos de diagnostico:',
+      '  docker ps -a | grep -i openclaw',
+      '  docker logs openclaw --tail=100',
+      '  docker restart openclaw  # risco moderado',
+      '  curl -I https://openclaw.n8ndredson.com',
+      '',
+      'Runbook completo: docs/runbooks/openclaw-recovery.md',
+    ].join('\n');
+    panel.style.display = 'block';
+    panel.textContent   = report;
+    navigator.clipboard.writeText(report).catch(() => {});
+  };
+
+  window.ocCopiarTodos = function(ev) {
+    const cmds = [
+      'docker ps -a | grep -i openclaw',
+      'docker logs openclaw --tail=100',
+      'docker restart openclaw',
+      'curl -I https://openclaw.n8ndredson.com',
+    ].join('\n');
+    navigator.clipboard.writeText(cmds).catch(() => {});
+    const btn = ev && ev.target;
+    if (btn) {
+      const orig = btn.textContent;
+      btn.textContent = 'Copiado!';
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    }
+  };
+
   // Inicia ao carregar
   window.ocStartPolling();
 
@@ -8770,6 +8909,7 @@ window.infraSwitchTab = function(tab) {
   if (tab==='logs') infraLoadLogs();
   if (tab==='seg') infraLoadSecurity();
   if (tab==='updates') infraCheckUpdates();
+  if (tab==='openclaw') ocTestUrl();
 };
 
 window.infraScanNow = async function() {
