@@ -73,6 +73,13 @@ export default async function handler(req, res) {
       break;
     }
 
+    case 'briefing-send': {
+      targetUrl    = `${BASE_URL}/api/openclaw/briefing/send`;
+      targetMethod = 'POST';
+      targetBody   = {};
+      break;
+    }
+
     default:
       return res.status(400).json({ error: `action desconhecida: ${action}` });
   }

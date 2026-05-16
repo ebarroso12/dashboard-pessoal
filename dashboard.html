@@ -2498,7 +2498,7 @@ body::before {
           <div class="c-sub" id="morning-sub">Carregando briefing do dia...</div>
         </div>
         <div class="c-spacer"></div>
-        <button onclick="enviarBriefingWA()" class="wa-btn" style="font-size:.72rem">📲 Enviar WA</button>
+        <button onclick="enviarBriefingWA()" class="wa-btn" style="font-size:.72rem">📲 Enviar WA</button><button id="btn-briefing-send" onclick="enviarBriefingAgora()" class="wa-btn" style="font-size:.72rem;margin-left:6px;background:rgba(255,107,53,.15);border-color:rgba(255,107,53,.35);color:#ff6b35">📤 Enviar Agora</button><span id="briefing-send-status" style="font-size:.65rem;margin-left:8px;color:var(--muted2)"></span>
         <button onclick="document.getElementById('widget-morning').style.display='none'" style="padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted2);font-size:.72rem;cursor:pointer">✕ Fechar</button>
       </div>
       <div class="card-body">
@@ -10406,6 +10406,42 @@ window.enviarBriefingWA = function() {
   const num = window._waNumber || '';
   if (!num)  { showToast('Configure seu número WhatsApp em Configurações', 'var(--gold)'); return; }
   window.open(`https://wa.me/${num}?text=${encodeURIComponent(texto)}`, '_blank');
+};
+
+window.enviarBriefingAgora = async function() {
+  const btn = document.getElementById('btn-briefing-send');
+  const st  = document.getElementById('briefing-send-status');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Enviando...'; }
+  if (st)  { st.textContent = ''; st.style.color = 'var(--muted2)'; }
+
+  try {
+    const res = await fetch('/api/dashboard-proxy', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ action: 'briefing-send', payload: {} }),
+      signal:  AbortSignal.timeout(35000),
+    });
+    const data = await res.json();
+
+    if (data.ok && data.status === 'enviado') {
+      if (st) { st.textContent = 'Enviado via WhatsApp'; st.style.color = '#22c55e'; }
+      showToast('Briefing enviado pelo WhatsApp', 'var(--teal)');
+    } else if (data.ok && data.status === 'enviado_retry') {
+      if (st) { st.textContent = 'Enviado (retry)'; st.style.color = '#fbbf24'; }
+      showToast('Briefing enviado (segunda tentativa)', 'var(--gold)');
+    } else if (data.status === 'briefing_vazio') {
+      if (st) { st.textContent = 'Briefing vazio — gere primeiro'; st.style.color = '#f59e0b'; }
+      showToast('Gere o briefing antes de enviar', 'var(--gold)');
+    } else {
+      if (st) { st.textContent = 'Falhou — verifique logs'; st.style.color = '#ef4444'; }
+      showToast('Falha ao enviar briefing', '#ef4444');
+    }
+  } catch(e) {
+    if (st) { st.textContent = 'Indeterminado (timeout)'; st.style.color = '#94a3b8'; }
+    showToast('Timeout — status indeterminado', '#94a3b8');
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = '📤 Enviar Agora'; }
 };
 
 // Pre-carrega briefing silenciosamente nas primeiras horas (6h-10h)
