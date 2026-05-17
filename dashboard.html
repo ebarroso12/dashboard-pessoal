@@ -3302,6 +3302,47 @@ body::before {
       </div>
     </div>
 
+    <!-- ══ VIDAVIRTUAL ════════════════════════════════════ -->
+    <div class="card" id="widget-vidavirtual" data-widget-id="vidavirtual" data-section="infra" style="grid-column:span 2">
+      <div class="card-head">
+        <div class="c-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);box-shadow:0 0 14px rgba(99,102,241,.3)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        </div>
+        <div>
+          <div class="c-title">VidaVirtual</div>
+          <div class="c-sub" id="vv-sub">Carregando...</div>
+        </div>
+        <div class="c-spacer"></div>
+        <a href="https://vidavirtual-omega.vercel.app" target="_blank" rel="noopener noreferrer" style="padding:5px 12px;border-radius:8px;font-size:.72rem;font-weight:700;background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.25);color:#6366f1;text-decoration:none">Abrir VidaVirtual</a>
+        <button onclick="vvLoad()" style="margin-left:6px;padding:5px 10px;border-radius:8px;font-size:.72rem;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted2);cursor:pointer" title="Atualizar">↻</button>
+      </div>
+      <div id="vv-body" style="padding:14px 16px">
+        <div id="vv-loading" style="color:var(--muted2);font-size:.82rem">Carregando resumo operacional...</div>
+        <div id="vv-data" style="display:none">
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+            <div style="background:rgba(99,102,241,.06);border:1px solid rgba(99,102,241,.15);border-radius:10px;padding:12px">
+              <div style="font-size:.65rem;font-weight:700;color:#6366f1;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">OS Abertas</div>
+              <div id="vv-os-abertas" style="font-size:1.8rem;font-weight:800;color:#eef2ff">—</div>
+            </div>
+            <div style="background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.15);border-radius:10px;padding:12px">
+              <div style="font-size:.65rem;font-weight:700;color:#ef4444;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">OS Atrasadas</div>
+              <div id="vv-os-atrasadas" style="font-size:1.8rem;font-weight:800;color:#fee2e2">—</div>
+            </div>
+            <div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:10px;padding:12px">
+              <div style="font-size:.65rem;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Aguardando Peca</div>
+              <div id="vv-aguardando" style="font-size:1.8rem;font-weight:800;color:#fef3c7">—</div>
+            </div>
+            <div style="background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:10px;padding:12px">
+              <div style="font-size:.65rem;font-weight:700;color:#22c55e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px">Pag. Pendentes</div>
+              <div id="vv-pagamentos" style="font-size:1.8rem;font-weight:800;color:#dcfce7">—</div>
+            </div>
+          </div>
+        </div>
+        <div id="vv-error" style="display:none;padding:12px;background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);border-radius:8px;color:#ef4444;font-size:.82rem">VidaVirtual indisponivel — tente novamente mais tarde.</div>
+        <div id="vv-no-config" style="display:none;padding:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;color:var(--muted2);font-size:.82rem">VidaVirtual nao configurado. Configure VIDAVIRTUAL_SERVICE_ROLE_KEY no Vercel.</div>
+      </div>
+    </div>
+
     <!-- ══ SUPERVISOR IA ══════════════════════════════════ -->
     <div class="card" id="widget-supervisor-ia" style="grid-column:span 3">
       <div class="card-head">
@@ -10443,6 +10484,49 @@ window.enviarBriefingAgora = async function() {
 
   if (btn) { btn.disabled = false; btn.textContent = '📤 Enviar Agora'; }
 };
+
+window.vvLoad = async function() {
+  const loading = document.getElementById('vv-loading');
+  const data    = document.getElementById('vv-data');
+  const err     = document.getElementById('vv-error');
+  const noConf  = document.getElementById('vv-no-config');
+  const sub     = document.getElementById('vv-sub');
+  if (loading) loading.style.display = 'block';
+  if (data)    data.style.display    = 'none';
+  if (err)     err.style.display     = 'none';
+  if (noConf)  noConf.style.display  = 'none';
+  try {
+    const res = await fetch('/api/vidavirtual/summary', { signal: AbortSignal.timeout(12000) });
+    const d   = await res.json();
+    if (loading) loading.style.display = 'none';
+    if (d.status === 'nao_configurado') {
+      if (noConf) noConf.style.display = 'block';
+      if (sub)    sub.textContent = 'nao configurado';
+      return;
+    }
+    if (d.status === 'offline' || d.status === 'erro_auth') {
+      if (err) err.style.display = 'block';
+      if (sub) sub.textContent   = d.status === 'erro_auth' ? 'erro de autenticacao' : 'indisponivel';
+      return;
+    }
+    if (data) data.style.display = 'block';
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set('vv-os-abertas',   d.os_abertas           ?? 0);
+    set('vv-os-atrasadas', d.os_atrasadas          ?? 0);
+    set('vv-aguardando',   d.aparelhos_aguardando  ?? 0);
+    set('vv-pagamentos',   d.pagamentos_pendentes  ?? 0);
+    if (sub) {
+      const tz = d.ts ? new Date(d.ts).toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}) : '';
+      sub.textContent = d.status === 'sem_dados' ? 'sem dados operacionais' : `Atualizado ${tz}`;
+    }
+    if ((d.os_atrasadas || 0) > 0) showToast(`${d.os_atrasadas} OS atrasada(s) no VidaVirtual`, '#ef4444');
+  } catch(e) {
+    if (loading) loading.style.display = 'none';
+    if (err)     err.style.display     = 'block';
+    if (sub)     sub.textContent       = 'timeout';
+  }
+};
+(function() { setTimeout(window.vvLoad, 1500); })();
 
 // Pre-carrega briefing silenciosamente nas primeiras horas (6h-10h)
 (function() {
