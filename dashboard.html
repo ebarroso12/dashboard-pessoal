@@ -9023,7 +9023,8 @@ window._infraServices = [
   { id:'n8n', name:'n8n', url:'https://n8n.n8ndredson.com', icon:'⚡', type:'vps' },
   { id:'dashboard', name:'Dashboard', url:'https://dashboard-pessoal-edson.vercel.app', icon:'📊', type:'self' },
   { id:'supabase', name:'Supabase', url:'https://dashboard-pessoal-edson.vercel.app/api/token/status', icon:'🗄️', type:'db_rest' },
-  { id:'calendar', name:'Google Calendar', url:'', icon:'📅', type:'google' }
+  { id:'calendar', name:'Google Calendar', url:'', icon:'📅', type:'google' },
+  { id:'vidavirtual', name:'VidaVirtual', url:'https://dashboard-pessoal-edson.vercel.app/api/vidavirtual/summary', icon:'📱', type:'json_status' },
 ];
 
 window._infraScanResults = {};
@@ -9058,7 +9059,7 @@ window.infraScanNow = async function() {
     const card = document.getElementById('icard-'+svc.id);
     try {
       const start = Date.now();
-      let ok=false, note='';
+      let ok=false, note='', degradado=false;
       
       if (svc.type==='self') { ok=true; note='0ms'; }
       else if (svc.type==='vps') { ok=true; note='VPS-only'; }
@@ -9074,6 +9075,13 @@ window.infraScanNow = async function() {
         const token = await getGoogleToken().catch(()=>null);
         if (token) { const r=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?maxResults=1&singleEvents=true&timeMin='+new Date().toISOString(),{headers:{Authorization:'Bearer '+token}}); ok=r.ok; }
         note=(Date.now()-start)+'ms';
+      } else if (svc.type==='json_status') {
+        const r = await fetch(svc.url, { signal: AbortSignal.timeout(5000) });
+        const d = r.ok ? await r.json().catch(() => ({})) : {};
+        const st = d.status || '';
+        ok        = st === 'ok' || st === 'sem_dados';
+        degradado = st === 'sem_dados';
+        note      = '(' + (st || 'erro') + ') ' + (Date.now()-start) + 'ms';
       } else {
         try { await fetch(svc.url,{method:'HEAD',mode:'no-cors',signal:AbortSignal.timeout(5000)}); ok=true; } catch { ok=false; }
         note=(Date.now()-start)+'ms';
@@ -9084,13 +9092,18 @@ window.infraScanNow = async function() {
         if (card) { card.innerHTML='<div style="font-size:18px;margin-bottom:4px">'+svc.icon+'</div><div style="font-size:12px;color:#fff;font-weight:600">'+svc.name+'</div><div style="font-size:11px;color:#fbbf24;margin-top:4px">⚡ VPS-only</div><div style="font-size:10px;color:#64748b;margin-top:2px">CORS/privado</div>'; card.style.borderColor='#854d0e'; card.style.background='#1c1505'; }
       } else {
         if (ok) online++;
-        const col=ok?'#22c55e':'#ef4444'; const dot=ok?'🟢':'🔴'; const txt=ok?'Online':'Offline';
+        const col = degradado?'#fbbf24': ok?'#22c55e':'#ef4444';
+        const dot = degradado?'🟡': ok?'🟢':'🔴';
+        const txt = degradado?'Degradado': ok?'Online':'Offline';
         if (card) { card.innerHTML='<div style="font-size:18px;margin-bottom:4px">'+svc.icon+'</div><div style="font-size:12px;color:#fff;font-weight:600">'+svc.name+'</div><div style="font-size:11px;color:'+col+';margin-top:4px;font-weight:600">'+dot+' '+txt+'</div><div style="font-size:10px;color:#64748b;margin-top:2px">'+note+'</div>'; card.style.borderColor=ok?'#166534':'#7f1d1d'; }
         window._infraScanResults[svc.id]={ok,ts:new Date()};
         window._iaKB_update(svc.name, txt, note);
       }
     } catch(e) {
-      if (card) { card.innerHTML='<div style="font-size:18px;margin-bottom:4px">'+svc.icon+'</div><div style="font-size:12px;color:#fff;font-weight:600">'+svc.name+'</div><div style="font-size:11px;color:#ef4444;margin-top:4px">🔴 Erro</div>'; }
+      const isTimeout = e?.name === 'AbortError' || e?.name === 'TimeoutError';
+      const errCol = isTimeout ? '#94a3b8' : '#ef4444';
+      const errTxt = isTimeout ? '⚡ Indeterminado' : '🔴 Erro';
+      if (card) { card.innerHTML='<div style="font-size:18px;margin-bottom:4px">'+svc.icon+'</div><div style="font-size:12px;color:#fff;font-weight:600">'+svc.name+'</div><div style="font-size:11px;color:'+errCol+';margin-top:4px">'+errTxt+'</div>'; }
     }
   }
   
@@ -9127,7 +9140,8 @@ window.iaAnalyzeNow = async function() {
       openclaw:{d:'OpenClaw desconectado',s:'docker restart openclaw no VPS'},
       dashboard:{d:'Dashboard offline',s:'Verifique Vercel'},
       supabase:{d:'Banco inacessível',s:'Verifique supabase.com'},
-      calendar:{d:'Token Google expirado',s:'Clique em Reconectar Google'}
+      calendar:    {d:'Token Google expirado',    s:'Clique em Reconectar Google'},
+      vidavirtual: {d:'VidaVirtual indisponivel', s:'Verificar env VIDAVIRTUAL_SERVICE_ROLE_KEY no Vercel'},
     };
     offline.forEach(svc => {
       const fix = fixes[svc.id] || {d:'Serviço não responsivo',s:'Verificar manualmente'};
