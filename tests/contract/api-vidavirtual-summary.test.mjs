@@ -89,9 +89,7 @@ describe('GET /api/vidavirtual/summary — online com dados', () => {
   });
 
   it('calcula os_atrasadas separadamente', async () => {
-    let callCount = 0;
     global.fetch = async (url) => {
-      callCount++;
       const u = String(url);
       if (u.includes('data_prometida')) return { ok: true, json: async () => [{ count: '2' }] };
       if (u.includes('ordens_servico')) return { ok: true, json: async () => [{ count: '6' }] };

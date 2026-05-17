@@ -50,6 +50,7 @@ export default async function handler(req, res) {
       });
     }
 
+    // protected by outer try/catch — .json() throwing returns 'offline'
     const [osAb, osAtr, apar, pag] = await Promise.all([
       rOs.json().then(parseCount),
       rOsAtr.ok ? rOsAtr.json().then(parseCount) : Promise.resolve(0),
