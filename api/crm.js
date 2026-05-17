@@ -37,8 +37,12 @@ export default async function handler(req, res) {
         crmSB('/whatsapp_leads?select=*&order=created_at.desc'),
         crmSB('/whatsapp_contacts?select=*'),
       ]);
-      const leads    = lRes.ok ? await lRes.json() : [];
-      const contacts = cRes.ok ? await cRes.json() : [];
+      if (!lRes.ok) {
+        const detail = await lRes.text().catch(() => '');
+        return res.status(502).json({ ok: false, error: 'GET leads falhou', detail, status: lRes.status });
+      }
+      const leads    = await lRes.json().catch(() => []);
+      const contacts = cRes.ok ? await cRes.json().catch(() => []) : [];
       const contactMap = {};
       contacts.forEach(c => { contactMap[c.id] = c; });
       return res.status(200).json({
@@ -95,7 +99,12 @@ export default async function handler(req, res) {
             body: JSON.stringify({ name }),
           }));
         }
-        await Promise.all(ops);
+        const results = await Promise.all(ops);
+        const failed = results.find(r => !r.ok);
+        if (failed) {
+          const detail = await failed.text().catch(() => '');
+          return res.status(502).json({ ok: false, error: 'PATCH falhou', detail, status: failed.status });
+        }
         return res.status(200).json({ ok: true });
       }
 
@@ -103,11 +112,15 @@ export default async function handler(req, res) {
       if (action === 'move') {
         const { leadId, status, now } = payload;
         if (!leadId || !status) return res.status(400).json({ ok: false, error: 'leadId e status obrigatorios' });
-        await crmSB(`/whatsapp_leads?id=eq.${leadId}`, {
+        const rM = await crmSB(`/whatsapp_leads?id=eq.${leadId}`, {
           method: 'PATCH',
           headers: { Prefer: 'return=minimal' },
           body: JSON.stringify({ status, updated_at: now }),
         });
+        if (!rM.ok) {
+          const detail = await rM.text().catch(() => '');
+          return res.status(502).json({ ok: false, error: 'PATCH move falhou', detail, status: rM.status });
+        }
         return res.status(200).json({ ok: true });
       }
 
