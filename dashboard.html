@@ -1389,6 +1389,16 @@ input::placeholder, textarea::placeholder { color: var(--text3) !important; }
   border-color: var(--border-h) !important;
   box-shadow: var(--shadow-lg) !important;
 }
+/* ── QUICK ACTIONS FAB ───────────────────────────────── */
+#qa-fab{position:fixed;bottom:80px;right:16px;z-index:8000}
+@media(min-width:769px){#qa-fab{bottom:24px}}
+#qa-fab-btn{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#10b981);border:none;cursor:pointer;font-size:24px;color:#fff;box-shadow:0 4px 20px rgba(59,130,246,.45);display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s}
+#qa-fab-btn.open{transform:rotate(45deg);box-shadow:0 4px 24px rgba(16,185,129,.5)}
+#qa-menu{position:absolute;bottom:62px;right:0;display:flex;flex-direction:column;gap:8px;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .2s,transform .2s}
+#qa-menu.open{opacity:1;pointer-events:all;transform:translateY(0)}
+.qa-item{display:flex;align-items:center;gap:10px;cursor:pointer;background:var(--bg2);border:1px solid var(--border-h);border-radius:24px;padding:8px 14px 8px 10px;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,.35);font-size:.8rem;color:var(--text);transition:background .15s}
+.qa-item:hover{background:var(--bg3);border-color:var(--accent)}
+.qa-icon{font-size:16px;width:22px;text-align:center}
 
 /* === ASSISTANT MODAL === */
 .ast-modal, [id*="astModal"] {
@@ -12256,6 +12266,67 @@ async function saveCRMEdit() {
   } catch(e) { console.error('CRM save error', e); }
 }
 
+/* ── QUICK ACTIONS FAB ───────────────────────────────── */
+let _qaOpen = false;
+function toggleQA() {
+  _qaOpen = !_qaOpen;
+  document.getElementById('qa-fab-btn').classList.toggle('open', _qaOpen);
+  document.getElementById('qa-menu').classList.toggle('open', _qaOpen);
+}
+function closeQA() {
+  _qaOpen = false;
+  document.getElementById('qa-fab-btn')?.classList.remove('open');
+  document.getElementById('qa-menu')?.classList.remove('open');
+}
+function qaAction(action) {
+  closeQA();
+  switch(action) {
+    case 'tarefa':
+      showSection('clinica'); showPage('home');
+      setTimeout(() => {
+        const el = document.getElementById('taskInput');
+        if (el) { el.scrollIntoView({behavior:'smooth',block:'center'}); el.focus(); }
+      }, 300);
+      break;
+    case 'gasto':
+      document.getElementById('qa-gasto-overlay').style.display = 'flex';
+      setTimeout(() => document.getElementById('qa-gasto-valor')?.focus(), 100);
+      break;
+    case 'lead':
+      if (typeof openCRMNew === 'function') openCRMNew('nurturing');
+      break;
+    case 'briefing':
+      if (typeof enviarBriefingAgora === 'function') enviarBriefingAgora();
+      break;
+    case 'vidavirtual':
+      window.open('https://vidavirtual-omega.vercel.app', '_blank', 'noopener');
+      break;
+    case 'monitor':
+      showSection('infra'); showPage('home');
+      setTimeout(() => { if (typeof infraScanNow === 'function') infraScanNow(); }, 400);
+      break;
+  }
+}
+function closeQaGasto() { const o=document.getElementById('qa-gasto-overlay'); if(o) o.style.display='none'; }
+function confirmQaGasto() {
+  const val = parseFloat(document.getElementById('qa-gasto-valor')?.value || '0');
+  const item = (document.getElementById('qa-gasto-item')?.value || '').trim() || 'Gasto rapido';
+  if (!val || val <= 0) { if(typeof showToast==='function') showToast('Informe um valor valido', '#ef4444'); return; }
+  const d = new Date();
+  const today = d.toISOString().slice(0, 10);
+  if (typeof _addTx === 'function') {
+    _addTx({ date: today, year: d.getFullYear(), month: d.getMonth(),
+              type: 'despesa', item, amount: val,
+              cat_id: 'outros', cat_label: 'Outros', source: 'quick' });
+    if(typeof showToast==='function') showToast('Gasto registrado', '#22c55e');
+  }
+  closeQaGasto();
+  const _gv=document.getElementById('qa-gasto-valor'); if(_gv) _gv.value='';
+  const _gi=document.getElementById('qa-gasto-item');  if(_gi) _gi.value='';
+}
+document.addEventListener('click', e => {
+  if (_qaOpen && !document.getElementById('qa-fab')?.contains(e.target)) closeQA();
+});
 /* Init mini widget on page load */
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -12322,6 +12393,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   </nav>
 </div>
 
+<!-- ── QUICK ACTIONS FAB ─────────────────────────────── -->
+<div id="qa-fab">
+  <div id="qa-menu">
+    <div class="qa-item" onclick="qaAction('tarefa')"><span class="qa-icon">✅</span>Nova Tarefa</div>
+    <div class="qa-item" onclick="qaAction('gasto')"><span class="qa-icon">💸</span>Novo Gasto</div>
+    <div class="qa-item" onclick="qaAction('lead')"><span class="qa-icon">👥</span>Novo Lead CRM</div>
+    <div class="qa-item" onclick="qaAction('briefing')"><span class="qa-icon">📤</span>Enviar Briefing</div>
+    <div class="qa-item" onclick="qaAction('vidavirtual')"><span class="qa-icon">🔧</span>Nova OS VidaVirtual</div>
+    <div class="qa-item" onclick="qaAction('monitor')"><span class="qa-icon">📊</span>Abrir Monitor</div>
+  </div>
+  <button id="qa-fab-btn" onclick="toggleQA()" aria-label="Acoes rapidas">+</button>
+</div>
+<!-- ── QUICK GASTO SHEET ──────────────────────────────── -->
+<div id="qa-gasto-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8100;flex-direction:column;align-items:stretch;justify-content:flex-end" onclick="if(event.target===this)closeQaGasto()">
+  <div style="background:var(--bg2);border:1px solid var(--border-h);border-radius:16px 16px 0 0;padding:20px;width:100%;max-width:500px">
+    <div style="font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:16px">Novo Gasto Rapido</div>
+    <input id="qa-gasto-valor" type="number" inputmode="decimal" placeholder="Valor (R$)" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:1rem;margin-bottom:10px;box-sizing:border-box">
+    <input id="qa-gasto-item" type="text" placeholder="Descricao" style="width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);font-size:.9rem;margin-bottom:14px;box-sizing:border-box" onkeydown="if(event.key==='Enter')confirmQaGasto()">
+    <div style="display:flex;gap:10px">
+      <button onclick="closeQaGasto()" style="flex:1;padding:10px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted2);cursor:pointer">Cancelar</button>
+      <button onclick="confirmQaGasto()" style="flex:2;padding:10px;border-radius:8px;background:rgba(239,68,68,.18);border:1px solid rgba(239,68,68,.35);color:#ef4444;cursor:pointer;font-weight:600">Registrar Gasto</button>
+    </div>
+  </div>
+</div>
 <!-- ── MOBILE BOTTOM NAV ────────────────────────────────── -->
 <nav id="mobile-nav" role="navigation" aria-label="Navegação mobile">
   <button class="mn-btn" onclick="showSection('clinica');showPage('home');window.scrollTo({top:0,behavior:'smooth'})" aria-label="Home">
