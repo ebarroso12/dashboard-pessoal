@@ -30,6 +30,15 @@ export default async function handler(req, res) {
   const key = (process.env.CRM_SUPABASE_SERVICE_ROLE_KEY || '').trim();
   if (!key) return res.status(500).json({ ok: false, error: 'CRM_SUPABASE_SERVICE_ROLE_KEY nao configurado' });
 
+  // Diagnóstico: decodifica ref do JWT sem expor a key
+  if (req.method === 'GET' && req.url?.includes('debug=ref')) {
+    try {
+      const payload = key.split('.')[1] || '';
+      const decoded = JSON.parse(Buffer.from(payload, 'base64').toString());
+      return res.status(200).json({ ref: decoded.ref, role: decoded.role, exp: decoded.exp });
+    } catch { return res.status(200).json({ error: 'JWT invalido' }); }
+  }
+
   try {
     // GET — lista leads + contacts joined
     if (req.method === 'GET') {
