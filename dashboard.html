@@ -12028,8 +12028,6 @@ updateMobTheme();
 /* ═══════════════════════════════════════════════════
    CRM KANBAN — Leads WhatsApp · Dr. Edson Barroso
 ═══════════════════════════════════════════════════ */
-const CRM_SB_URL  = 'https://zlrydmfwsobheajaeael.supabase.co';
-const CRM_SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpscnlkbWZ3c29iaGVhamFlYWVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MDQ2NTEsImV4cCI6MjA5MzQ4MDY1MX0.wNA7iFkwIBhPAJO6x5Y3xqeyxGUFAmM1a551Grhcu2E';
 
 const CRM_COLS = [
   { id:'qualificado',    label:'Qualificado',     color:'#10b981', dot:'#10b981' },
@@ -12044,19 +12042,11 @@ let crmSortables = [];
 
 async function crmFetch() {
   try {
-    const headers = { apikey: CRM_SB_KEY, Authorization: 'Bearer ' + CRM_SB_KEY };
-    const [lRes, cRes] = await Promise.all([
-      fetch(CRM_SB_URL + '/rest/v1/whatsapp_leads?select=*&order=created_at.desc', { headers }),
-      fetch(CRM_SB_URL + '/rest/v1/whatsapp_contacts?select=*', { headers }),
-    ]);
-    const leads    = lRes.ok ? await lRes.json() : [];
-    const contacts = cRes.ok ? await cRes.json() : [];
+    const r = await fetch('/api/crm', { signal: AbortSignal.timeout(8000) });
+    const data = r.ok ? await r.json() : { ok: false, leads: [] };
+    crmLeads = data.leads || [];
     crmContacts = {};
-    contacts.forEach(c => { crmContacts[c.id] = c; });
-    crmLeads = leads.map(l => ({
-      ...l,
-      _contact: crmContacts[l.contact_id] || {},
-    }));
+    crmLeads.forEach(l => { if (l._contact) crmContacts[l.contact_id] = l._contact; });
   } catch(e) { console.error('CRM fetch error', e); }
 }
 
@@ -12143,17 +12133,13 @@ async function crmUpdateStatus(leadId, newStatus) {
   lead.status = newStatus;
   lead.updated_at = new Date().toISOString();
   try {
-    await fetch(CRM_SB_URL + '/rest/v1/whatsapp_leads?id=eq.' + leadId, {
-      method: 'PATCH',
-      headers: {
-        apikey: CRM_SB_KEY,
-        Authorization: 'Bearer ' + CRM_SB_KEY,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal',
-      },
-      body: JSON.stringify({ status: newStatus, updated_at: lead.updated_at }),
+    await fetch('/api/crm', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'move', payload: { leadId, status: newStatus, now: lead.updated_at } }),
+      signal: AbortSignal.timeout(8000),
     });
-  } catch(e) { console.error('CRM update error', e); }
+  } catch(e) { console.error('CRM move error', e); }
   crmUpdateMiniStats();
 }
 
@@ -12235,25 +12221,15 @@ async function saveCRMEdit() {
   const interesse = document.getElementById('crm-edit-interesse').value;
   const resumo    = document.getElementById('crm-edit-resumo').value;
   const now       = new Date().toISOString();
-  const headers   = {
-    apikey: CRM_SB_KEY, Authorization: 'Bearer ' + CRM_SB_KEY,
-    'Content-Type': 'application/json', Prefer: 'return=minimal',
-  };
   try {
     if (_crmEditId) {
       const lead = crmLeads.find(l => l.id === _crmEditId);
-      await Promise.all([
-        fetch(CRM_SB_URL + '/rest/v1/whatsapp_leads?id=eq.' + _crmEditId, {
-          method: 'PATCH', headers,
-          body: JSON.stringify({ status, interesse, resumo, updated_at: now }),
-        }),
-        (lead && lead.contact_id && name)
-          ? fetch(CRM_SB_URL + '/rest/v1/whatsapp_contacts?id=eq.' + lead.contact_id, {
-              method: 'PATCH', headers,
-              body: JSON.stringify({ name }),
-            })
-          : Promise.resolve(),
-      ]);
+      await fetch('/api/crm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'update', payload: { leadId: _crmEditId, contactId: lead?.contact_id, name, status, interesse, resumo, now } }),
+        signal: AbortSignal.timeout(8000),
+      });
       if (lead) {
         lead.status = status; lead.interesse = interesse; lead.resumo = resumo; lead.updated_at = now;
         if (lead._contact) lead._contact.name = name || lead._contact.name;
@@ -12261,13 +12237,11 @@ async function saveCRMEdit() {
     } else {
       const contactId = crypto.randomUUID();
       const leadId    = crypto.randomUUID();
-      await fetch(CRM_SB_URL + '/rest/v1/whatsapp_contacts', {
-        method: 'POST', headers,
-        body: JSON.stringify({ id: contactId, name: name || 'Sem nome', phone: '' }),
-      });
-      await fetch(CRM_SB_URL + '/rest/v1/whatsapp_leads', {
-        method: 'POST', headers,
-        body: JSON.stringify({ id: leadId, contact_id: contactId, status, interesse, resumo, created_at: now, updated_at: now }),
+      await fetch('/api/crm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'create', payload: { contactId, leadId, name, status, interesse, resumo, now } }),
+        signal: AbortSignal.timeout(8000),
       });
       crmLeads.unshift({
         id: leadId, contact_id: contactId, status, interesse, resumo,
