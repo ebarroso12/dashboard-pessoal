@@ -56,16 +56,24 @@ export default async function handler(req, res) {
         if (!contactId || !leadId || !status) {
           return res.status(400).json({ ok: false, error: 'contactId, leadId, status obrigatorios' });
         }
-        await crmSB('/whatsapp_contacts', {
+        const rC = await crmSB('/whatsapp_contacts', {
           method: 'POST',
           headers: { Prefer: 'return=minimal' },
           body: JSON.stringify({ id: contactId, name: name || 'Sem nome', phone: '' }),
         });
-        await crmSB('/whatsapp_leads', {
+        if (!rC.ok) {
+          const detail = await rC.text().catch(() => '');
+          return res.status(502).json({ ok: false, error: 'INSERT contact falhou', detail, status: rC.status });
+        }
+        const rL = await crmSB('/whatsapp_leads', {
           method: 'POST',
           headers: { Prefer: 'return=minimal' },
           body: JSON.stringify({ id: leadId, contact_id: contactId, status, interesse: interesse || '', resumo: resumo || '', created_at: now, updated_at: now }),
         });
+        if (!rL.ok) {
+          const detail = await rL.text().catch(() => '');
+          return res.status(502).json({ ok: false, error: 'INSERT lead falhou', detail, status: rL.status });
+        }
         return res.status(200).json({ ok: true });
       }
 
