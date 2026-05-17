@@ -12215,6 +12215,7 @@ function closeCRMEdit() {
 }
 
 async function saveCRMEdit() {
+  const name      = (document.getElementById('crm-edit-name').value || '').trim();
   const status    = document.getElementById('crm-edit-status').value;
   const interesse = document.getElementById('crm-edit-interesse').value;
   const resumo    = document.getElementById('crm-edit-resumo').value;
@@ -12225,12 +12226,39 @@ async function saveCRMEdit() {
   };
   try {
     if (_crmEditId) {
-      await fetch(CRM_SB_URL + '/rest/v1/whatsapp_leads?id=eq.' + _crmEditId, {
-        method: 'PATCH', headers,
-        body: JSON.stringify({ status, interesse, resumo, updated_at: now }),
-      });
       const lead = crmLeads.find(l => l.id === _crmEditId);
-      if (lead) { lead.status = status; lead.interesse = interesse; lead.resumo = resumo; lead.updated_at = now; }
+      await Promise.all([
+        fetch(CRM_SB_URL + '/rest/v1/whatsapp_leads?id=eq.' + _crmEditId, {
+          method: 'PATCH', headers,
+          body: JSON.stringify({ status, interesse, resumo, updated_at: now }),
+        }),
+        (lead && lead.contact_id && name)
+          ? fetch(CRM_SB_URL + '/rest/v1/whatsapp_contacts?id=eq.' + lead.contact_id, {
+              method: 'PATCH', headers,
+              body: JSON.stringify({ name }),
+            })
+          : Promise.resolve(),
+      ]);
+      if (lead) {
+        lead.status = status; lead.interesse = interesse; lead.resumo = resumo; lead.updated_at = now;
+        if (lead._contact) lead._contact.name = name || lead._contact.name;
+      }
+    } else {
+      const contactId = crypto.randomUUID();
+      const leadId    = crypto.randomUUID();
+      await fetch(CRM_SB_URL + '/rest/v1/whatsapp_contacts', {
+        method: 'POST', headers,
+        body: JSON.stringify({ id: contactId, name: name || 'Sem nome', phone: '' }),
+      });
+      await fetch(CRM_SB_URL + '/rest/v1/whatsapp_leads', {
+        method: 'POST', headers,
+        body: JSON.stringify({ id: leadId, contact_id: contactId, status, interesse, resumo, created_at: now, updated_at: now }),
+      });
+      crmLeads.unshift({
+        id: leadId, contact_id: contactId, status, interesse, resumo,
+        created_at: now, updated_at: now,
+        _contact: { id: contactId, name: name || 'Sem nome', phone: '' },
+      });
     }
     closeCRMEdit();
     const q = document.getElementById('crm-search-inp');
