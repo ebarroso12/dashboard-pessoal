@@ -124,4 +124,37 @@ describe('dashboard.html — touch targets minimos', () => {
     );
   });
 
+  it('.crm-close deve ter height de ao menos 44px', () => {
+    const idx = html.indexOf('.crm-close{');
+    const block = idx >= 0 ? html.slice(idx, idx + 150) : '';
+    assert.ok(block.length > 0, '.crm-close nao encontrado no CSS');
+    assert.ok(
+      block.includes('44px'),
+      '.crm-close com 30px — botão fechar modal CRM abaixo de 44px mínimo para toque.'
+    );
+  });
+
+});
+
+// ── Suite 5: crm-mini-sub nao persistente ────────────────────────────────────
+
+describe('dashboard.html — crm-mini-sub nao persiste em loading', () => {
+
+  it('crm-mini-sub deve estar no loading guard OU crmUpdateMiniStats chamado no DOMContentLoaded', () => {
+    const guardIdx = html.indexOf('Indisponível no momento');
+    const context = guardIdx >= 0 ? html.slice(Math.max(0, guardIdx - 600), guardIdx + 200) : '';
+    const inGuard = context.includes('crm-mini-sub');
+
+    const domLoadIdx = html.indexOf("'DOMContentLoaded'") >= 0
+      ? html.indexOf("'DOMContentLoaded'")
+      : html.indexOf('"DOMContentLoaded"');
+    const domBlock = domLoadIdx >= 0 ? html.slice(domLoadIdx, domLoadIdx + 400) : '';
+    const inDomLoad = domBlock.includes('crmUpdateMiniStats');
+
+    assert.ok(
+      inGuard || inDomLoad,
+      'crm-mini-sub persiste "Carregando..." indefinidamente — não está no loading guard nem é atualizado no DOMContentLoaded.'
+    );
+  });
+
 });
