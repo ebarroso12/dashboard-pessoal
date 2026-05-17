@@ -63,7 +63,7 @@ export default async function handler(req, res) {
         const rC = await crmSB('/whatsapp_contacts', {
           method: 'POST',
           headers: { Prefer: 'return=minimal' },
-          body: JSON.stringify({ id: contactId, name: name || 'Sem nome', phone: '' }),
+          body: JSON.stringify({ id: contactId, name: name || 'Sem nome', phone: null }),
         });
         if (!rC.ok) {
           const detail = await rC.text().catch(() => '');
