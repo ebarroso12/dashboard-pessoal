@@ -304,6 +304,7 @@ html[data-theme="claro"] .drawer-close{background:rgba(0,0,0,.04);border-color:r
   -webkit-tap-highlight-color:transparent;
 }
 .mn-btn:hover,.mn-btn.active{color:var(--accent)}
+.mn-btn.active svg{stroke:var(--accent) !important}
 .mn-btn svg{flex-shrink:0}
 
 /* ── MOBILE DRAWER ───────────────────────────────────── */
@@ -10563,6 +10564,15 @@ function showSection(name) {
   const tab = document.getElementById('stab-' + name);
   if (tab) tab.classList.add('active');
   try { localStorage.setItem('dash_active_section', name); } catch(e) {}
+  try {
+    const _secMap = { clinica:1, marketing:2, infra:3 };
+    document.querySelectorAll('.mn-btn').forEach((b,i) => b.classList.remove('active'));
+    const _idx = _secMap[name];
+    if (_idx !== undefined) {
+      const _btns = document.querySelectorAll('.mn-btn');
+      if (_btns[_idx]) _btns[_idx].classList.add('active');
+    }
+  } catch(e) {}
 }
 (function initSection(){
   const saved = localStorage.getItem('dash_active_section') || 'clinica';
