@@ -10542,6 +10542,7 @@ window.gerarBriefing = async function() {
     }
   } catch(e) {
     if (txt) txt.textContent = '❌ Timeout ao gerar briefing. Verifique a conexão.';
+    if (sub) sub.textContent = 'erro — tente novamente';
   }
 };
 
