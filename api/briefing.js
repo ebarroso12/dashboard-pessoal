@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   const fontes = [];
 
   // ── 1. Coletar dados em paralelo ─────────────────────────────────────
-  const [tarefas, finRows, alertas, calendar] = await Promise.allSettled([
+  const [tarefas, finRows, alertas, calendar, vvSum] = await Promise.allSettled([
     adminFetch('/tarefas?concluida=eq.false&order=criado_em.desc&limit=8'),
     adminFetch('/dados_assistente?tipo=eq.financeiro&select=dados&limit=1&order=atualizado_em.desc'),
     adminFetch('/supervisor_logs?select=severidade,mensagem,componente&order=criado_em.desc&limit=5'),
@@ -29,17 +29,23 @@ export default async function handler(req, res) {
       body: JSON.stringify({}),
       signal: AbortSignal.timeout(6000),
     }).then(r => r.ok ? r.json() : null).catch(() => null),
+    fetch(`${BASE_URL}/api/vidavirtual/summary`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(6000),
+    }).then(r => r.ok ? r.json() : null).catch(() => null),
   ]);
 
   const tasks  = tarefas.status === 'fulfilled'  ? (tarefas.value  || []) : [];
   const fin    = finRows.status === 'fulfilled'   ? (finRows.value?.[0]?.dados || {}) : {};
   const alerts = alertas.status === 'fulfilled'   ? (alertas.value || []) : [];
   const cal    = calendar.status === 'fulfilled'  ? calendar.value  : null;
+  const vv     = vvSum.status === 'fulfilled'     ? vvSum.value     : null;
 
-  if (tasks.length)   fontes.push('tarefas');
-  if (fin.renda)      fontes.push('financeiro');
-  if (alerts.length)  fontes.push('supervisor_logs');
-  if (cal?.events)    fontes.push('google_calendar');
+  if (tasks.length)       fontes.push('tarefas');
+  if (fin.renda)          fontes.push('financeiro');
+  if (alerts.length)      fontes.push('supervisor_logs');
+  if (cal?.events)        fontes.push('google_calendar');
+  if (vv?.status === 'ok') fontes.push('vidavirtual');
 
   // ── 2. Montar contexto para o prompt ─────────────────────────────────
   const fBRL = v => 'R$ ' + parseFloat(v || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
@@ -73,7 +79,13 @@ FINANCEIRO (${fin.mes||'mês atual'}):
 ${finStr}
 
 ALERTAS DO SISTEMA:
-${alertasStr}`;
+${alertasStr}
+
+VIDAVIRTUAL (assistencia tecnica):
+${vv?.status === 'ok'
+  ? `OS abertas: ${vv.os_abertas} | Atrasadas: ${vv.os_atrasadas} | Aguardando peca: ${vv.aparelhos_aguardando} | Pagamentos pendentes: ${vv.pagamentos_pendentes}`
+  : vv?.status === 'sem_dados' ? 'Sem dados operacionais'
+  : 'Indisponivel ou nao configurado'}`;
 
   // ── 3. Gerar briefing com GPT-4.1-mini ───────────────────────────────
   const apiKey = process.env.OPENAI_API_KEY || '';
