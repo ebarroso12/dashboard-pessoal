@@ -2010,6 +2010,72 @@ body::before {
 .ia-src-btn{padding:4px 10px;border-radius:6px;font-size:.7rem;font-weight:600;cursor:pointer;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);color:var(--muted2);transition:all .2s}
 .ia-src-active{background:rgba(99,102,241,.2)!important;border-color:rgba(99,102,241,.5)!important;color:#818cf8!important}
 @keyframes leg-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.55)}65%{box-shadow:0 0 0 12px rgba(239,68,68,0)}}
+
+/* ═══════════════ CRM KANBAN ═══════════════ */
+.crm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:9000;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.crm-overlay.open{display:flex}
+.crm-modal{background:var(--bg2);border:1px solid var(--border-h);border-radius:16px;width:100%;max-width:1200px;min-height:80vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.6)}
+.crm-head{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--border)}
+.crm-head-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#10b981,#3b82f6);display:flex;align-items:center;justify-content:center;box-shadow:0 0 18px rgba(16,185,129,.3);flex-shrink:0}
+.crm-head-title{font-size:1rem;font-weight:600;color:var(--text)}
+.crm-head-sub{font-size:.72rem;color:var(--muted2)}
+.crm-close{margin-left:auto;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted2);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+.crm-close:hover{background:rgba(255,255,255,.1);color:var(--text)}
+.crm-toolbar{display:flex;align-items:center;gap:10px;padding:12px 22px;border-bottom:1px solid var(--border)}
+.crm-search{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:7px 12px;color:var(--text);font-size:.8rem;outline:none}
+.crm-search:focus{border-color:var(--accent);background:rgba(59,130,246,.07)}
+.crm-search::placeholder{color:var(--muted)}
+.crm-btn{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#10b981;border-radius:8px;padding:7px 14px;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.crm-btn:hover{background:rgba(16,185,129,.25)}
+.crm-board{display:flex;gap:14px;padding:16px 22px 22px;overflow-x:auto;flex:1;min-height:0}
+.crm-col{flex:0 0 260px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;display:flex;flex-direction:column;min-height:400px}
+.crm-col-head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.crm-col-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.crm-col-name{font-size:.78rem;font-weight:600;color:var(--text);flex:1}
+.crm-col-count{font-size:.7rem;background:rgba(255,255,255,.08);border:1px solid var(--border);color:var(--muted2);border-radius:20px;padding:1px 8px}
+.crm-col-body{flex:1;padding:10px;display:flex;flex-direction:column;gap:8px;overflow-y:auto;min-height:200px}
+.crm-col-body.drag-over{background:rgba(59,130,246,.06);border-radius:8px}
+.crm-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:grab;transition:transform .15s,box-shadow .15s;position:relative}
+.crm-card:hover{border-color:var(--border-h);box-shadow:0 4px 16px rgba(0,0,0,.3);transform:translateY(-2px)}
+.crm-card:active{cursor:grabbing}
+.crm-card-name{font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.crm-card-msg{font-size:.72rem;color:var(--muted2);margin-bottom:8px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.crm-card-foot{display:flex;align-items:center;gap:6px}
+.crm-tone{font-size:.65rem;padding:2px 7px;border-radius:20px;font-weight:600}
+.crm-tone.normal{background:rgba(100,116,139,.15);color:#94a3b8}
+.crm-tone.nervoso{background:rgba(245,158,11,.15);color:#f59e0b}
+.crm-tone.urgente{background:rgba(239,68,68,.15);color:#ef4444}
+.crm-card-ts{font-size:.65rem;color:var(--muted);margin-left:auto}
+.crm-card-edit{position:absolute;top:8px;right:8px;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:6px;padding:3px 7px;font-size:.65rem;color:var(--muted2);cursor:pointer;opacity:0;transition:opacity .15s}
+.crm-card:hover .crm-card-edit{opacity:1}
+.crm-empty{font-size:.72rem;color:var(--muted);text-align:center;padding:24px 8px;opacity:.6}
+.crm-add-card{display:flex;align-items:center;gap:6px;padding:8px 10px;margin:4px;border:1px dashed var(--border);border-radius:8px;color:var(--muted);font-size:.75rem;cursor:pointer;background:none;width:calc(100% - 8px)}
+.crm-add-card:hover{border-color:var(--accent);color:var(--accent);background:rgba(59,130,246,.05)}
+/* Edit lead modal */
+.crm-edit-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9100;display:none;align-items:center;justify-content:center}
+.crm-edit-overlay.open{display:flex}
+.crm-edit-box{background:var(--bg2);border:1px solid var(--border-h);border-radius:14px;width:100%;max-width:420px;padding:24px}
+.crm-edit-title{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:16px}
+.crm-edit-field{margin-bottom:12px}
+.crm-edit-field label{display:block;font-size:.72rem;color:var(--muted2);margin-bottom:4px}
+.crm-edit-field input,.crm-edit-field select,.crm-edit-field textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-size:.8rem;outline:none;font-family:inherit;box-sizing:border-box}
+.crm-edit-field input:focus,.crm-edit-field select:focus,.crm-edit-field textarea:focus{border-color:var(--accent)}
+.crm-edit-field textarea{resize:vertical;min-height:60px}
+.crm-edit-field select option{background:var(--bg2)}
+.crm-edit-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+.crm-edit-cancel{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--muted2);border-radius:8px;padding:8px 16px;cursor:pointer;font-size:.78rem}
+.crm-edit-save{background:rgba(16,185,129,.2);border:1px solid rgba(16,185,129,.35);color:#10b981;border-radius:8px;padding:8px 16px;cursor:pointer;font-size:.78rem;font-weight:600}
+.crm-edit-save:hover{background:rgba(16,185,129,.3)}
+/* Widget card mini */
+#widget-crm .crm-mini-stats{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+#widget-crm .crm-mini-stat{flex:1;min-width:80px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:8px 10px;text-align:center}
+#widget-crm .crm-mini-stat .stat-val{font-size:1.3rem;font-weight:700;color:var(--text)}
+#widget-crm .crm-mini-stat .stat-lbl{font-size:.62rem;color:var(--muted2);margin-top:2px}
+#widget-crm .crm-open-btn{margin-top:12px;width:100%;background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(59,130,246,.2));border:1px solid rgba(16,185,129,.3);color:#10b981;border-radius:8px;padding:9px;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px}
+#widget-crm .crm-open-btn:hover{background:linear-gradient(135deg,rgba(16,185,129,.3),rgba(59,130,246,.3));box-shadow:0 0 16px rgba(16,185,129,.25)}
+/* Sortable ghost */
+.sortable-ghost{opacity:.4;background:rgba(59,130,246,.1)!important;border:1px dashed var(--accent)!important}
+/* ═══════════════ /CRM KANBAN ═══════════════ */
 </style>
 
 <!-- SIDEBAR — AIOX DARK NAVY -->
@@ -2063,7 +2129,11 @@ body::before {
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
       OpenClaw
     </a>
-    <!-- 📱 MARKETING -->
+        <a class="sb-link" onclick="openCRM();return false">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      CRM Leads
+    </a>
+<!-- 📱 MARKETING -->
     <div class="sb-section-title" style="color:var(--purple);margin-top:4px">📱 Marketing</div>
     <a class="sb-link" onclick="showSection('marketing');showPage('home');setTimeout(()=>document.getElementById('widget-instagram')?.scrollIntoView({behavior:'smooth'}),50);return false">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
@@ -2478,8 +2548,32 @@ body::before {
     <!-- METAS -->
     
 
-    <!-- WA CONTACTS -->
-    
+    <!-- WA CONTACTS / CRM -->
+    <div class="card" id="widget-crm" data-widget-id="crm" data-section="clinica" style="grid-column:span 2">
+      <div class="card-head">
+        <div class="c-icon" style="background:linear-gradient(135deg,#10b981,#3b82f6);box-shadow:0 0 14px rgba(16,185,129,.3)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.3"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        </div>
+        <div>
+          <div class="c-title">CRM — Leads WhatsApp</div>
+          <div class="c-sub" id="crm-mini-sub">Carregando...</div>
+        </div>
+        <div class="c-spacer"></div>
+        <button onclick="openCRM()" class="wa-btn" style="font-size:.72rem">📊 Abrir Kanban</button>
+      </div>
+      <div class="card-body">
+        <div class="crm-mini-stats" id="crm-mini-stats">
+          <div class="crm-mini-stat"><div class="stat-val" id="crm-stat-qualificado">—</div><div class="stat-lbl">Qualificados</div></div>
+          <div class="crm-mini-stat"><div class="stat-val" id="crm-stat-nurturing">—</div><div class="stat-lbl">Nurturing</div></div>
+          <div class="crm-mini-stat"><div class="stat-val" id="crm-stat-fechado">—</div><div class="stat-lbl">Fechados</div></div>
+          <div class="crm-mini-stat"><div class="stat-val" id="crm-stat-nao">—</div><div class="stat-lbl">Não Qualif.</div></div>
+        </div>
+        <button class="crm-open-btn" onclick="openCRM()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Abrir Kanban CRM
+        </button>
+      </div>
+    </div>
 
     <!-- FINANÇAS PESSOAIS -->
     
@@ -11915,6 +12009,246 @@ if(typeof _setTheme==='function'){
   window._setTheme=function(t){__st(t);updateMobTheme();};
 }
 updateMobTheme();
+
+/* ═══════════════════════════════════════════════════
+   CRM KANBAN — Leads WhatsApp · Dr. Edson Barroso
+═══════════════════════════════════════════════════ */
+const CRM_SB_URL  = 'https://zlrydmfwsobheajaeael.supabase.co';
+const CRM_SB_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpscnlkbWZ3c29iaGVhamFlYWVsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc5MDQ2NTEsImV4cCI6MjA5MzQ4MDY1MX0.wNA7iFkwIBhPAJO6x5Y3xqeyxGUFAmM1a551Grhcu2E';
+
+const CRM_COLS = [
+  { id:'qualificado',    label:'Qualificado',     color:'#10b981', dot:'#10b981' },
+  { id:'nurturing',      label:'Nurturing',        color:'#3b82f6', dot:'#3b82f6' },
+  { id:'nao_qualificado',label:'Não Qualificado',  color:'#64748b', dot:'#64748b' },
+  { id:'fechado',        label:'Fechado',          color:'#f59e0b', dot:'#f59e0b' },
+];
+
+let crmLeads = [];
+let crmContacts = {};
+let crmSortables = [];
+
+async function crmFetch() {
+  try {
+    const headers = { apikey: CRM_SB_KEY, Authorization: 'Bearer ' + CRM_SB_KEY };
+    const [lRes, cRes] = await Promise.all([
+      fetch(CRM_SB_URL + '/rest/v1/whatsapp_leads?select=*&order=created_at.desc', { headers }),
+      fetch(CRM_SB_URL + '/rest/v1/whatsapp_contacts?select=*', { headers }),
+    ]);
+    const leads    = lRes.ok ? await lRes.json() : [];
+    const contacts = cRes.ok ? await cRes.json() : [];
+    crmContacts = {};
+    contacts.forEach(c => { crmContacts[c.id] = c; });
+    crmLeads = leads.map(l => ({
+      ...l,
+      _contact: crmContacts[l.contact_id] || {},
+    }));
+  } catch(e) { console.error('CRM fetch error', e); }
+}
+
+function crmToneClass(tone) {
+  if (!tone) return 'normal';
+  if (tone.includes('urgen')) return 'urgente';
+  if (tone.includes('nervos')) return 'nervoso';
+  return 'normal';
+}
+
+function crmTimeAgo(ts) {
+  if (!ts) return '';
+  const diff = (Date.now() - new Date(ts)) / 1000;
+  if (diff < 60) return 'agora';
+  if (diff < 3600) return Math.floor(diff/60) + 'm';
+  if (diff < 86400) return Math.floor(diff/3600) + 'h';
+  return Math.floor(diff/86400) + 'd';
+}
+
+function crmRenderCard(lead) {
+  const name    = lead._contact.name || lead._contact.phone || 'Sem nome';
+  const msg     = (lead.resumo || '').substring(0, 80) || '—';
+  const tone    = crmToneClass(lead.interesse || '');
+  const toneLabel = tone === 'urgente' ? '🔴 Urgente' : tone === 'nervoso' ? '🟡 Nervoso' : '🟢 Normal';
+  const ts      = crmTimeAgo(lead.updated_at || lead.created_at);
+  return `<div class="crm-card" data-lead-id="${lead.id}" draggable="true">
+    <button class="crm-card-edit" onclick="openCRMEdit('${lead.id}')">✏️</button>
+    <div class="crm-card-name" title="${name}">${name}</div>
+    <div class="crm-card-msg">${msg}</div>
+    <div class="crm-card-foot">
+      <span class="crm-tone ${tone}">${toneLabel}</span>
+      <span class="crm-card-ts">${ts}</span>
+    </div>
+  </div>`;
+}
+
+function crmRenderBoard(filter) {
+  const board = document.getElementById('crm-board');
+  if (!board) return;
+  crmSortables.forEach(s => s.destroy && s.destroy());
+  crmSortables = [];
+  const q = (filter || '').toLowerCase();
+  const leads = q
+    ? crmLeads.filter(l => {
+        const name = (l._contact.name || '').toLowerCase();
+        const msg  = (l.resumo || '').toLowerCase();
+        return name.includes(q) || msg.includes(q);
+      })
+    : crmLeads;
+  board.innerHTML = CRM_COLS.map(col => {
+    const colLeads = leads.filter(l => l.status === col.id);
+    const cards    = colLeads.map(crmRenderCard).join('') || `<div class="crm-empty">Sem leads</div>`;
+    return `<div class="crm-col" data-col-id="${col.id}">
+      <div class="crm-col-head">
+        <div class="crm-col-dot" style="background:${col.dot}"></div>
+        <div class="crm-col-name">${col.label}</div>
+        <div class="crm-col-count">${colLeads.length}</div>
+      </div>
+      <div class="crm-col-body" id="crm-col-${col.id}">${cards}</div>
+      <button class="crm-add-card" onclick="openCRMNew('${col.id}')">＋ Adicionar lead</button>
+    </div>`;
+  }).join('');
+  if (typeof Sortable !== 'undefined') {
+    CRM_COLS.forEach(col => {
+      const el = document.getElementById('crm-col-' + col.id);
+      if (!el) return;
+      crmSortables.push(Sortable.create(el, {
+        group: 'crm',
+        animation: 150,
+        ghostClass: 'sortable-ghost',
+        onEnd: async (evt) => {
+          const leadId = evt.item.dataset.leadId;
+          const newStatus = evt.to.closest('.crm-col').dataset.colId;
+          await crmUpdateStatus(leadId, newStatus);
+        },
+      }));
+    });
+  }
+}
+
+async function crmUpdateStatus(leadId, newStatus) {
+  const lead = crmLeads.find(l => l.id === leadId);
+  if (!lead || lead.status === newStatus) return;
+  lead.status = newStatus;
+  lead.updated_at = new Date().toISOString();
+  try {
+    await fetch(CRM_SB_URL + '/rest/v1/whatsapp_leads?id=eq.' + leadId, {
+      method: 'PATCH',
+      headers: {
+        apikey: CRM_SB_KEY,
+        Authorization: 'Bearer ' + CRM_SB_KEY,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({ status: newStatus, updated_at: lead.updated_at }),
+    });
+  } catch(e) { console.error('CRM update error', e); }
+  crmUpdateMiniStats();
+}
+
+function crmUpdateMiniStats() {
+  const counts = { qualificado:0, nurturing:0, fechado:0, nao_qualificado:0 };
+  crmLeads.forEach(l => { if (counts[l.status] !== undefined) counts[l.status]++; });
+  const el = (id, val) => { const e = document.getElementById(id); if(e) e.textContent = val; };
+  el('crm-stat-qualificado', counts.qualificado);
+  el('crm-stat-nurturing',   counts.nurturing);
+  el('crm-stat-fechado',     counts.fechado);
+  el('crm-stat-nao',         counts.nao_qualificado);
+  const sub = document.getElementById('crm-mini-sub');
+  if (sub) sub.textContent = (crmLeads.length) + ' leads · ' + counts.qualificado + ' qualificados';
+  const hsub = document.getElementById('crm-head-sub');
+  if (hsub) hsub.textContent = 'Clínica Dr. Edson Barroso · ' + crmLeads.length + ' leads';
+}
+
+async function openCRM() {
+  document.getElementById('crm-overlay').classList.add('open');
+  const board = document.getElementById('crm-board');
+  if (board) board.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted2);font-size:.82rem">Carregando leads...</div>';
+  await crmFetch();
+  crmRenderBoard();
+  crmUpdateMiniStats();
+}
+
+function closeCRM() {
+  document.getElementById('crm-overlay').classList.remove('open');
+}
+
+function crmFilter(q) {
+  crmRenderBoard(q);
+}
+
+async function crmRefresh() {
+  const board = document.getElementById('crm-board');
+  if (board) board.innerHTML = '<div style="padding:40px;text-align:center;color:var(--muted2);font-size:.82rem">Atualizando...</div>';
+  await crmFetch();
+  const q = document.getElementById('crm-search-inp');
+  crmRenderBoard(q ? q.value : '');
+  crmUpdateMiniStats();
+}
+
+/* Edit / New Lead */
+let _crmEditId = null;
+
+function openCRMEdit(leadId) {
+  const lead = crmLeads.find(l => l.id === leadId);
+  if (!lead) return;
+  _crmEditId = leadId;
+  document.getElementById('crm-edit-id').value       = leadId;
+  document.getElementById('crm-edit-name').value     = lead._contact.name || lead._contact.phone || '';
+  document.getElementById('crm-edit-status').value   = lead.status || 'nurturing';
+  document.getElementById('crm-edit-tone').value     = crmToneClass(lead.interesse || '');
+  document.getElementById('crm-edit-interesse').value= lead.interesse || '';
+  document.getElementById('crm-edit-resumo').value   = lead.resumo || '';
+  document.getElementById('crm-edit-overlay').classList.add('open');
+}
+
+function openCRMNew(status) {
+  _crmEditId = null;
+  document.getElementById('crm-edit-id').value       = '';
+  document.getElementById('crm-edit-name').value     = '';
+  document.getElementById('crm-edit-status').value   = status || 'nurturing';
+  document.getElementById('crm-edit-tone').value     = 'normal';
+  document.getElementById('crm-edit-interesse').value= '';
+  document.getElementById('crm-edit-resumo').value   = '';
+  document.getElementById('crm-edit-overlay').classList.add('open');
+}
+
+function closeCRMEdit() {
+  document.getElementById('crm-edit-overlay').classList.remove('open');
+  _crmEditId = null;
+}
+
+async function saveCRMEdit() {
+  const status    = document.getElementById('crm-edit-status').value;
+  const interesse = document.getElementById('crm-edit-interesse').value;
+  const resumo    = document.getElementById('crm-edit-resumo').value;
+  const now       = new Date().toISOString();
+  const headers   = {
+    apikey: CRM_SB_KEY, Authorization: 'Bearer ' + CRM_SB_KEY,
+    'Content-Type': 'application/json', Prefer: 'return=minimal',
+  };
+  try {
+    if (_crmEditId) {
+      await fetch(CRM_SB_URL + '/rest/v1/whatsapp_leads?id=eq.' + _crmEditId, {
+        method: 'PATCH', headers,
+        body: JSON.stringify({ status, interesse, resumo, updated_at: now }),
+      });
+      const lead = crmLeads.find(l => l.id === _crmEditId);
+      if (lead) { lead.status = status; lead.interesse = interesse; lead.resumo = resumo; lead.updated_at = now; }
+    }
+    closeCRMEdit();
+    const q = document.getElementById('crm-search-inp');
+    crmRenderBoard(q ? q.value : '');
+    crmUpdateMiniStats();
+  } catch(e) { console.error('CRM save error', e); }
+}
+
+/* Init mini widget on page load */
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    await crmFetch();
+    crmUpdateMiniStats();
+  } catch(e) {}
+});
+/* ═══════════════════════════════════════════════════
+   /CRM KANBAN
+═══════════════════════════════════════════════════ */
 </script>
 <!-- ── MOBILE OVERLAY ──────────────────────────────────── -->
 <div id="mobile-overlay" onclick="toggleMobileMenu(false)"></div>
@@ -11994,5 +12328,64 @@ updateMobTheme();
     Menu
   </button>
 </nav>
+
+<!-- ═══════════════ CRM KANBAN MODAL ═══════════════ -->
+<div class="crm-overlay" id="crm-overlay" onclick="if(event.target===this)closeCRM()">
+  <div class="crm-modal">
+    <div class="crm-head">
+      <div class="crm-head-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      </div>
+      <div>
+        <div class="crm-head-title">CRM — Leads WhatsApp</div>
+        <div class="crm-head-sub" id="crm-head-sub">Clínica Dr. Edson Barroso · Saúde Mental & Alta Performance</div>
+      </div>
+      <button class="crm-close" onclick="closeCRM()">✕</button>
+    </div>
+    <div class="crm-toolbar">
+      <input class="crm-search" type="text" placeholder="🔍  Buscar lead por nome ou mensagem..." oninput="crmFilter(this.value)" id="crm-search-inp">
+      <button class="crm-btn" onclick="crmRefresh()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        Atualizar
+      </button>
+    </div>
+    <div class="crm-board" id="crm-board">
+      <!-- colunas geradas por JS -->
+    </div>
+  </div>
+</div>
+
+<!-- CRM Edit Lead Modal -->
+<div class="crm-edit-overlay" id="crm-edit-overlay" onclick="if(event.target===this)closeCRMEdit()">
+  <div class="crm-edit-box">
+    <div class="crm-edit-title">✏️ Editar Lead</div>
+    <input type="hidden" id="crm-edit-id">
+    <div class="crm-edit-field"><label>Nome do contato</label><input type="text" id="crm-edit-name" placeholder="Nome"></div>
+    <div class="crm-edit-field">
+      <label>Status</label>
+      <select id="crm-edit-status">
+        <option value="qualificado">Qualificado</option>
+        <option value="nurturing">Nurturing</option>
+        <option value="fechado">Fechado</option>
+        <option value="nao_qualificado">Não Qualificado</option>
+      </select>
+    </div>
+    <div class="crm-edit-field">
+      <label>Tom</label>
+      <select id="crm-edit-tone">
+        <option value="normal">Normal</option>
+        <option value="nervoso">Nervoso</option>
+        <option value="urgente">Urgente</option>
+      </select>
+    </div>
+    <div class="crm-edit-field"><label>Interesse</label><input type="text" id="crm-edit-interesse" placeholder="Ex: ansiedade, burnout..."></div>
+    <div class="crm-edit-field"><label>Resumo / Observações</label><textarea id="crm-edit-resumo" rows="3" placeholder="Notas sobre o lead..."></textarea></div>
+    <div class="crm-edit-actions">
+      <button class="crm-edit-cancel" onclick="closeCRMEdit()">Cancelar</button>
+      <button class="crm-edit-save" onclick="saveCRMEdit()">💾 Salvar</button>
+    </div>
+  </div>
+</div>
+<!-- ═══════════════ /CRM KANBAN MODAL ═══════════════ -->
 </body></html>
 
