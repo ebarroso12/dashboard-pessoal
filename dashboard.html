@@ -110,7 +110,7 @@ input,textarea{font-family:inherit}
   text-decoration:none;cursor:pointer;
   transition:background .15s,color .15s;
   border:none;background:none;width:100%;text-align:left;
-  white-space:nowrap;
+  white-space:nowrap;min-height:44px;
 }
 .sb-link:hover{
   background:rgba(59,130,246,.1);color:var(--text);
@@ -336,7 +336,7 @@ html[data-theme="claro"] .drawer-close{background:rgba(0,0,0,.04);border-color:r
 }
 .drawer-title{font-size:.85rem;font-weight:700;color:var(--text)}
 .drawer-close{
-  width:36px;height:36px;min-height:36px;
+  width:44px;height:44px;min-height:44px;
   border-radius:8px;display:flex;align-items:center;justify-content:center;
   color:var(--muted2);background:rgba(255,255,255,.05);
   border:1px solid var(--border);cursor:pointer;
@@ -2634,7 +2634,7 @@ body::before {
         </div>
         <div>
           <div class="c-title">☀️ Resumo Matinal</div>
-          <div class="c-sub" id="morning-sub">Carregando briefing do dia...</div>
+          <div class="c-sub" id="morning-sub">Pronto para gerar o briefing</div>
         </div>
         <div class="c-spacer"></div>
         <button onclick="enviarBriefingWA()" class="wa-btn" style="font-size:.72rem">📲 Enviar WA</button><button id="btn-briefing-send" onclick="enviarBriefingAgora()" class="wa-btn" style="font-size:.72rem;margin-left:6px;background:rgba(255,107,53,.15);border-color:rgba(255,107,53,.35);color:#ff6b35">📤 Enviar Agora</button><span id="briefing-send-status" style="font-size:.65rem;margin-left:8px;color:var(--muted2)"></span>
@@ -4252,7 +4252,7 @@ function toggleMobileMenu(open){
 function setWidgetState(elementId, state, message) {
   const el = document.getElementById(elementId);
   if (!el) return;
-  const defaults = { loading:'Carregando...', ready:'', empty:'Sem dados', error:'Erro na integração', disconnected:'Não conectado' };
+  const defaults = { loading:'Carregando...', ready:'', empty:'Nenhum dado disponível', error:'Erro na integração', disconnected:'Não conectado' };
   if (state !== 'ready') el.textContent = message !== undefined ? message : (defaults[state] || '—');
 }
 /* Estado inicial: loading até dados reais chegarem */
@@ -4292,6 +4292,17 @@ setWidgetState('fb-reach',  'loading');
 setWidgetState('funil-rate-ig',    'empty');
 setWidgetState('funil-rate-wa',    'empty');
 setWidgetState('funil-rate-total', 'empty');
+
+/* Loading guard — após 10s substitui "Carregando..." por fallback em widgets não resolvidos */
+(function _loadingGuard(){
+  var WATCHED = ['gmail-list','drive-list','oc-status-txt','fin-renda','fin-desp','fin-saldo','fin-pct','ga-sessions','ga-users','ga-pageviews','ga-engage','ig-reach','ig-likes','fb-reach'];
+  setTimeout(function(){
+    WATCHED.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el && el.textContent.trim() === 'Carregando...') el.textContent = 'Indisponível no momento';
+    });
+  }, 10000);
+})();
 
 /* ─── FORMAT HELPER (precisa vir antes dos engines) ─── */
 const fmtN = n => n >= 1000 ? (n/1000).toFixed(1).replace('.0','')+'K' : String(n);
@@ -5747,7 +5758,7 @@ async function loadDrive() {
     if (!data.files || data.files.length === 0) {
       _insightsData.driveFiles = [];
       generateInsights();
-      setWidgetState('drive-list', 'empty');
+      setWidgetState('drive-list', 'empty', 'Nenhum arquivo recente');
       if (sub) sub.textContent = '0 arquivos';
       return;
     }
