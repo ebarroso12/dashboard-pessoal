@@ -155,10 +155,6 @@ export default async function handler(req, res) {
   data      = data      || hoje;
   categoria = categoria || categoriaAuto(descricao);
 
-  const dataObj  = new Date(data);
-  const mes      = dataObj.getUTCMonth() + 1;
-  const ano      = dataObj.getUTCFullYear();
-
   const registro = {
     descricao:     descricao.toString().trim(),
     valor,
@@ -168,8 +164,6 @@ export default async function handler(req, res) {
     ...(subcategoria   ? { subcategoria }   : {}),
     ...(local_servico  ? { local_servico }  : {}),
     ...(observacoes    ? { observacoes }    : {}),
-    mes,
-    ano,
   };
 
   try {
