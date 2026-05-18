@@ -169,6 +169,13 @@ export default async function handler(req, res) {
   try {
     const result = await supabaseInsert(registro);
 
+    // Sincronizar widget de finanças automaticamente (fire-and-forget)
+    fetch('https://dashboard-pessoal-edson.vercel.app/api/finance/autosync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Webhook-Token': WEBHOOK_TOKEN },
+      body: JSON.stringify({}),
+    }).catch(() => {}); // não bloqueia a resposta
+
     const emoji = tipo === 'receita' ? '💰' : '💸';
     const sinal = tipo === 'receita' ? '+' : '-';
     const valorFmt = `R$ ${valor.toFixed(2).replace('.', ',')}`;
