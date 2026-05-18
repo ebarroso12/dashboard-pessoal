@@ -7546,6 +7546,39 @@ function updateFinCard(){
 }
 
 /* ── Modal open/close ───────────────────── */
+async function _syncLancamentosSupabase(y, m){
+  try {
+    const mes = m + 1;
+    const ano = y;
+    const url = `https://jaewjscbigfwjiaeavft.supabase.co/rest/v1/lancamentos_financeiros?mes=eq.${mes}&ano=eq.${ano}&order=data.desc`;
+    const key = (typeof SB_ANON !== 'undefined' ? SB_ANON : '') || '';
+    if (!key) return;
+    const r = await fetch(url, { headers: { apikey: key, Authorization: 'Bearer ' + key } });
+    if (!r.ok) return;
+    const rows = await r.json();
+    if (!Array.isArray(rows) || !rows.length) return;
+    // Converter para formato interno do dashboard
+    const CAT_MAP = { alimentacao:'alimentacao', transporte:'transporte', saude:'saude', pessoal:'pessoal', marketing:'lazer', educacao:'educacao', moradia:'moradia', outros:'diversos' };
+    const mapped = rows.map(l => ({
+      id: 'sb_' + l.id,
+      date: l.data || new Date().toISOString().split('T')[0],
+      year: ano, month: m,
+      cat_id: CAT_MAP[l.categoria] || 'diversos',
+      cat_label: l.categoria || 'Diversos',
+      item: l.descricao || 'Lançamento',
+      amount: Math.abs(parseFloat(l.valor) || 0),
+      type: l.tipo || 'despesa',
+      source: 'openclaw',
+      obs: l.observacoes || '',
+    }));
+    // Mesclar: manter manuais, substituir os do openclaw
+    const existing = _getTxMonth(y, m).filter(t => !t.id.startsWith('sb_'));
+    _saveTxMonth([...mapped, ...existing], y, m);
+    if (_finTab === 'lancamentos') _renderLancamentos();
+    updateFinCard();
+  } catch(e) { console.warn('[syncSupabase]', e.message); }
+}
+
 function openFinModal(){
   _finMonth=new Date().getMonth();
   _finYear=new Date().getFullYear();
@@ -7554,6 +7587,8 @@ function openFinModal(){
   _renderOrcamento();
   _renderPatrimonio();
   $('finBackdrop').classList.add('open');
+  // Sincronizar lançamentos do Supabase automaticamente
+  _syncLancamentosSupabase(_finYear, _finMonth);
 }
 function closeFinModal(){ $('finBackdrop').classList.remove('open'); updateFinCard(); }
 function switchFinTab(t){
@@ -7567,7 +7602,7 @@ function switchFinTab(t){
   const elI=$('fin-tab-insights');    if(elI) elI.style.display=t==='insights'?'':'none';
   const elPag=$('fin-tab-pagamentos'); if(elPag) elPag.style.display=t==='pagamentos'?'':'none';
   const elRec=$('fin-tab-recebimentos'); if(elRec) elRec.style.display=t==='recebimentos'?'':'none';
-  if(t==='lancamentos')   _renderLancamentos();
+  if(t==='lancamentos'){ _syncLancamentosSupabase(_finYear,_finMonth); _renderLancamentos(); }
   if(t==='comparativo')   _renderComparativo();
   if(t==='insights')      _renderInsights();
   if(t==='pagamentos')    _renderPagamentos();
