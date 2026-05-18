@@ -7480,21 +7480,26 @@ function updateFinCard(){
   const mn=FIN_MESES[_finMonth];
   const lbl=$('fin-month-lbl'); if(lbl) lbl.textContent=mn+' '+_finYear;
   const renda=finTotRenda();
-  const desp=finTotDesp()+finTotSeg()+finTotEmp();
-  const saldo=renda-desp;
+  // Despesas do orçamento + lançamentos do Supabase (via localStorage após sync)
+  const despOrc=finTotDesp()+finTotSeg()+finTotEmp();
+  const txList=_getTxMonth(_finYear,_finMonth);
+  const despTx=txList.filter(t=>t.type==='despesa').reduce((s,t)=>s+t.amount,0);
+  const recTx=txList.filter(t=>t.type==='receita').reduce((s,t)=>s+t.amount,0);
+  const desp=despOrc||despTx; // usa lançamentos se não há orçamento
+  const saldo=renda>0?(renda-desp):(recTx-despTx);
   const pct=renda>0?(desp/renda*100):0;
   const elR=$('fin-renda'),elD=$('fin-desp'),elS=$('fin-saldo'),elP=$('fin-pct');
   if(!elR)return;
-  const semDados=!renda&&!desp;
+  const semDados=!renda&&!desp&&!despTx;
   if(semDados){
     setWidgetState('fin-renda','empty','Sem dados'); setWidgetState('fin-desp','empty','Sem dados');
     setWidgetState('fin-saldo','empty','Sem dados'); setWidgetState('fin-pct','empty','—');
   } else {
-    elR.textContent=renda?fBRL(renda):'—';
-    elD.textContent=desp?fBRL(desp):'—';
-    elS.textContent=(saldo||renda)?fBRL(saldo):'—';
+    elR.textContent=renda?fBRL(renda):(recTx?fBRL(recTx):'—');
+    elD.textContent=(desp||despTx)?fBRL(desp||despTx):'—';
+    elS.textContent=fBRL(saldo);
     elS.style.color=saldo>=0?'#4ade80':'var(--coral)';
-    elP.textContent=renda?fPct(pct):'—';
+    elP.textContent=renda?fPct(pct):(txList.length?txList.length+' lançtos':'—');
   }
   /* ── Barra de meta de receita ── */
   const meta=_finV('meta_receita');
@@ -7868,8 +7873,12 @@ function _patRecalc(id,n){
   document.body.appendChild(d);
 })();
 
-/* Initialize card */
-updateFinCard();
+/* Initialize card — sync Supabase lancamentos on load */
+(async()=>{
+  await _syncLancamentosSupabase(new Date().getFullYear(), new Date().getMonth());
+  updateFinCard();
+  _updateFinCardRecentTx && _updateFinCardRecentTx();
+})();
 
 /* ══════════════════════════════════════════════════════════
    BANCO DE DADOS DE LANÇAMENTOS DIÁRIOS
