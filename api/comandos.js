@@ -241,18 +241,82 @@ async function handleAlertas() {
   }
 }
 
+async function handleBriefing() {
+  try {
+    const r = await fetch('https://dashboard-pessoal-edson.vercel.app/api/briefing', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({}),
+      signal: AbortSignal.timeout(25000),
+    });
+    if (!r.ok) return '⚠️ Briefing indisponível.';
+    const d = await r.json();
+    return d.briefing || d.fallback || '📋 Briefing gerado.';
+  } catch(e) { return '⚠️ Erro ao gerar briefing.'; }
+}
+
+async function handleCRM() {
+  try {
+    const r = await fetch('https://dashboard-pessoal-edson.vercel.app/api/crm');
+    if (!r.ok) return '📈 CRM: erro ao consultar.';
+    const d = await r.json();
+    const leads = d.leads || [];
+    if (!leads.length) return '📈 CRM: nenhum lead cadastrado.';
+    const por_status = {};
+    leads.forEach(l => { por_status[l.status || 'novo'] = (por_status[l.status || 'novo'] || 0) + 1; });
+    const resumo = Object.entries(por_status).map(([s,n]) => `• ${s}: ${n}`).join('\n');
+    return `📈 *CRM — ${leads.length} leads*\n${resumo}`;
+  } catch(e) { return '⚠️ CRM indisponível.'; }
+}
+
+async function handleMarketing() {
+  try {
+    const rows = await adminFetch('/dados_assistente?tipo=eq.marketing&select=dados&limit=1&order=atualizado_em.desc');
+    const d = rows?.[0]?.dados;
+    if (!d) return '📣 Marketing: nenhum dado sincronizado.\nAbra o módulo Marketing no dashboard para sincronizar.';
+    let txt = '📣 *Marketing*\n';
+    if (d.instagram) txt += `📸 Instagram: ${d.instagram.followers || 0} seguidores\n`;
+    if (d.facebook)  txt += `👍 Facebook: ${d.facebook.likes || 0} curtidas\n`;
+    if (d.google)    txt += `⭐ Google: ${d.google.rating || '-'} (${d.google.reviews || 0} avaliações)\n`;
+    return txt.trim();
+  } catch(e) { return '⚠️ Marketing indisponível.'; }
+}
+
+async function handleClinica() {
+  try {
+    const [tarefasRows, agendaTxt] = await Promise.all([
+      adminFetch('/tarefas?select=texto,done&order=created_at.desc&limit=5'),
+      handleAgenda(),
+    ]);
+    const pendentes = (tarefasRows || []).filter(t => !t.done);
+    const tarefasTxt = pendentes.length
+      ? pendentes.map(t => `• ${t.texto}`).join('\n')
+      : 'Nenhuma tarefa pendente';
+    return `🏥 *Clínica*\n\n${agendaTxt}\n\n✅ Tarefas: ${pendentes.length} pendente(s)\n${tarefasTxt}`;
+  } catch(e) { return '⚠️ Dados da clínica indisponíveis.'; }
+}
+
 function handleAjuda() {
   return `🤖 *Comandos disponíveis*
 
+📋 *briefing* — resumo executivo IA do dia
 📅 *agenda* — próximos eventos
 📧 *emails* — emails não lidos
 📁 *drive* — arquivos recentes do Drive
 ✅ *tarefas* — tarefas pendentes
 💰 *financas* — saldo e transações
 🎯 *metas* — progresso das metas
+📈 *crm* — status dos leads
+📣 *marketing* — Instagram, Facebook, Google
+🏥 *clinica* — agenda + tarefas clínicas
 📋 *resumo* — tudo junto
 🚨 *alertas* — alertas ativos
-❓ *ajuda* — esta mensagem`;
+❓ *ajuda* — esta mensagem
+
+💸 *Registrar despesa:*
+gastei 50 em gasolina
+paguei 200 no mercado
+barbearia 107,20`;
 }
 
 // ── MAIN HANDLER ─────────────────────────────────────────────────────────────
@@ -292,10 +356,39 @@ export default async function handler(req, res) {
       resposta = await handleResumo();
     else if (['alertas', 'alerta', 'ver alertas', 'listar alertas'].includes(comando))
       resposta = await handleAlertas();
+    else if (['briefing', 'brief', 'manha', 'manhã', 'bom dia'].includes(comando))
+      resposta = await handleBriefing();
+    else if (['crm', 'leads', 'clientes', 'pipeline'].includes(comando))
+      resposta = await handleCRM();
+    else if (['marketing', 'mkt', 'instagram', 'redes sociais', 'instagram'].includes(comando))
+      resposta = await handleMarketing();
+    else if (['clinica', 'clínica', 'consultorio', 'consultório', 'medico', 'médico'].includes(comando))
+      resposta = await handleClinica();
     else if (['ajuda', 'help', 'comandos', 'menu'].includes(comando))
       resposta = handleAjuda();
-    else
-      resposta = `❓ Comando não reconhecido: "${raw}"\n\nDigite *ajuda* para ver os comandos disponíveis.`;
+    else {
+      // Tentar interpretar como lançamento financeiro (ex: "barbearia 107,20")
+      const valorMatch = raw.match(/(R?\$?\s*[\d]+[.,][\d]{1,2}|[\d]+)/);
+      if (valorMatch) {
+        const valor = parseFloat(valorMatch[0].replace(/[R$\s]/g,'').replace(',','.'));
+        const desc  = raw.replace(valorMatch[0], '').replace(/gastei|paguei|comprei/gi,'').trim() || 'Gasto';
+        if (valor > 0 && desc.length > 1) {
+          try {
+            const lr = await fetch('https://dashboard-pessoal-edson.vercel.app/api/lancamento', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'X-Webhook-Token': process.env.WEBHOOK_TOKEN || 'oc_edson_2026_secure' },
+              body: JSON.stringify({ texto: raw }),
+            });
+            const ld = await lr.json();
+            resposta = ld.message || `💸 Lançamento registrado: ${desc} R$${valor.toFixed(2).replace('.',',')}`;
+          } catch(e) { resposta = `❓ Comando não reconhecido: "${raw}"\n\nDigite *ajuda* para ver os comandos.`; }
+        } else {
+          resposta = `❓ Comando não reconhecido: "${raw}"\n\nDigite *ajuda* para ver os comandos disponíveis.`;
+        }
+      } else {
+        resposta = `❓ Comando não reconhecido: "${raw}"\n\nDigite *ajuda* para ver os comandos disponíveis.`;
+      }
+    }
   } catch (err) {
     console.error('[comandos] Erro:', err.message);
     resposta = `⚠️ Erro ao processar comando "${raw}". Tente novamente.`;
